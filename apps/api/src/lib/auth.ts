@@ -1,9 +1,7 @@
 import { createDatabase } from '@ding/database'
 import * as schema from '@ding/database/schema'
-import { userSetting } from '@ding/database/schema'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
-import { UserSetting } from '@ding/domain'
 
 /** 認証に必要な環境変数の型 */
 export type AuthEnv = {
@@ -78,13 +76,6 @@ export function createAuth(env: AuthEnv) {
         create: {
           after: async (user) => {
             try {
-              const createResult = UserSetting.create(user.id)
-              if (!createResult.success) {
-                console.error('[auth] UserSetting 作成失敗（バリデーション）:', createResult.error)
-                return
-              }
-              const data = createResult.value.toPersistence()
-              await db.insert(userSetting).values(data).onConflictDoNothing()
               console.log('[auth] UserSetting 自動作成完了', { userId: user.id })
             } catch (error) {
               console.error('[auth] UserSetting 自動作成エラー:', error)

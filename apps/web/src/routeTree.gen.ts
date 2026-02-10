@@ -12,8 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AuthIndexRouteImport } from './routes/_auth/index'
-import { Route as AuthSettingsRouteImport } from './routes/_auth/settings'
-import { Route as AuthTweetsIdRouteImport } from './routes/_auth/tweets.$id'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -29,49 +27,27 @@ const AuthIndexRoute = AuthIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthRoute,
 } as any)
-const AuthSettingsRoute = AuthSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthTweetsIdRoute = AuthTweetsIdRouteImport.update({
-  id: '/tweets/$id',
-  path: '/tweets/$id',
-  getParentRoute: () => AuthRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthIndexRoute
   '/login': typeof LoginRoute
-  '/settings': typeof AuthSettingsRoute
-  '/tweets/$id': typeof AuthTweetsIdRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
-  '/settings': typeof AuthSettingsRoute
   '/': typeof AuthIndexRoute
-  '/tweets/$id': typeof AuthTweetsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_auth': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
-  '/_auth/settings': typeof AuthSettingsRoute
   '/_auth/': typeof AuthIndexRoute
-  '/_auth/tweets/$id': typeof AuthTweetsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/settings' | '/tweets/$id'
+  fullPaths: '/' | '/login'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/settings' | '/' | '/tweets/$id'
-  id:
-    | '__root__'
-    | '/_auth'
-    | '/login'
-    | '/_auth/settings'
-    | '/_auth/'
-    | '/_auth/tweets/$id'
+  to: '/login' | '/'
+  id: '__root__' | '/_auth' | '/login' | '/_auth/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -102,33 +78,15 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthIndexRouteImport
       parentRoute: typeof AuthRoute
     }
-    '/_auth/settings': {
-      id: '/_auth/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof AuthSettingsRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/tweets/$id': {
-      id: '/_auth/tweets/$id'
-      path: '/tweets/$id'
-      fullPath: '/tweets/$id'
-      preLoaderRoute: typeof AuthTweetsIdRouteImport
-      parentRoute: typeof AuthRoute
-    }
   }
 }
 
 interface AuthRouteChildren {
-  AuthSettingsRoute: typeof AuthSettingsRoute
   AuthIndexRoute: typeof AuthIndexRoute
-  AuthTweetsIdRoute: typeof AuthTweetsIdRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
-  AuthSettingsRoute: AuthSettingsRoute,
   AuthIndexRoute: AuthIndexRoute,
-  AuthTweetsIdRoute: AuthTweetsIdRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)

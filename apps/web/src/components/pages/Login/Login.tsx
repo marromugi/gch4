@@ -1,16 +1,14 @@
-import { useTranslation } from '@ding/i18n'
 import { Box, Button } from '@ding/ui'
 import { Google } from '@ding/ui/icon'
 import { cn } from '@ding/ui/lib'
 import { useRouter } from '@tanstack/react-router'
 import { motion } from 'motion/react'
 import { useEffect } from 'react'
-import { useAuth } from '../../lib/auth'
+import { useAuth } from '@/lib/auth'
 import { loginPage } from './const'
 import type { LoginPageProps } from './type'
 
 export function LoginPage({ className }: LoginPageProps) {
-  const { t } = useTranslation()
   const styles = loginPage()
   const router = useRouter()
   const { signInWithGoogle, isPending, isAuthenticated } = useAuth()
@@ -39,8 +37,8 @@ export function LoginPage({ className }: LoginPageProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
       >
-        <h1 className={styles.title()}>{t('login.title')}</h1>
-        <p className={styles.description()}>{t('login.description')}</p>
+        <h1 className={styles.title()}>ログイン</h1>
+        <p className={styles.description()}>Googleアカウントでログインしてください</p>
 
         <Button
           variant="secondary"
@@ -49,7 +47,7 @@ export function LoginPage({ className }: LoginPageProps) {
           className={styles.googleButton()}
           disabled={isPending}
         >
-          <span>{t('login.googleButton')}</span>
+          <span>Googleでログイン</span>
         </Button>
       </motion.div>
     </Box>

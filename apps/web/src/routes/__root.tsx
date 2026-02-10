@@ -1,4 +1,3 @@
-import { RootLayout } from '@ding/app/layouts'
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { lazy, Suspense } from 'react'
 

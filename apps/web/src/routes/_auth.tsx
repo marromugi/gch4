@@ -1,7 +1,6 @@
-import { useAuth } from '@ding/app/lib/auth'
-import { usePendingActions } from '@ding/app/lib/api'
 import { createFileRoute, Outlet, useRouter } from '@tanstack/react-router'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect } from 'react'
+import { useAuth } from '@/lib/auth'
 
 export const Route = createFileRoute('/_auth')({
   component: AuthLayoutRoute,
@@ -10,8 +9,6 @@ export const Route = createFileRoute('/_auth')({
 function AuthLayoutRoute() {
   const router = useRouter()
   const { isAuthenticated, isPending } = useAuth()
-  const { actions, count, invalidate } = usePendingActions()
-  const [isActionPanelOpen, setIsActionPanelOpen] = useState(false)
 
   // 未認証時はログインページにリダイレクト
   useEffect(() => {

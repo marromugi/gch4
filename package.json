@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "turbo dev",
     "dev:api": "turbo dev --filter=@ding/api",
-    "dev:web": "pnpm db:up && turbo build --filter=@ding/domain --filter=@ding/ui --filter=@ding/app && turbo dev --filter=@ding/api --filter=@ding/web",
+    "dev:web": "pnpm db:up && turbo build --filter=@ding/domain --filter=@ding/ui && turbo dev --filter=@ding/api --filter=@ding/web",
     "build": "turbo build",
     "build:api": "turbo build --filter=@ding/api",
     "build:web": "turbo build --filter=@ding/web",
