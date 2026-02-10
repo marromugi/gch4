@@ -1,0 +1,1 @@
+export { ConsentLogId } from './ConsentLogId'

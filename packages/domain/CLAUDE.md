@@ -39,9 +39,10 @@ src/
 
 ```
 src/domain/shared/
-├── Result.ts
-└── __tests__/
+└── Result/
+    └── Result.ts
     └── Result.test.ts
+    └── index.ts
 ```
 
 vitest の projects 機能で `unit` と `integration` を分離。

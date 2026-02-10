@@ -1,4 +1,4 @@
-import { MockAuthProvider } from '../../lib/auth'
+import { MockAuthProvider } from '@/lib/auth'
 import { LoginPage } from './Login'
 import type { Meta, StoryObj } from '@storybook/react'
 

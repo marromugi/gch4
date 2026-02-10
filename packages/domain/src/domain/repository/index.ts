@@ -1,1 +1,5 @@
-export const keepDomainRepository = ''
+export type { IJobRepository } from './IJobRepository'
+export type { IApplicationRepository } from './IApplicationRepository'
+export type { IReviewPolicyRepository } from './IReviewPolicyRepository'
+export type { IInterviewFeedbackRepository } from './IInterviewFeedbackRepository'
+export type { IEventLogRepository } from './IEventLogRepository'

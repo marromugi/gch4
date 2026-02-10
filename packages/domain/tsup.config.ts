@@ -8,12 +8,12 @@ export default defineConfig(
       index: 'src/index.ts',
 
       // Domain layer entries
-      // 'domain/index': 'src/domain/index.ts',
+      'domain/index': 'src/domain/index.ts',
       'domain/shared/index': 'src/domain/shared/index.ts',
-      // 'domain/valueObject/index': 'src/domain/valueObject/index.ts',
-      // 'domain/entity/index': 'src/domain/entity/index.ts',
-      // 'domain/repository/index': 'src/domain/repository/index.ts',
-      // 'domain/service/index': 'src/domain/service/index.ts',
+      'domain/valueObject/index': 'src/domain/valueObject/index.ts',
+      'domain/entity/index': 'src/domain/entity/index.ts',
+      'domain/repository/index': 'src/domain/repository/index.ts',
+      'domain/service/index': 'src/domain/service/index.ts',
 
       // Infrastructure layer entries
       // 'infrastructure/index': 'src/infrastructure/index.ts',
