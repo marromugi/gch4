@@ -1,0 +1,27 @@
+/**
+ * Ding Design System - Shared Tailwind Theme
+ * This is the single source of truth for theme tokens
+ */
+
+/* Dark mode: class strategy */
+@variant dark (&:where(.dark, .dark *));
+
+/* Theme tokens will be added here */
+@theme {
+  --color-background: #ffffff;
+  --color-foreground: #0a0a0a;
+}
+
+.dark {
+  --color-background: #0a0a0a;
+  --color-foreground: #ffffff;
+}
+
+/* Scrollbar utilities */
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

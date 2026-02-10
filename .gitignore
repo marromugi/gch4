@@ -1,0 +1,56 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+.next/
+.nuxt/
+.output/
+
+# Tauri
+src-tauri/target/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Environment files
+.env
+.env.local
+.env.*.local
+.dev.vars
+
+# IDE
+.idea/
+*.swp
+*.swo
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage/
+
+# Cache
+.cache/
+.turbo/
+*.tsbuildinfo
+.wrangler
+
+# Temporary files
+tmp/
+temp/
+
+# Local sqld data
+data/libsql/
+data/
+*.sqlite
+
+# storybook
+storybook-static

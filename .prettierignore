@@ -1,0 +1,6 @@
+node_modules
+dist
+.wrangler
+pnpm-lock.yaml
+**/routeTree.gen.ts
+**/src-tauri

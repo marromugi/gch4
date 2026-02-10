@@ -1,0 +1,96 @@
+{
+  "name": "@ding/domain",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./domain": {
+      "types": "./dist/domain/index.d.ts",
+      "import": "./dist/domain/index.js"
+    },
+    "./domain/shared": {
+      "types": "./dist/domain/shared/index.d.ts",
+      "import": "./dist/domain/shared/index.js"
+    },
+    "./domain/valueObject": {
+      "types": "./dist/domain/valueObject/index.d.ts",
+      "import": "./dist/domain/valueObject/index.js"
+    },
+    "./domain/entity": {
+      "types": "./dist/domain/entity/index.d.ts",
+      "import": "./dist/domain/entity/index.js"
+    },
+    "./domain/repository": {
+      "types": "./dist/domain/repository/index.d.ts",
+      "import": "./dist/domain/repository/index.js"
+    },
+    "./domain/service": {
+      "types": "./dist/domain/service/index.d.ts",
+      "import": "./dist/domain/service/index.js"
+    },
+    "./infrastructure": {
+      "types": "./dist/infrastructure/index.d.ts",
+      "import": "./dist/infrastructure/index.js"
+    },
+    "./infrastructure/repository": {
+      "types": "./dist/infrastructure/repository/index.d.ts",
+      "import": "./dist/infrastructure/repository/index.js"
+    },
+    "./infrastructure/service": {
+      "types": "./dist/infrastructure/service/index.d.ts",
+      "import": "./dist/infrastructure/service/index.js"
+    },
+    "./presentation": {
+      "types": "./dist/presentation/index.d.ts",
+      "import": "./dist/presentation/index.js"
+    },
+    "./presentation/usecase": {
+      "types": "./dist/presentation/usecase/index.d.ts",
+      "import": "./dist/presentation/usecase/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "test": "vitest run --project unit",
+    "test:watch": "vitest --project unit",
+    "test:coverage": "vitest run --coverage",
+    "test:integration": "vitest run --project integration"
+  },
+  "dependencies": {
+    "nanoid": "^5.0.9"
+  },
+  "peerDependencies": {
+    "@ding/database": "workspace:*",
+    "drizzle-orm": ">=0.38.0"
+  },
+  "peerDependenciesMeta": {
+    "@ding/database": {
+      "optional": true
+    },
+    "drizzle-orm": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@ding/config": "workspace:*",
+    "@ding/database": "workspace:*",
+    "@libsql/client": "^0.14.0",
+    "@cloudflare/workers-types": "^4.20250109.0",
+    "@types/node": "^22.10.0",
+    "drizzle-orm": "^0.38.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^4.0.18"
+  }
+}

@@ -1,0 +1,49 @@
+name = "ding-api"
+main = "src/worker.ts"
+compatibility_date = "2024-12-18"
+compatibility_flags = ["nodejs_compat"]
+
+# 開発環境の環境変数
+[vars]
+DATABASE_URL = "http://127.0.0.1:8081"
+CLIENT_URL = "http://localhost:3000"
+BETTER_AUTH_URL = "http://localhost:8080"
+MEDIA_SIGNER_SECRET = "dev-media-signer-secret-key-change-in-production"
+MEDIA_PROXY_BASE_URL = "http://localhost:8080/api/media/serve"
+
+# 本番環境のシークレットは `wrangler secret put` で設定:
+# - BETTER_AUTH_SECRET
+# - GOOGLE_CLIENT_ID
+# - GOOGLE_CLIENT_SECRET
+# - DATABASE_AUTH_TOKEN (リモートTurso使用時)
+
+# Cron Triggers
+# スケジュール実行: 30分刻み (毎時0分と30分)
+[triggers]
+crons = ["0,30 * * * *"]
+
+# KV Namespaces
+# 本番環境: wrangler kv:namespace create SESSION_KV
+# プレビュー環境: wrangler kv:namespace create SESSION_KV --preview
+[[kv_namespaces]]
+binding = "SESSION_KV"
+id = "3336d3e3982d49f5a8d09ad7f6ff8ddf"
+
+[[kv_namespaces]]
+binding = "AGENT_KV"
+id = "f9d867f952ef4ce6a278ed8831251973"
+
+# R2 Buckets
+# wrangler r2 bucket create ding-media
+[[r2_buckets]]
+binding = "MEDIA_BUCKET"
+bucket_name = "ding-media"
+
+# Durable Objects
+[[durable_objects.bindings]]
+name = "AGENT_SESSION_DO"
+class_name = "AgentSessionDO"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["AgentSessionDO"]

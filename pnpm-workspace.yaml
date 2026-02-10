@@ -1,0 +1,12 @@
+packages:
+  - apps/*
+  - packages/*
+useNodeVersion: 22.18.0
+enablePrePostScripts: true
+
+catalog:
+  react: ^19.0.0
+  react-dom: ^19.0.0
+  '@types/react': ^19.0.0
+  '@types/react-dom': ^19.0.0
+  motion: ^12.0.0

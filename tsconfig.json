@@ -1,0 +1,14 @@
+{
+  "extends": "./packages/config/typescript/base.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": [],
+  "references": [
+    { "path": "./apps/api" },
+    { "path": "./apps/desktop" },
+    { "path": "./apps/web" },
+    { "path": "./packages/app" },
+    { "path": "./packages/ui" }
+  ]
+}

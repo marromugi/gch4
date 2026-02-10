@@ -1,0 +1,63 @@
+import { tv } from 'tailwind-variants'
+
+export const audioPlayer = tv({
+  slots: {
+    root: [
+      'flex items-center gap-2',
+      'py-2 px-3',
+      'rounded-xl',
+      'bg-neutral-100 dark:bg-neutral-800',
+      'border border-neutral-200 dark:border-neutral-700',
+    ],
+    topRow: ['flex items-center gap-2'],
+    fileName: ['flex-1 min-w-0', 'text-xs', 'text-neutral-700 dark:text-neutral-300', 'truncate'],
+    playButton: [
+      'flex items-center justify-center',
+      'w-8 h-8',
+      'rounded-full',
+      'text-neutral-700 dark:text-neutral-300',
+      'hover:text-neutral-900 dark:hover:text-neutral-100',
+      'focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400',
+      'transition-colors',
+      'shrink-0',
+    ],
+    playIcon: ['w-8 h-8'],
+    seekBar: ['w-full'],
+    seekBarTrack: [
+      'group',
+      'relative',
+      'h-1.5',
+      'rounded-full',
+      'bg-neutral-300 dark:bg-neutral-600',
+      'cursor-pointer',
+    ],
+    seekBarProgress: [
+      'absolute inset-y-0 left-0',
+      'rounded-full',
+      'bg-neutral-600 dark:bg-neutral-300',
+      'pointer-events-none',
+    ],
+    seekBarThumb: [
+      'absolute',
+      'top-1/2',
+      '-translate-y-1/2',
+      '-translate-x-1/2',
+      'w-3 h-3',
+      'rounded-full',
+      'bg-neutral-700 dark:bg-neutral-200',
+      'shadow-sm',
+      'opacity-0 group-hover:opacity-100',
+      'transition-opacity',
+      'pointer-events-none',
+    ],
+    seekBarThumbDragging: ['opacity-100'],
+    time: [
+      'text-xs',
+      'text-neutral-500 dark:text-neutral-400',
+      'tabular-nums',
+      'shrink-0',
+      'min-w-[4.5rem]',
+      'text-right',
+    ],
+  },
+})

@@ -1,0 +1,37 @@
+{
+  "name": "@ding/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/worker.js",
+  "scripts": {
+    "dev": "wrangler dev --port 8080",
+    "build": "tsup",
+    "deploy": "wrangler deploy",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@ding/database": "workspace:*",
+    "@ding/domain": "workspace:*",
+    "@hono/swagger-ui": "^0.5.3",
+    "@hono/zod-openapi": "^1.2.0",
+    "better-auth": "^1.4.17",
+    "hono": "^4.6.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260128.0",
+    "@ding/config": "workspace:*",
+    "@types/node": "^22.10.0",
+    "tsup": "^8.5.1",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "wrangler": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

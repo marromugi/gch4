@@ -1,0 +1,126 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Skill(component-planner)",
+      "Skill(component-planner:*)",
+      "Skill(locale-translation)",
+      "Skill(locale-translation:*)",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(ls:*)",
+      "Bash(xargs:*)",
+      "Bash(pnpm build:*)",
+      "Bash(grep:*)",
+      "Bash(pnpm format:check:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm --filter @ding/ui typecheck:*)",
+      "Bash(pnpm --filter @ding/ui build:*)",
+      "Bash(pnpm --filter @ding/api typecheck:*)",
+      "Bash(pnpm --filter @ding/database build:*)",
+      "Bash(pnpm --filter @ding/agent typecheck:*)",
+      "Bash(tree:*)",
+      "Bash(wc:*)",
+      "Bash(pnpm -F @ding/app build:*)",
+      "Bash(pnpm -F @ding/i18n build:*)",
+      "Bash(pnpm -F @ding/web build:*)",
+      "Bash(pnpm typecheck:*)",
+      "Bash(pnpm --filter @ding/agent build:*)",
+      "Bash(pnpm turbo build:*)",
+      "Bash(pnpm --filter @ding/app build:*)",
+      "Bash(find:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm --filter @ding/calendar build:*)",
+      "Bash(pnpm --filter @ding/api build)",
+      "Bash(pnpm --filter api build:*)",
+      "Bash(pnpm -F @ding/agent build:*)",
+      "Bash(pnpm --filter @ding/api exec tsc:*)",
+      "Bash(pnpm drizzle-kit generate:*)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm --filter api typecheck:*)",
+      "Bash(pnpm --filter @ding/domain test)",
+      "Bash(pnpm --filter @ding/agent exec tsc:*)",
+      "Bash(pnpm turbo typecheck:*)",
+      "Bash(pnpm --filter @ding/domain build:*)",
+      "Bash(pnpm --filter @ding/domain test:*)",
+      "WebFetch(domain:www.anthropic.com)",
+      "Bash(pnpm -F @ding/agent tsc:*)",
+      "Bash(pnpm --filter @ding/domain exec tsc:*)",
+      "Bash(pnpm --filter api exec tsc:*)",
+      "Bash(pnpm --filter @ding/app typecheck:*)",
+      "Bash(pnpm --filter @ding/i18n build:*)",
+      "Bash(pnpm --filter @ding/domain typecheck:*)",
+      "Bash(pnpm -F @ding/agent exec tsc:*)",
+      "Bash(pnpm -F @ding/domain exec tsc:*)",
+      "Bash(pnpm -F @ding/domain build:*)",
+      "Bash(pnpm --filter @ding/app exec tsc:*)",
+      "Bash(pnpm --filter @ding/agent test:*)",
+      "Bash(pnpm --filter @ding/tweet typecheck:*)",
+      "Bash(pnpm db:test:up:*)",
+      "Bash(pnpm db:test:push:*)",
+      "Bash(pnpm --filter @ding/domain test:integration:*)",
+      "Bash(pnpm vitest:*)",
+      "Bash(pnpm --filter @ding/domain run build:*)",
+      "Bash(pnpm --filter @ding/agent run build:*)",
+      "Bash(pnpm --filter @ding/ui exec vitest run:*)",
+      "Bash(pnpm --filter @ding/ui run test -- --run packages/ui/src/components/core/Calendar/utils.test.ts)",
+      "Bash(pnpm --filter @ding/ui vitest run:*)",
+      "Bash(pnpm --filter @ding/editor build:*)",
+      "Bash(pnpm --filter @ding/editor typecheck:*)",
+      "Bash(pnpm --filter @ding/ui exec tsc:*)",
+      "Bash(npx tsc:*)",
+      "Bash(pnpm --filter @ding/app test)",
+      "Bash(pnpm --filter @ding/editor test)",
+      "Bash(pnpm --filter @ding/app test:*)",
+      "Bash(pnpm --filter @ding/api dev:*)",
+      "Bash(pnpm --filter @ding/app orval:*)",
+      "Bash(pnpm --filter @ding/ui test:*)",
+      "Bash(pnpm --filter @ding/database drizzle-kit generate:*)",
+      "Bash(pnpm --filter @ding/database db:generate:*)",
+      "Bash(pnpm db:test:reset:*)",
+      "Bash(pnpm generate:icon:*)",
+      "Bash(pnpm --filter @ding/app generate:api:*)",
+      "Bash(pnpm --filter @ding/web typecheck:*)",
+      "Bash(pnpm --filter @ding/desktop typecheck:*)",
+      "Bash(pnpm --filter @ding/desktop exec vite build:*)",
+      "Bash(pnpm --filter @ding/ui generate:icon:*)",
+      "Bash(pnpm --filter @ding/app generate:client:*)",
+      "Bash(pnpm tsc:*)",
+      "Bash(pnpm --filter @ding/app run generate:api:*)",
+      "Bash(pnpm --filter @ding/domain lint:*)",
+      "Bash(pnpm -F @ding/app typecheck:*)",
+      "Bash(pnpm --filter @ding/agent vitest run:*)",
+      "Bash(pnpm eslint:*)"
+    ],
+    "deny": ["Bash(npm:*)", "Bash(yarn:*)", "Bash(bun:*)", "Bash(rm -rf:*)", "Bash(sudo :*)"]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path | select(endswith(\".js\") or endswith(\".ts\") or endswith(\".jsx\") or endswith(\".tsx\"))' | xargs -r pnpm lint:fix"
+          },
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path | select(endswith(\".js\") or endswith(\".ts\") or endswith(\".jsx\") or endswith(\".tsx\"))' | xargs -r pnpm format"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/check-spec-update.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

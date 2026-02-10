@@ -1,0 +1,7 @@
+{
+  "extends": "@ding/config/typescript/react-library.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": ["src"]
+}

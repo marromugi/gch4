@@ -1,0 +1,3 @@
+@import '@ding/ui/styles/base.css';
+@source '../../../packages/ui/src/**/*.{tsx,ts}';
+@source '../../../packages/app/src/**/*.{tsx,ts}';

@@ -1,0 +1,12 @@
+/**
+ * Ding UI - Base Styles
+ * Import this file in your app to get Tailwind + shared theme
+ */
+
+@import 'tailwindcss';
+@import '@ding/config/tailwind/theme.css';
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
