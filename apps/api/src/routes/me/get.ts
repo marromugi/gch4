@@ -1,5 +1,6 @@
 import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi'
 import type { HonoEnv } from '../../types/hono'
+import { userResponseSchema, sessionResponseSchema } from '../../schemas/response'
 
 const route = createRoute({
   method: 'get',
@@ -14,8 +15,8 @@ const route = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            user: z.record(z.string(), z.unknown()),
-            session: z.record(z.string(), z.unknown()).nullable(),
+            user: userResponseSchema,
+            session: sessionResponseSchema.nullable(),
           }),
         },
       },
@@ -43,7 +44,32 @@ app.openapi(route, (c) => {
     return c.json({ error: 'Not authenticated' }, 401)
   }
 
-  return c.json({ user, session }, 200)
+  const serializedUser = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    emailVerified: user.emailVerified,
+    image: user.image ?? null,
+    createdAt: user.createdAt instanceof Date ? user.createdAt.toISOString() : user.createdAt,
+    updatedAt: user.updatedAt instanceof Date ? user.updatedAt.toISOString() : user.updatedAt,
+  }
+  const serializedSession = session
+    ? {
+        id: session.id,
+        userId: session.userId,
+        token: session.token,
+        expiresAt:
+          session.expiresAt instanceof Date ? session.expiresAt.toISOString() : session.expiresAt,
+        ipAddress: session.ipAddress,
+        userAgent: session.userAgent,
+        createdAt:
+          session.createdAt instanceof Date ? session.createdAt.toISOString() : session.createdAt,
+        updatedAt:
+          session.updatedAt instanceof Date ? session.updatedAt.toISOString() : session.updatedAt,
+      }
+    : null
+
+  return c.json({ user: serializedUser, session: serializedSession }, 200)
 })
 
 export default app

@@ -5,8 +5,8 @@
  * Ding API Documentation
  * OpenAPI spec version: 0.0.0
  */
-import type { ListTweets200TweetsItem } from './listTweets200TweetsItem'
 import type { ListTweets200Meta } from './listTweets200Meta'
+import type { ListTweets200TweetsItem } from './listTweets200TweetsItem'
 
 export type ListTweets200 = {
   tweets: ListTweets200TweetsItem[]

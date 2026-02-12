@@ -5,8 +5,8 @@
  * Ding API Documentation
  * OpenAPI spec version: 0.0.0
  */
-import type { GetMe200User } from './getMe200User'
 import type { GetMe200Session } from './getMe200Session'
+import type { GetMe200User } from './getMe200User'
 
 export type GetMe200 = {
   user: GetMe200User

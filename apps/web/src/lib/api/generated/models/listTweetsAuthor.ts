@@ -8,7 +8,6 @@
 
 export type ListTweetsAuthor = (typeof ListTweetsAuthor)[keyof typeof ListTweetsAuthor]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ListTweetsAuthor = {
   user: 'user',
   bud: 'bud',

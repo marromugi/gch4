@@ -92,7 +92,9 @@ describe('ApplicationSubmissionService', () => {
       expect(Result.isErr(result)).toBe(true)
       if (Result.isErr(result)) {
         expect(result.error.type).toBe('REQUIRED_TODOS_INCOMPLETE')
-        expect(result.error.incompleteTodoIds).toEqual(['todo-2'])
+        if (result.error.type === 'REQUIRED_TODOS_INCOMPLETE') {
+          expect(result.error.incompleteTodoIds).toEqual(['todo-2'])
+        }
       }
     })
 

@@ -5,9 +5,9 @@
  * Ding API Documentation
  * OpenAPI spec version: 0.0.0
  */
+import type { UpdateAppSettingsBodyDefaultEnterAction } from './updateAppSettingsBodyDefaultEnterAction'
 import type { UpdateAppSettingsBodyLocale } from './updateAppSettingsBodyLocale'
 import type { UpdateAppSettingsBodyTheme } from './updateAppSettingsBodyTheme'
-import type { UpdateAppSettingsBodyDefaultEnterAction } from './updateAppSettingsBodyDefaultEnterAction'
 
 export type UpdateAppSettingsBody = {
   /** 言語設定 */

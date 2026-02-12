@@ -16,13 +16,12 @@ export default defineConfig(
       'domain/service/index': 'src/domain/service/index.ts',
 
       // Infrastructure layer entries
-      // 'infrastructure/index': 'src/infrastructure/index.ts',
-      // 'infrastructure/repository/index': 'src/infrastructure/repository/index.ts',
-      // 'infrastructure/service/index': 'src/infrastructure/service/index.ts',
+      'infrastructure/index': 'src/infrastructure/index.ts',
+      'infrastructure/repository/index': 'src/infrastructure/repository/index.ts',
 
       // Presentation layer entries
-      // 'presentation/index': 'src/presentation/index.ts',
-      // 'presentation/usecase/index': 'src/presentation/usecase/index.ts',
+      'presentation/index': 'src/presentation/index.ts',
+      'presentation/usecase/index': 'src/presentation/usecase/index.ts',
     },
     dts: true,
     external: ['@ding/database', '@ding/database/schema', '@ding/database/client', 'drizzle-orm'],

@@ -9,7 +9,6 @@
 export type UpdateAppSettings200AppSettingsTheme =
   (typeof UpdateAppSettings200AppSettingsTheme)[keyof typeof UpdateAppSettings200AppSettingsTheme]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UpdateAppSettings200AppSettingsTheme = {
   light: 'light',
   dark: 'dark',

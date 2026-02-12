@@ -92,7 +92,17 @@
       "Bash(pnpm --filter @ding/domain lint:*)",
       "Bash(pnpm -F @ding/app typecheck:*)",
       "Bash(pnpm --filter @ding/agent vitest run:*)",
-      "Bash(pnpm eslint:*)"
+      "Bash(pnpm eslint:*)",
+      "Bash(pnpm --filter @ding/domain tsc:*)",
+      "Bash(pnpm --filter web exec tsr:*)",
+      "Bash(pnpm --filter web typecheck:*)",
+      "WebFetch(domain:ai.google.dev)",
+      "Bash(pnpm --filter @ding/web tsc:*)",
+      "Bash(pnpm --filter=@ding/api exec tsc:*)",
+      "Bash(pnpm --filter @ding/web exec tsc:*)",
+      "Bash(pnpm --filter @ding/web tsr generate:*)",
+      "Bash(pnpm --filter @ding/web exec tsr generate:*)",
+      "Bash(pnpm --filter @ding/web build:*)"
     ],
     "deny": ["Bash(npm:*)", "Bash(yarn:*)", "Bash(bun:*)", "Bash(rm -rf:*)", "Bash(sudo :*)"]
   },

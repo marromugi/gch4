@@ -6,8 +6,8 @@
  * OpenAPI spec version: 0.0.0
  */
 import type { GetAppSettings200AppSettings } from './getAppSettings200AppSettings'
-import type { GetAppSettings200TodoSettings } from './getAppSettings200TodoSettings'
 import type { GetAppSettings200ProfileSettings } from './getAppSettings200ProfileSettings'
+import type { GetAppSettings200TodoSettings } from './getAppSettings200TodoSettings'
 
 export type GetAppSettings200 = {
   appSettings: GetAppSettings200AppSettings

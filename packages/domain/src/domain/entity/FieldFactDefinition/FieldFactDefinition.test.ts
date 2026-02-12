@@ -11,6 +11,7 @@ const createFact = (overrides: Partial<Parameters<typeof FieldFactDefinition.cre
     factKey: 'async_communication',
     fact: '非同期コミュニケーションで成果を出した実例',
     doneCriteria: '直近の具体事例、本人の行動、結果が確認できること',
+    questioningHints: null,
     sortOrder: 0,
     createdAt: new Date('2025-01-01'),
     ...overrides,

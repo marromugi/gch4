@@ -5,10 +5,10 @@
  * Ding API Documentation
  * OpenAPI spec version: 0.0.0
  */
-import type { GetAgentSession200SessionStatus } from './getAgentSession200SessionStatus'
 import type { GetAgentSession200SessionCurrentAction } from './getAgentSession200SessionCurrentAction'
 import type { GetAgentSession200SessionCurrentAgent } from './getAgentSession200SessionCurrentAgent'
 import type { GetAgentSession200SessionResult } from './getAgentSession200SessionResult'
+import type { GetAgentSession200SessionStatus } from './getAgentSession200SessionStatus'
 
 export type GetAgentSession200Session = {
   id: string

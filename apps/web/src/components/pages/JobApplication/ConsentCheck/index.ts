@@ -1,0 +1,1 @@
+export { ConsentCheck } from './ConsentCheck'

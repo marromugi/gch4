@@ -9,7 +9,6 @@
 export type GetAgentSession200SessionStatus =
   (typeof GetAgentSession200SessionStatus)[keyof typeof GetAgentSession200SessionStatus]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetAgentSession200SessionStatus = {
   pending: 'pending',
   running: 'running',

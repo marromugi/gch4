@@ -5,9 +5,9 @@
  * Ding API Documentation
  * OpenAPI spec version: 0.0.0
  */
+import type { GetAppSettings200AppSettingsDefaultEnterAction } from './getAppSettings200AppSettingsDefaultEnterAction'
 import type { GetAppSettings200AppSettingsLocale } from './getAppSettings200AppSettingsLocale'
 import type { GetAppSettings200AppSettingsTheme } from './getAppSettings200AppSettingsTheme'
-import type { GetAppSettings200AppSettingsDefaultEnterAction } from './getAppSettings200AppSettingsDefaultEnterAction'
 
 export type GetAppSettings200AppSettings = {
   locale: GetAppSettings200AppSettingsLocale

@@ -10,6 +10,7 @@ export interface FieldFactDefinitionProps {
   factKey: string
   fact: string
   doneCriteria: string
+  questioningHints: string | null
   sortOrder: number
   createdAt: Date
 }
@@ -43,6 +44,10 @@ export class FieldFactDefinition implements Entity<FieldFactDefinitionId> {
 
   get doneCriteria(): string {
     return this.props.doneCriteria
+  }
+
+  get questioningHints(): string | null {
+    return this.props.questioningHints
   }
 
   get sortOrder(): number {

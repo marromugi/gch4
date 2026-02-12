@@ -6,4 +6,13 @@
  * OpenAPI spec version: 0.0.0
  */
 
-export type GetMe200User = { [key: string]: unknown | null }
+export type GetMe200User = {
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  /** @nullable */
+  image: string | null
+  createdAt: string
+  updatedAt: string
+}

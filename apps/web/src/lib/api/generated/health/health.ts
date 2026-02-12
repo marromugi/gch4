@@ -6,6 +6,8 @@
  * OpenAPI spec version: 0.0.0
  */
 import { useQuery } from '@tanstack/react-query'
+import { customFetch } from '../../fetcher'
+import type { GetHealth200, GetLive200, GetReady200 } from '.././models'
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -17,10 +19,6 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query'
-
-import type { GetHealth200, GetLive200, GetReady200 } from '.././models'
-
-import { customFetch } from '../../fetcher'
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 

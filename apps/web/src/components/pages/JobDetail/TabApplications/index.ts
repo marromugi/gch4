@@ -1,0 +1,1 @@
+export { TabApplications } from './TabApplications'

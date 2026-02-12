@@ -5,9 +5,9 @@
  * Ding API Documentation
  * OpenAPI spec version: 0.0.0
  */
+import type { ListTweetsAuthor } from './listTweetsAuthor'
 import type { ListTweetsOrderBy } from './listTweetsOrderBy'
 import type { ListTweetsOrderDirection } from './listTweetsOrderDirection'
-import type { ListTweetsAuthor } from './listTweetsAuthor'
 
 export type ListTweetsParams = {
   /**

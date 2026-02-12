@@ -9,6 +9,13 @@ import GetHealth from './routes/health/get'
 import GetHealthLive from './routes/health/live/get'
 import GetHealthReady from './routes/health/ready/get'
 import GetMe from './routes/me/get'
+import { jobRoutes } from './routes/jobs'
+import { userRoutes } from './routes/users'
+import { applicationRoutes } from './routes/applications'
+import { consentLogRoutes } from './routes/consent-logs'
+import { eventLogRoutes } from './routes/event-logs'
+import { reviewPolicyRoutes } from './routes/review-policies'
+import { interviewFeedbackRoutes } from './routes/interview-feedbacks'
 
 import type { HonoEnv } from './types/hono'
 
@@ -40,6 +47,15 @@ app.route('/health/live', GetHealthLive)
 app.route('/health/ready', GetHealthReady)
 app.route('/api/auth', authRoutes)
 app.route('/me', GetMe)
+
+// Domain API Routes
+app.route('/api/jobs', jobRoutes)
+app.route('/api/users', userRoutes)
+app.route('/api/applications', applicationRoutes)
+app.route('/api/consent-logs', consentLogRoutes)
+app.route('/api/event-logs', eventLogRoutes)
+app.route('/api/review-policies', reviewPolicyRoutes)
+app.route('/api/interview-feedbacks', interviewFeedbackRoutes)
 
 // OpenAPI documentation
 app.doc('/openapi.json', {

@@ -12,7 +12,6 @@
 export type UpdateAppSettingsBodyLocale =
   (typeof UpdateAppSettingsBodyLocale)[keyof typeof UpdateAppSettingsBodyLocale]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UpdateAppSettingsBodyLocale = {
   ja: 'ja',
   en: 'en',

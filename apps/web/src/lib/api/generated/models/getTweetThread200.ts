@@ -5,8 +5,8 @@
  * Ding API Documentation
  * OpenAPI spec version: 0.0.0
  */
-import type { GetTweetThread200TweetsItem } from './getTweetThread200TweetsItem'
 import type { GetTweetThread200Meta } from './getTweetThread200Meta'
+import type { GetTweetThread200TweetsItem } from './getTweetThread200TweetsItem'
 
 export type GetTweetThread200 = {
   tweets: GetTweetThread200TweetsItem[]

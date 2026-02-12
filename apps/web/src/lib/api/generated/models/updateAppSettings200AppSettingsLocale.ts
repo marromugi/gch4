@@ -9,7 +9,6 @@
 export type UpdateAppSettings200AppSettingsLocale =
   (typeof UpdateAppSettings200AppSettingsLocale)[keyof typeof UpdateAppSettings200AppSettingsLocale]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UpdateAppSettings200AppSettingsLocale = {
   ja: 'ja',
   en: 'en',

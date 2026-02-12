@@ -12,7 +12,6 @@
 export type UpdateAppSettingsBodyTheme =
   (typeof UpdateAppSettingsBodyTheme)[keyof typeof UpdateAppSettingsBodyTheme]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UpdateAppSettingsBodyTheme = {
   light: 'light',
   dark: 'dark',

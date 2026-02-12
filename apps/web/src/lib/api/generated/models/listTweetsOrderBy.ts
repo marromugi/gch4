@@ -8,7 +8,6 @@
 
 export type ListTweetsOrderBy = (typeof ListTweetsOrderBy)[keyof typeof ListTweetsOrderBy]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ListTweetsOrderBy = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',

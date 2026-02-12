@@ -6,85 +6,62 @@
  * OpenAPI spec version: 0.0.0
  */
 import { faker } from '@faker-js/faker'
-
 import { HttpResponse, delay, http } from 'msw'
+import type { GetMe200, ListJobsByUser200 } from '.././models'
 import type { RequestHandlerOptions } from 'msw'
-
-import type {
-  GetAppSettings200,
-  GetMe200,
-  UpdateAppSettings200,
-  UpdateProfile200,
-  UpdateProfileAvatar200,
-} from '.././models'
 
 export const getGetMeResponseMock = (overrideResponse: Partial<GetMe200> = {}): GetMe200 => ({
   user: {
-    [faker.string.alphanumeric(5)]: {},
+    id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    email: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    emailVerified: faker.datatype.boolean(),
+    image: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+    createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
   },
   session: {
-    [faker.string.alphanumeric(5)]: {},
+    id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    userId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    token: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    expiresAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    ipAddress: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+      undefined,
+    ]),
+    userAgent: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+      undefined,
+    ]),
+    createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
   },
   ...overrideResponse,
 })
 
-export const getUpdateProfileResponseMock = (
-  overrideResponse: Partial<UpdateProfile200> = {}
-): UpdateProfile200 => ({
-  name: faker.string.alpha({ length: { min: 10, max: 20 } }),
-  updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
-  ...overrideResponse,
-})
-
-export const getUpdateProfileAvatarResponseMock = (
-  overrideResponse: Partial<UpdateProfileAvatar200> = {}
-): UpdateProfileAvatar200 => ({
-  avatarMediaId: faker.helpers.arrayElement([
-    faker.string.alpha({ length: { min: 10, max: 20 } }),
-    null,
-  ]),
-  signedUrl: faker.helpers.arrayElement([
-    faker.string.alpha({ length: { min: 10, max: 20 } }),
-    null,
-  ]),
-  ...overrideResponse,
-})
-
-export const getGetAppSettingsResponseMock = (
-  overrideResponse: Partial<GetAppSettings200> = {}
-): GetAppSettings200 => ({
-  appSettings: {
-    locale: faker.helpers.arrayElement(['ja', 'en'] as const),
-    theme: faker.helpers.arrayElement(['light', 'dark', 'system'] as const),
-    defaultEnterAction: faker.helpers.arrayElement(['submit', 'newline'] as const),
-  },
-  todoSettings: {
-    maxOpenCount: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
-  },
-  profileSettings: {
-    avatarMediaId: faker.helpers.arrayElement([
+export const getListJobsByUserResponseMock = (
+  overrideResponse: Partial<ListJobsByUser200> = {}
+): ListJobsByUser200 => ({
+  data: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    title: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    description: faker.helpers.arrayElement([
       faker.string.alpha({ length: { min: 10, max: 20 } }),
       null,
     ]),
-    avatarSignedUrl: faker.helpers.arrayElement([
+    idealCandidate: faker.helpers.arrayElement([
       faker.string.alpha({ length: { min: 10, max: 20 } }),
       null,
     ]),
-  },
-  ...overrideResponse,
-})
-
-export const getUpdateAppSettingsResponseMock = (
-  overrideResponse: Partial<UpdateAppSettings200> = {}
-): UpdateAppSettings200 => ({
-  appSettings: {
-    locale: faker.helpers.arrayElement(['ja', 'en'] as const),
-    theme: faker.helpers.arrayElement(['light', 'dark', 'system'] as const),
-    defaultEnterAction: faker.helpers.arrayElement(['submit', 'newline'] as const),
-  },
-  todoSettings: {
-    maxOpenCount: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
-  },
+    cultureContext: faker.helpers.arrayElement([
+      faker.string.alpha({ length: { min: 10, max: 20 } }),
+      null,
+    ]),
+    status: faker.helpers.arrayElement(['draft', 'open', 'closed'] as const),
+    createdBy: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  })),
   ...overrideResponse,
 })
 
@@ -114,72 +91,16 @@ export const getGetMeMockHandler = (
   )
 }
 
-export const getUpdateProfileMockHandler = (
+export const getListJobsByUserMockHandler = (
   overrideResponse?:
-    | UpdateProfile200
-    | ((
-        info: Parameters<Parameters<typeof http.patch>[1]>[0]
-      ) => Promise<UpdateProfile200> | UpdateProfile200),
-  options?: RequestHandlerOptions
-) => {
-  return http.patch(
-    '*/me/profile',
-    async (info) => {
-      await delay(1000)
-
-      return new HttpResponse(
-        JSON.stringify(
-          overrideResponse !== undefined
-            ? typeof overrideResponse === 'function'
-              ? await overrideResponse(info)
-              : overrideResponse
-            : getUpdateProfileResponseMock()
-        ),
-        { status: 200, headers: { 'Content-Type': 'application/json' } }
-      )
-    },
-    options
-  )
-}
-
-export const getUpdateProfileAvatarMockHandler = (
-  overrideResponse?:
-    | UpdateProfileAvatar200
-    | ((
-        info: Parameters<Parameters<typeof http.patch>[1]>[0]
-      ) => Promise<UpdateProfileAvatar200> | UpdateProfileAvatar200),
-  options?: RequestHandlerOptions
-) => {
-  return http.patch(
-    '*/me/profile/avatar',
-    async (info) => {
-      await delay(1000)
-
-      return new HttpResponse(
-        JSON.stringify(
-          overrideResponse !== undefined
-            ? typeof overrideResponse === 'function'
-              ? await overrideResponse(info)
-              : overrideResponse
-            : getUpdateProfileAvatarResponseMock()
-        ),
-        { status: 200, headers: { 'Content-Type': 'application/json' } }
-      )
-    },
-    options
-  )
-}
-
-export const getGetAppSettingsMockHandler = (
-  overrideResponse?:
-    | GetAppSettings200
+    | ListJobsByUser200
     | ((
         info: Parameters<Parameters<typeof http.get>[1]>[0]
-      ) => Promise<GetAppSettings200> | GetAppSettings200),
+      ) => Promise<ListJobsByUser200> | ListJobsByUser200),
   options?: RequestHandlerOptions
 ) => {
   return http.get(
-    '*/me/settings',
+    '*/api/users/:userId/jobs',
     async (info) => {
       await delay(1000)
 
@@ -189,7 +110,7 @@ export const getGetAppSettingsMockHandler = (
             ? typeof overrideResponse === 'function'
               ? await overrideResponse(info)
               : overrideResponse
-            : getGetAppSettingsResponseMock()
+            : getListJobsByUserResponseMock()
         ),
         { status: 200, headers: { 'Content-Type': 'application/json' } }
       )
@@ -197,38 +118,4 @@ export const getGetAppSettingsMockHandler = (
     options
   )
 }
-
-export const getUpdateAppSettingsMockHandler = (
-  overrideResponse?:
-    | UpdateAppSettings200
-    | ((
-        info: Parameters<Parameters<typeof http.patch>[1]>[0]
-      ) => Promise<UpdateAppSettings200> | UpdateAppSettings200),
-  options?: RequestHandlerOptions
-) => {
-  return http.patch(
-    '*/me/settings',
-    async (info) => {
-      await delay(1000)
-
-      return new HttpResponse(
-        JSON.stringify(
-          overrideResponse !== undefined
-            ? typeof overrideResponse === 'function'
-              ? await overrideResponse(info)
-              : overrideResponse
-            : getUpdateAppSettingsResponseMock()
-        ),
-        { status: 200, headers: { 'Content-Type': 'application/json' } }
-      )
-    },
-    options
-  )
-}
-export const getUserMock = () => [
-  getGetMeMockHandler(),
-  getUpdateProfileMockHandler(),
-  getUpdateProfileAvatarMockHandler(),
-  getGetAppSettingsMockHandler(),
-  getUpdateAppSettingsMockHandler(),
-]
+export const getUserMock = () => [getGetMeMockHandler(), getListJobsByUserMockHandler()]

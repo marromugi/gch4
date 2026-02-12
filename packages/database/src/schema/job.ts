@@ -78,6 +78,7 @@ export const fieldFactDefinition = sqliteTable(
     factKey: text('fact_key').notNull(),
     fact: text('fact').notNull(),
     doneCriteria: text('done_criteria').notNull(),
+    questioningHints: text('questioning_hints'),
     sortOrder: integer('sort_order').notNull().default(0),
     createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
   },

@@ -9,7 +9,6 @@
 export type GetAgentSession200SessionCurrentAgent =
   (typeof GetAgentSession200SessionCurrentAgent)[keyof typeof GetAgentSession200SessionCurrentAgent]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetAgentSession200SessionCurrentAgent = {
   bud: 'bud',
   task: 'task',

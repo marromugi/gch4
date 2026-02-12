@@ -9,7 +9,6 @@
 export type GetAgentSession200SessionCurrentAction =
   (typeof GetAgentSession200SessionCurrentAction)[keyof typeof GetAgentSession200SessionCurrentAction]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetAgentSession200SessionCurrentAction = {
   thinking: 'thinking',
   'tool-call': 'tool-call',

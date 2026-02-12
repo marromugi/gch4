@@ -9,7 +9,6 @@
 export type CreateTweet201SessionStatus =
   (typeof CreateTweet201SessionStatus)[keyof typeof CreateTweet201SessionStatus]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateTweet201SessionStatus = {
   pending: 'pending',
   running: 'running',

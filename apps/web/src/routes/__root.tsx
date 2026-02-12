@@ -1,3 +1,4 @@
+import { ToastProvider } from '@ding/ui'
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { lazy, Suspense } from 'react'
 
@@ -15,11 +16,11 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <>
+    <ToastProvider>
       <Outlet />
       <Suspense>
         <TanStackRouterDevtools />
       </Suspense>
-    </>
+    </ToastProvider>
   )
 }

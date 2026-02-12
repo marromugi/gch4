@@ -5,47 +5,26 @@
  * Ding API Documentation
  * OpenAPI spec version: 0.0.0
  */
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
+import { customFetch } from '../../fetcher'
+import type {
+  GetMe200,
+  GetMe401,
+  ListJobsByUser200,
+  ListJobsByUser401,
+  ListJobsByUser500,
+} from '.././models'
 import type {
   DataTag,
   DefinedInitialDataOptions,
   DefinedUseQueryResult,
-  MutationFunction,
   QueryClient,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
-  UseMutationOptions,
-  UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query'
-
-import type {
-  GetAppSettings200,
-  GetAppSettings401,
-  GetAppSettings500,
-  GetMe200,
-  GetMe401,
-  UpdateAppSettings200,
-  UpdateAppSettings400,
-  UpdateAppSettings401,
-  UpdateAppSettings500,
-  UpdateAppSettingsBody,
-  UpdateProfile200,
-  UpdateProfile400,
-  UpdateProfile401,
-  UpdateProfile500,
-  UpdateProfileAvatar200,
-  UpdateProfileAvatar400,
-  UpdateProfileAvatar401,
-  UpdateProfileAvatar404,
-  UpdateProfileAvatar500,
-  UpdateProfileAvatarBody,
-  UpdateProfileBody,
-} from '.././models'
-
-import { customFetch } from '../../fetcher'
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
@@ -145,244 +124,62 @@ export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = Get
 }
 
 /**
- * Update the current user profile (name)
- * @summary Update user profile
+ * @summary List jobs by user
  */
-export const updateProfile = (
-  updateProfileBody: UpdateProfileBody,
-  options?: SecondParameter<typeof customFetch>
-) => {
-  return customFetch<UpdateProfile200>(
-    {
-      url: `API_BASE_URL/me/profile`,
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      data: updateProfileBody,
-    },
-    options
-  )
-}
-
-export const getUpdateProfileMutationOptions = <
-  TError = UpdateProfile400 | UpdateProfile401 | UpdateProfile500,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof updateProfile>>,
-    TError,
-    { data: UpdateProfileBody },
-    TContext
-  >
-  request?: SecondParameter<typeof customFetch>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof updateProfile>>,
-  TError,
-  { data: UpdateProfileBody },
-  TContext
-> => {
-  const mutationKey = ['updateProfile']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof updateProfile>>,
-    { data: UpdateProfileBody }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return updateProfile(data, requestOptions)
-  }
-
-  return { mutationFn, ...mutationOptions }
-}
-
-export type UpdateProfileMutationResult = NonNullable<Awaited<ReturnType<typeof updateProfile>>>
-export type UpdateProfileMutationBody = UpdateProfileBody
-export type UpdateProfileMutationError = UpdateProfile400 | UpdateProfile401 | UpdateProfile500
-
-/**
- * @summary Update user profile
- */
-export const useUpdateProfile = <
-  TError = UpdateProfile400 | UpdateProfile401 | UpdateProfile500,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof updateProfile>>,
-      TError,
-      { data: UpdateProfileBody },
-      TContext
-    >
-    request?: SecondParameter<typeof customFetch>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof updateProfile>>,
-  TError,
-  { data: UpdateProfileBody },
-  TContext
-> => {
-  const mutationOptions = getUpdateProfileMutationOptions(options)
-
-  return useMutation(mutationOptions, queryClient)
-}
-/**
- * Update the current user profile avatar image
- * @summary Update user profile avatar
- */
-export const updateProfileAvatar = (
-  updateProfileAvatarBody: UpdateProfileAvatarBody,
-  options?: SecondParameter<typeof customFetch>
-) => {
-  return customFetch<UpdateProfileAvatar200>(
-    {
-      url: `API_BASE_URL/me/profile/avatar`,
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      data: updateProfileAvatarBody,
-    },
-    options
-  )
-}
-
-export const getUpdateProfileAvatarMutationOptions = <
-  TError =
-    | UpdateProfileAvatar400
-    | UpdateProfileAvatar401
-    | UpdateProfileAvatar404
-    | UpdateProfileAvatar500,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof updateProfileAvatar>>,
-    TError,
-    { data: UpdateProfileAvatarBody },
-    TContext
-  >
-  request?: SecondParameter<typeof customFetch>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof updateProfileAvatar>>,
-  TError,
-  { data: UpdateProfileAvatarBody },
-  TContext
-> => {
-  const mutationKey = ['updateProfileAvatar']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof updateProfileAvatar>>,
-    { data: UpdateProfileAvatarBody }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return updateProfileAvatar(data, requestOptions)
-  }
-
-  return { mutationFn, ...mutationOptions }
-}
-
-export type UpdateProfileAvatarMutationResult = NonNullable<
-  Awaited<ReturnType<typeof updateProfileAvatar>>
->
-export type UpdateProfileAvatarMutationBody = UpdateProfileAvatarBody
-export type UpdateProfileAvatarMutationError =
-  | UpdateProfileAvatar400
-  | UpdateProfileAvatar401
-  | UpdateProfileAvatar404
-  | UpdateProfileAvatar500
-
-/**
- * @summary Update user profile avatar
- */
-export const useUpdateProfileAvatar = <
-  TError =
-    | UpdateProfileAvatar400
-    | UpdateProfileAvatar401
-    | UpdateProfileAvatar404
-    | UpdateProfileAvatar500,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof updateProfileAvatar>>,
-      TError,
-      { data: UpdateProfileAvatarBody },
-      TContext
-    >
-    request?: SecondParameter<typeof customFetch>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof updateProfileAvatar>>,
-  TError,
-  { data: UpdateProfileAvatarBody },
-  TContext
-> => {
-  const mutationOptions = getUpdateProfileAvatarMutationOptions(options)
-
-  return useMutation(mutationOptions, queryClient)
-}
-/**
- * Get the current user app settings (locale and theme)
- * @summary Get user app settings
- */
-export const getAppSettings = (
+export const listJobsByUser = (
+  userId: string,
   options?: SecondParameter<typeof customFetch>,
   signal?: AbortSignal
 ) => {
-  return customFetch<GetAppSettings200>(
-    { url: `API_BASE_URL/me/settings`, method: 'GET', signal },
+  return customFetch<ListJobsByUser200>(
+    { url: `API_BASE_URL/api/users/${userId}/jobs`, method: 'GET', signal },
     options
   )
 }
 
-export const getGetAppSettingsQueryKey = () => {
-  return [`API_BASE_URL/me/settings`] as const
+export const getListJobsByUserQueryKey = (userId?: string) => {
+  return [`API_BASE_URL/api/users/${userId}/jobs`] as const
 }
 
-export const getGetAppSettingsQueryOptions = <
-  TData = Awaited<ReturnType<typeof getAppSettings>>,
-  TError = GetAppSettings401 | GetAppSettings500,
->(options?: {
-  query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAppSettings>>, TError, TData>>
-  request?: SecondParameter<typeof customFetch>
-}) => {
+export const getListJobsByUserQueryOptions = <
+  TData = Awaited<ReturnType<typeof listJobsByUser>>,
+  TError = ListJobsByUser401 | ListJobsByUser500,
+>(
+  userId: string,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listJobsByUser>>, TError, TData>>
+    request?: SecondParameter<typeof customFetch>
+  }
+) => {
   const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey = queryOptions?.queryKey ?? getGetAppSettingsQueryKey()
+  const queryKey = queryOptions?.queryKey ?? getListJobsByUserQueryKey(userId)
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getAppSettings>>> = ({ signal }) =>
-    getAppSettings(requestOptions, signal)
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listJobsByUser>>> = ({ signal }) =>
+    listJobsByUser(userId, requestOptions, signal)
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof getAppSettings>>,
+  return { queryKey, queryFn, enabled: !!userId, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listJobsByUser>>,
     TError,
     TData
   > & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetAppSettingsQueryResult = NonNullable<Awaited<ReturnType<typeof getAppSettings>>>
-export type GetAppSettingsQueryError = GetAppSettings401 | GetAppSettings500
+export type ListJobsByUserQueryResult = NonNullable<Awaited<ReturnType<typeof listJobsByUser>>>
+export type ListJobsByUserQueryError = ListJobsByUser401 | ListJobsByUser500
 
-export function useGetAppSettings<
-  TData = Awaited<ReturnType<typeof getAppSettings>>,
-  TError = GetAppSettings401 | GetAppSettings500,
+export function useListJobsByUser<
+  TData = Awaited<ReturnType<typeof listJobsByUser>>,
+  TError = ListJobsByUser401 | ListJobsByUser500,
 >(
+  userId: string,
   options: {
-    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAppSettings>>, TError, TData>> &
+    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof listJobsByUser>>, TError, TData>> &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getAppSettings>>,
+          Awaited<ReturnType<typeof listJobsByUser>>,
           TError,
-          Awaited<ReturnType<typeof getAppSettings>>
+          Awaited<ReturnType<typeof listJobsByUser>>
         >,
         'initialData'
       >
@@ -390,17 +187,18 @@ export function useGetAppSettings<
   },
   queryClient?: QueryClient
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetAppSettings<
-  TData = Awaited<ReturnType<typeof getAppSettings>>,
-  TError = GetAppSettings401 | GetAppSettings500,
+export function useListJobsByUser<
+  TData = Awaited<ReturnType<typeof listJobsByUser>>,
+  TError = ListJobsByUser401 | ListJobsByUser500,
 >(
+  userId: string,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAppSettings>>, TError, TData>> &
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listJobsByUser>>, TError, TData>> &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getAppSettings>>,
+          Awaited<ReturnType<typeof listJobsByUser>>,
           TError,
-          Awaited<ReturnType<typeof getAppSettings>>
+          Awaited<ReturnType<typeof listJobsByUser>>
         >,
         'initialData'
       >
@@ -408,31 +206,33 @@ export function useGetAppSettings<
   },
   queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetAppSettings<
-  TData = Awaited<ReturnType<typeof getAppSettings>>,
-  TError = GetAppSettings401 | GetAppSettings500,
+export function useListJobsByUser<
+  TData = Awaited<ReturnType<typeof listJobsByUser>>,
+  TError = ListJobsByUser401 | ListJobsByUser500,
 >(
+  userId: string,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAppSettings>>, TError, TData>>
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listJobsByUser>>, TError, TData>>
     request?: SecondParameter<typeof customFetch>
   },
   queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
- * @summary Get user app settings
+ * @summary List jobs by user
  */
 
-export function useGetAppSettings<
-  TData = Awaited<ReturnType<typeof getAppSettings>>,
-  TError = GetAppSettings401 | GetAppSettings500,
+export function useListJobsByUser<
+  TData = Awaited<ReturnType<typeof listJobsByUser>>,
+  TError = ListJobsByUser401 | ListJobsByUser500,
 >(
+  userId: string,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAppSettings>>, TError, TData>>
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listJobsByUser>>, TError, TData>>
     request?: SecondParameter<typeof customFetch>
   },
   queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getGetAppSettingsQueryOptions(options)
+  const queryOptions = getListJobsByUserQueryOptions(userId, options)
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
     queryKey: DataTag<QueryKey, TData, TError>
@@ -441,96 +241,4 @@ export function useGetAppSettings<
   query.queryKey = queryOptions.queryKey
 
   return query
-}
-
-/**
- * Update the current user app settings (locale and/or theme)
- * @summary Update user app settings
- */
-export const updateAppSettings = (
-  updateAppSettingsBody: UpdateAppSettingsBody,
-  options?: SecondParameter<typeof customFetch>
-) => {
-  return customFetch<UpdateAppSettings200>(
-    {
-      url: `API_BASE_URL/me/settings`,
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      data: updateAppSettingsBody,
-    },
-    options
-  )
-}
-
-export const getUpdateAppSettingsMutationOptions = <
-  TError = UpdateAppSettings400 | UpdateAppSettings401 | UpdateAppSettings500,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof updateAppSettings>>,
-    TError,
-    { data: UpdateAppSettingsBody },
-    TContext
-  >
-  request?: SecondParameter<typeof customFetch>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof updateAppSettings>>,
-  TError,
-  { data: UpdateAppSettingsBody },
-  TContext
-> => {
-  const mutationKey = ['updateAppSettings']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof updateAppSettings>>,
-    { data: UpdateAppSettingsBody }
-  > = (props) => {
-    const { data } = props ?? {}
-
-    return updateAppSettings(data, requestOptions)
-  }
-
-  return { mutationFn, ...mutationOptions }
-}
-
-export type UpdateAppSettingsMutationResult = NonNullable<
-  Awaited<ReturnType<typeof updateAppSettings>>
->
-export type UpdateAppSettingsMutationBody = UpdateAppSettingsBody
-export type UpdateAppSettingsMutationError =
-  | UpdateAppSettings400
-  | UpdateAppSettings401
-  | UpdateAppSettings500
-
-/**
- * @summary Update user app settings
- */
-export const useUpdateAppSettings = <
-  TError = UpdateAppSettings400 | UpdateAppSettings401 | UpdateAppSettings500,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof updateAppSettings>>,
-      TError,
-      { data: UpdateAppSettingsBody },
-      TContext
-    >
-    request?: SecondParameter<typeof customFetch>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof updateAppSettings>>,
-  TError,
-  { data: UpdateAppSettingsBody },
-  TContext
-> => {
-  const mutationOptions = getUpdateAppSettingsMutationOptions(options)
-
-  return useMutation(mutationOptions, queryClient)
 }

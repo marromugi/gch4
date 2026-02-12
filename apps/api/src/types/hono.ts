@@ -12,6 +12,7 @@ export type Bindings = {
   GOOGLE_CLIENT_SECRET: string
   GEMINI_API_KEY: string
   GEMINI_MODEL?: string
+  AGENT_LOG_DIR?: string
 }
 
 export type HonoEnv = {

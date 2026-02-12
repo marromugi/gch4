@@ -6,11 +6,9 @@
  * OpenAPI spec version: 0.0.0
  */
 import { faker } from '@faker-js/faker'
-
 import { HttpResponse, delay, http } from 'msw'
-import type { RequestHandlerOptions } from 'msw'
-
 import type { CreateTweet201, GetTweetThread200, ListTweets200 } from '.././models'
+import type { RequestHandlerOptions } from 'msw'
 
 export const getListTweetsResponseMock = (
   overrideResponse: Partial<ListTweets200> = {}

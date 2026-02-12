@@ -5,8 +5,8 @@
  * Ding API Documentation
  * OpenAPI spec version: 0.0.0
  */
-import type { CreateTweet201Tweet } from './createTweet201Tweet'
 import type { CreateTweet201Session } from './createTweet201Session'
+import type { CreateTweet201Tweet } from './createTweet201Tweet'
 
 export type CreateTweet201 = {
   tweet: CreateTweet201Tweet

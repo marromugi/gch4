@@ -9,7 +9,6 @@
 export type ListTweetsOrderDirection =
   (typeof ListTweetsOrderDirection)[keyof typeof ListTweetsOrderDirection]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ListTweetsOrderDirection = {
   asc: 'asc',
   desc: 'desc',

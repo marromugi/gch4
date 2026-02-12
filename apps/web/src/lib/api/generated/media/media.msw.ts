@@ -6,10 +6,7 @@
  * OpenAPI spec version: 0.0.0
  */
 import { faker } from '@faker-js/faker'
-
 import { HttpResponse, delay, http } from 'msw'
-import type { RequestHandlerOptions } from 'msw'
-
 import type {
   DeleteMedia200,
   ServeMedia200One,
@@ -17,6 +14,7 @@ import type {
   ServeMedia200Two,
   UploadMedia201,
 } from '.././models'
+import type { RequestHandlerOptions } from 'msw'
 
 export const getUploadMediaResponseMock = (
   overrideResponse: Partial<UploadMedia201> = {}

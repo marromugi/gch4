@@ -3,7 +3,7 @@ import { tv } from 'tailwind-variants'
 export const buttonBase = tv({
   base: [
     'inline-flex items-center justify-center',
-    'font-medium',
+    'font-semibold',
     'rounded-full',
     'transition-colors duration-200',
   ],

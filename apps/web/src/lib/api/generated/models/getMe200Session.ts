@@ -9,4 +9,15 @@
 /**
  * @nullable
  */
-export type GetMe200Session = { [key: string]: unknown | null } | null
+export type GetMe200Session = {
+  id: string
+  userId: string
+  token: string
+  expiresAt: string
+  /** @nullable */
+  ipAddress?: string | null
+  /** @nullable */
+  userAgent?: string | null
+  createdAt: string
+  updatedAt: string
+} | null

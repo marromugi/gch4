@@ -14,6 +14,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@ding/agent": "workspace:*",
     "@ding/database": "workspace:*",
     "@ding/domain": "workspace:*",
     "@hono/swagger-ui": "^0.5.3",

@@ -1,4 +1,13 @@
 import { createDatabase } from '@ding/database'
+import {
+  DrizzleJobRepository,
+  DrizzleApplicationRepository,
+  DrizzleReviewPolicyRepository,
+  DrizzleInterviewFeedbackRepository,
+  DrizzleEventLogRepository,
+} from '@ding/domain'
+import { ApplicationSubmissionService, FallbackService } from '@ding/domain'
+import { GeminiProvider } from '@ding/agent/provider/gemini'
 import type { HonoEnv } from '../types/hono'
 import type { MiddlewareHandler } from 'hono'
 
@@ -11,11 +20,25 @@ export const diMiddleware: MiddlewareHandler<HonoEnv> = async (c, next) => {
     DATABASE_AUTH_TOKEN: c.env.DATABASE_AUTH_TOKEN,
   })
 
-  const repositories = {}
+  const repositories = {
+    jobRepository: new DrizzleJobRepository(db),
+    applicationRepository: new DrizzleApplicationRepository(db),
+    reviewPolicyRepository: new DrizzleReviewPolicyRepository(db),
+    interviewFeedbackRepository: new DrizzleInterviewFeedbackRepository(db),
+    eventLogRepository: new DrizzleEventLogRepository(db),
+  }
 
-  const services = {}
+  const services = {
+    submissionService: new ApplicationSubmissionService(),
+    fallbackService: new FallbackService(),
+  }
 
-  const infrastructure = {}
+  const infrastructure = {
+    llmProvider: new GeminiProvider({
+      apiKey: c.env.GEMINI_API_KEY,
+      defaultModel: c.env.GEMINI_MODEL,
+    }),
+  }
 
   c.set('di', {
     db,

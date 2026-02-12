@@ -9,7 +9,6 @@
 export type UpdateAppSettings200AppSettingsDefaultEnterAction =
   (typeof UpdateAppSettings200AppSettingsDefaultEnterAction)[keyof typeof UpdateAppSettings200AppSettingsDefaultEnterAction]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UpdateAppSettings200AppSettingsDefaultEnterAction = {
   submit: 'submit',
   newline: 'newline',
