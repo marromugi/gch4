@@ -1,0 +1,55 @@
+{
+  "name": "@ding/agent",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./provider": {
+      "types": "./dist/provider/index.d.ts",
+      "import": "./dist/provider/index.js"
+    },
+    "./provider/gemini": {
+      "types": "./dist/provider/gemini/index.d.ts",
+      "import": "./dist/provider/gemini/index.js"
+    },
+    "./agent": {
+      "types": "./dist/agent/index.d.ts",
+      "import": "./dist/agent/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@google/genai": "^1.0.0"
+  },
+  "peerDependencies": {
+    "@ding/domain": "workspace:*"
+  },
+  "peerDependenciesMeta": {
+    "@ding/domain": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@ding/config": "workspace:*",
+    "@ding/domain": "workspace:*",
+    "@types/node": "^22.10.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^4.0.18"
+  }
+}
