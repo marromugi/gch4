@@ -8,5 +8,6 @@
     "target": "ES2022",
     "types": ["node", "vitest/globals", "@cloudflare/workers-types"]
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["src/__tests__"]
 }

@@ -1,8 +1,7 @@
 import type { TimestampedEntity } from '../../shared/Entity/Entity'
 import type { ChatSessionId } from '../../valueObject/ChatSessionId/ChatSessionId'
-import type { ApplicationId } from '../../valueObject/ApplicationId/ApplicationId'
-import type { JobId } from '../../valueObject/JobId/JobId'
-import type { ReviewPolicyVersionId } from '../../valueObject/ReviewPolicyVersionId/ReviewPolicyVersionId'
+import type { SubmissionId } from '../../valueObject/SubmissionId/SubmissionId'
+import type { FormId } from '../../valueObject/FormId/FormId'
 import type { UserId } from '../../valueObject/UserId/UserId'
 import type { ChatSessionType } from '../../valueObject/ChatSessionType/ChatSessionType'
 import { ChatSessionStatus } from '../../valueObject/ChatSessionStatus/ChatSessionStatus'
@@ -10,9 +9,8 @@ import type { AgentType } from '../../valueObject/AgentType/AgentType'
 
 export interface ChatSessionProps {
   id: ChatSessionId
-  applicationId: ApplicationId | null
-  jobId: JobId | null
-  policyVersionId: ReviewPolicyVersionId | null
+  submissionId: SubmissionId | null
+  formId: FormId | null
   type: ChatSessionType
   conductorId: UserId | null
   bootstrapCompleted: boolean
@@ -26,7 +24,7 @@ export interface ChatSessionProps {
   extractionFailStreak: number
   timeoutStreak: number
   currentAgent: AgentType
-  /** インタビュープラン（JSON文字列） */
+  /** 情報収集プラン（JSON文字列） */
   plan: string | null
   /** プランスキーマバージョン */
   planSchemaVersion: number | null
@@ -44,16 +42,12 @@ export class ChatSession implements TimestampedEntity<ChatSessionId> {
     return this.props.id
   }
 
-  get applicationId(): ApplicationId | null {
-    return this.props.applicationId
+  get submissionId(): SubmissionId | null {
+    return this.props.submissionId
   }
 
-  get jobId(): JobId | null {
-    return this.props.jobId
-  }
-
-  get policyVersionId(): ReviewPolicyVersionId | null {
-    return this.props.policyVersionId
+  get formId(): FormId | null {
+    return this.props.formId
   }
 
   get type(): ChatSessionType {
@@ -108,7 +102,7 @@ export class ChatSession implements TimestampedEntity<ChatSessionId> {
     return this.props.currentAgent
   }
 
-  /** インタビュープラン（JSON文字列） */
+  /** 情報収集プラン（JSON文字列） */
   get plan(): string | null {
     return this.props.plan
   }
@@ -210,7 +204,7 @@ export class ChatSession implements TimestampedEntity<ChatSessionId> {
   }
 
   /**
-   * インタビュープランを設定
+   * 情報収集プランを設定
    * @param plan プランオブジェクト（JSON.stringifyされる）
    * @param schemaVersion スキーマバージョン（デフォルト: 1）
    */
@@ -224,7 +218,7 @@ export class ChatSession implements TimestampedEntity<ChatSessionId> {
   }
 
   /**
-   * インタビュープランを取得（パース済み）
+   * 情報収集プランを取得（パース済み）
    * @returns パース成功時はオブジェクト、失敗時は null
    */
   getPlan<T = unknown>(): T | null {

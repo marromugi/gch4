@@ -9,7 +9,6 @@
 export type CreateChatSession201DataGreetingRole =
   (typeof CreateChatSession201DataGreetingRole)[keyof typeof CreateChatSession201DataGreetingRole]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateChatSession201DataGreetingRole = {
   user: 'user',
   assistant: 'assistant',

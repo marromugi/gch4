@@ -113,6 +113,68 @@ describe('TweetSaveUsecase', () => {
 })
 ```
 
+## API Layer (Hono)
+
+APIルートは `@hono/zod-openapi` を使用して定義します。
+
+```
+apps/api/src/routes/
+├── {resource}/
+│   ├── index.ts           # OpenAPI route definition
+│   ├── get.ts             # GET handler
+│   ├── post.ts            # POST handler
+│   └── [resourceId]/
+│       ├── get.ts         # GET by ID handler
+│       └── put.ts         # PUT handler
+```
+
+### Route Definition
+
+```typescript
+import { createRoute, z } from '@hono/zod-openapi'
+
+// Request/Response schemas with Zod
+const ParamsSchema = z.object({
+  id: z.string().openapi({ example: '123' }),
+})
+
+const ResponseSchema = z
+  .object({
+    id: z.string(),
+    name: z.string(),
+  })
+  .openapi('Resource')
+
+// Route definition with OpenAPI metadata
+export const getResourceRoute = createRoute({
+  method: 'get',
+  path: '/resources/{id}',
+  request: {
+    params: ParamsSchema,
+  },
+  responses: {
+    200: {
+      content: { 'application/json': { schema: ResponseSchema } },
+      description: 'Success',
+    },
+  },
+})
+```
+
+### Handler Implementation
+
+```typescript
+import { OpenAPIHono } from '@hono/zod-openapi'
+
+const app = new OpenAPIHono()
+
+app.openapi(getResourceRoute, async (c) => {
+  const { id } = c.req.valid('param')
+  // Call usecase, return response
+  return c.json({ id, name: 'example' }, 200)
+})
+```
+
 ## Checklist
 
 - [ ] Entity: `private` constructor + `create()` / `reconstruct()`
@@ -121,3 +183,4 @@ describe('TweetSaveUsecase', () => {
 - [ ] `execute()` returns `Promise<Result<Output, Error>>`
 - [ ] Never throw, use `Result.err()`
 - [ ] Unit tests cover 正常系 + 異常系
+- [ ] API routes use `@hono/zod-openapi` with proper schemas

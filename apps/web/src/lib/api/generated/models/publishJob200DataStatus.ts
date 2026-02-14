@@ -9,7 +9,6 @@
 export type PublishJob200DataStatus =
   (typeof PublishJob200DataStatus)[keyof typeof PublishJob200DataStatus]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PublishJob200DataStatus = {
   draft: 'draft',
   open: 'open',

@@ -9,7 +9,6 @@
 export type GetJobSchema200DataSchemaVersionStatus =
   (typeof GetJobSchema200DataSchemaVersionStatus)[keyof typeof GetJobSchema200DataSchemaVersionStatus]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetJobSchema200DataSchemaVersionStatus = {
   draft: 'draft',
   approved: 'approved',

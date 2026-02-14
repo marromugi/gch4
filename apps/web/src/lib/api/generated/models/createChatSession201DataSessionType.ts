@@ -9,9 +9,6 @@
 export type CreateChatSession201DataSessionType =
   (typeof CreateChatSession201DataSessionType)[keyof typeof CreateChatSession201DataSessionType]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateChatSession201DataSessionType = {
-  application: 'application',
-  interview_feedback: 'interview_feedback',
-  policy_creation: 'policy_creation',
+  form_response: 'form_response',
 } as const

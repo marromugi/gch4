@@ -5,8 +5,8 @@
  * Ding API Documentation
  * OpenAPI spec version: 0.0.0
  */
-import type { SuggestFormFields200FormFieldsItem } from './suggestFormFields200FormFieldsItem'
+import type { SuggestFormFields200Data } from './suggestFormFields200Data'
 
 export type SuggestFormFields200 = {
-  formFields: SuggestFormFields200FormFieldsItem[]
+  data: SuggestFormFields200Data
 }

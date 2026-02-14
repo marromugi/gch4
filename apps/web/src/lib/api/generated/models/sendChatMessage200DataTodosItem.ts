@@ -9,8 +9,8 @@ import type { SendChatMessage200DataTodosItemStatus } from './sendChatMessage200
 
 export type SendChatMessage200DataTodosItem = {
   id: string
-  applicationId: string
-  jobFormFieldId: string
+  submissionId: string
+  formFieldId: string
   fact: string
   doneCriteria: string
   required: boolean

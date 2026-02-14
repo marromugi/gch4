@@ -1,17 +1,15 @@
 import type { Entity } from '../../shared/Entity/Entity'
 import type { EventLogId } from '../../valueObject/EventLogId/EventLogId'
-import type { JobId } from '../../valueObject/JobId/JobId'
-import type { ApplicationId } from '../../valueObject/ApplicationId/ApplicationId'
+import type { FormId } from '../../valueObject/FormId/FormId'
+import type { SubmissionId } from '../../valueObject/SubmissionId/SubmissionId'
 import type { ChatSessionId } from '../../valueObject/ChatSessionId/ChatSessionId'
-import type { ReviewPolicyVersionId } from '../../valueObject/ReviewPolicyVersionId/ReviewPolicyVersionId'
 import type { EventType } from '../../valueObject/EventType/EventType'
 
 export interface EventLogProps {
   id: EventLogId
-  jobId: JobId | null
-  applicationId: ApplicationId | null
+  formId: FormId | null
+  submissionId: SubmissionId | null
   chatSessionId: ChatSessionId | null
-  policyVersionId: ReviewPolicyVersionId | null
   eventType: EventType
   metadata: string | null
   createdAt: Date
@@ -27,20 +25,16 @@ export class EventLog implements Entity<EventLogId> {
     return this.props.id
   }
 
-  get jobId(): JobId | null {
-    return this.props.jobId
+  get formId(): FormId | null {
+    return this.props.formId
   }
 
-  get applicationId(): ApplicationId | null {
-    return this.props.applicationId
+  get submissionId(): SubmissionId | null {
+    return this.props.submissionId
   }
 
   get chatSessionId(): ChatSessionId | null {
     return this.props.chatSessionId
-  }
-
-  get policyVersionId(): ReviewPolicyVersionId | null {
-    return this.props.policyVersionId
   }
 
   get eventType(): EventType {

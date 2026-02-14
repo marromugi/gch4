@@ -9,7 +9,6 @@
 export type SendChatMessage200DataMessageRole =
   (typeof SendChatMessage200DataMessageRole)[keyof typeof SendChatMessage200DataMessageRole]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SendChatMessage200DataMessageRole = {
   user: 'user',
   assistant: 'assistant',

@@ -17,10 +17,9 @@ const route = createRoute({
           schema: z.object({
             eventLogId: z.string().optional(),
             eventType: z.string(),
-            applicationId: z.string(),
-            jobId: z.string(),
-            chatSessionId: z.string(),
-            policyVersionId: z.string(),
+            submissionId: z.string().nullable(),
+            formId: z.string().nullable(),
+            chatSessionId: z.string().nullable(),
             metadata: z.string().optional(),
           }),
         },
@@ -70,10 +69,9 @@ app.openapi(route, async (c) => {
   const result = await usecase.execute({
     eventLogId: body.eventLogId ?? crypto.randomUUID(),
     eventType: body.eventType,
-    applicationId: body.applicationId,
-    jobId: body.jobId,
-    chatSessionId: body.chatSessionId,
-    policyVersionId: body.policyVersionId,
+    submissionId: body.submissionId ?? undefined,
+    formId: body.formId ?? undefined,
+    chatSessionId: body.chatSessionId ?? undefined,
     metadata: body.metadata,
   })
 

@@ -12,13 +12,13 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AuthIndexRouteImport } from './routes/_auth/index'
-import { Route as ApplyApplicationIdRouteImport } from './routes/apply/$applicationId'
-import { Route as AuthJobsIndexRouteImport } from './routes/_auth/jobs/index'
-import { Route as AuthJobsCreateRouteImport } from './routes/_auth/jobs/create'
-import { Route as AuthJobsJobIdRouteImport } from './routes/_auth/jobs/$jobId'
-import { Route as AuthJobsJobIdIndexRouteImport } from './routes/_auth/jobs/$jobId/index'
-import { Route as AuthJobsJobIdPreviewRouteImport } from './routes/_auth/jobs/$jobId/preview'
-import { Route as AuthJobsJobIdEditRouteImport } from './routes/_auth/jobs/$jobId/edit'
+import { Route as RespondSubmissionIdRouteImport } from './routes/respond/$submissionId'
+import { Route as AuthFormsIndexRouteImport } from './routes/_auth/forms/index'
+import { Route as AuthFormsCreateRouteImport } from './routes/_auth/forms/create'
+import { Route as AuthFormsFormIdRouteImport } from './routes/_auth/forms/$formId'
+import { Route as AuthFormsFormIdIndexRouteImport } from './routes/_auth/forms/$formId/index'
+import { Route as AuthFormsFormIdPreviewRouteImport } from './routes/_auth/forms/$formId/preview'
+import { Route as AuthFormsFormIdEditRouteImport } from './routes/_auth/forms/$formId/edit'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -34,116 +34,116 @@ const AuthIndexRoute = AuthIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthRoute,
 } as any)
-const ApplyApplicationIdRoute = ApplyApplicationIdRouteImport.update({
-  id: '/apply/$applicationId',
-  path: '/apply/$applicationId',
+const RespondSubmissionIdRoute = RespondSubmissionIdRouteImport.update({
+  id: '/respond/$submissionId',
+  path: '/respond/$submissionId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthJobsIndexRoute = AuthJobsIndexRouteImport.update({
-  id: '/jobs/',
-  path: '/jobs/',
+const AuthFormsIndexRoute = AuthFormsIndexRouteImport.update({
+  id: '/forms/',
+  path: '/forms/',
   getParentRoute: () => AuthRoute,
 } as any)
-const AuthJobsCreateRoute = AuthJobsCreateRouteImport.update({
-  id: '/jobs/create',
-  path: '/jobs/create',
+const AuthFormsCreateRoute = AuthFormsCreateRouteImport.update({
+  id: '/forms/create',
+  path: '/forms/create',
   getParentRoute: () => AuthRoute,
 } as any)
-const AuthJobsJobIdRoute = AuthJobsJobIdRouteImport.update({
-  id: '/jobs/$jobId',
-  path: '/jobs/$jobId',
+const AuthFormsFormIdRoute = AuthFormsFormIdRouteImport.update({
+  id: '/forms/$formId',
+  path: '/forms/$formId',
   getParentRoute: () => AuthRoute,
 } as any)
-const AuthJobsJobIdIndexRoute = AuthJobsJobIdIndexRouteImport.update({
+const AuthFormsFormIdIndexRoute = AuthFormsFormIdIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AuthJobsJobIdRoute,
+  getParentRoute: () => AuthFormsFormIdRoute,
 } as any)
-const AuthJobsJobIdPreviewRoute = AuthJobsJobIdPreviewRouteImport.update({
+const AuthFormsFormIdPreviewRoute = AuthFormsFormIdPreviewRouteImport.update({
   id: '/preview',
   path: '/preview',
-  getParentRoute: () => AuthJobsJobIdRoute,
+  getParentRoute: () => AuthFormsFormIdRoute,
 } as any)
-const AuthJobsJobIdEditRoute = AuthJobsJobIdEditRouteImport.update({
+const AuthFormsFormIdEditRoute = AuthFormsFormIdEditRouteImport.update({
   id: '/edit',
   path: '/edit',
-  getParentRoute: () => AuthJobsJobIdRoute,
+  getParentRoute: () => AuthFormsFormIdRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthIndexRoute
   '/login': typeof LoginRoute
-  '/apply/$applicationId': typeof ApplyApplicationIdRoute
-  '/jobs/$jobId': typeof AuthJobsJobIdRouteWithChildren
-  '/jobs/create': typeof AuthJobsCreateRoute
-  '/jobs/': typeof AuthJobsIndexRoute
-  '/jobs/$jobId/edit': typeof AuthJobsJobIdEditRoute
-  '/jobs/$jobId/preview': typeof AuthJobsJobIdPreviewRoute
-  '/jobs/$jobId/': typeof AuthJobsJobIdIndexRoute
+  '/respond/$submissionId': typeof RespondSubmissionIdRoute
+  '/forms/$formId': typeof AuthFormsFormIdRouteWithChildren
+  '/forms/create': typeof AuthFormsCreateRoute
+  '/forms/': typeof AuthFormsIndexRoute
+  '/forms/$formId/edit': typeof AuthFormsFormIdEditRoute
+  '/forms/$formId/preview': typeof AuthFormsFormIdPreviewRoute
+  '/forms/$formId/': typeof AuthFormsFormIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
-  '/apply/$applicationId': typeof ApplyApplicationIdRoute
+  '/respond/$submissionId': typeof RespondSubmissionIdRoute
   '/': typeof AuthIndexRoute
-  '/jobs/create': typeof AuthJobsCreateRoute
-  '/jobs': typeof AuthJobsIndexRoute
-  '/jobs/$jobId/edit': typeof AuthJobsJobIdEditRoute
-  '/jobs/$jobId/preview': typeof AuthJobsJobIdPreviewRoute
-  '/jobs/$jobId': typeof AuthJobsJobIdIndexRoute
+  '/forms/create': typeof AuthFormsCreateRoute
+  '/forms': typeof AuthFormsIndexRoute
+  '/forms/$formId/edit': typeof AuthFormsFormIdEditRoute
+  '/forms/$formId/preview': typeof AuthFormsFormIdPreviewRoute
+  '/forms/$formId': typeof AuthFormsFormIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_auth': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
-  '/apply/$applicationId': typeof ApplyApplicationIdRoute
+  '/respond/$submissionId': typeof RespondSubmissionIdRoute
   '/_auth/': typeof AuthIndexRoute
-  '/_auth/jobs/$jobId': typeof AuthJobsJobIdRouteWithChildren
-  '/_auth/jobs/create': typeof AuthJobsCreateRoute
-  '/_auth/jobs/': typeof AuthJobsIndexRoute
-  '/_auth/jobs/$jobId/edit': typeof AuthJobsJobIdEditRoute
-  '/_auth/jobs/$jobId/preview': typeof AuthJobsJobIdPreviewRoute
-  '/_auth/jobs/$jobId/': typeof AuthJobsJobIdIndexRoute
+  '/_auth/forms/$formId': typeof AuthFormsFormIdRouteWithChildren
+  '/_auth/forms/create': typeof AuthFormsCreateRoute
+  '/_auth/forms/': typeof AuthFormsIndexRoute
+  '/_auth/forms/$formId/edit': typeof AuthFormsFormIdEditRoute
+  '/_auth/forms/$formId/preview': typeof AuthFormsFormIdPreviewRoute
+  '/_auth/forms/$formId/': typeof AuthFormsFormIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/login'
-    | '/apply/$applicationId'
-    | '/jobs/$jobId'
-    | '/jobs/create'
-    | '/jobs/'
-    | '/jobs/$jobId/edit'
-    | '/jobs/$jobId/preview'
-    | '/jobs/$jobId/'
+    | '/respond/$submissionId'
+    | '/forms/$formId'
+    | '/forms/create'
+    | '/forms/'
+    | '/forms/$formId/edit'
+    | '/forms/$formId/preview'
+    | '/forms/$formId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
-    | '/apply/$applicationId'
+    | '/respond/$submissionId'
     | '/'
-    | '/jobs/create'
-    | '/jobs'
-    | '/jobs/$jobId/edit'
-    | '/jobs/$jobId/preview'
-    | '/jobs/$jobId'
+    | '/forms/create'
+    | '/forms'
+    | '/forms/$formId/edit'
+    | '/forms/$formId/preview'
+    | '/forms/$formId'
   id:
     | '__root__'
     | '/_auth'
     | '/login'
-    | '/apply/$applicationId'
+    | '/respond/$submissionId'
     | '/_auth/'
-    | '/_auth/jobs/$jobId'
-    | '/_auth/jobs/create'
-    | '/_auth/jobs/'
-    | '/_auth/jobs/$jobId/edit'
-    | '/_auth/jobs/$jobId/preview'
-    | '/_auth/jobs/$jobId/'
+    | '/_auth/forms/$formId'
+    | '/_auth/forms/create'
+    | '/_auth/forms/'
+    | '/_auth/forms/$formId/edit'
+    | '/_auth/forms/$formId/preview'
+    | '/_auth/forms/$formId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   LoginRoute: typeof LoginRoute
-  ApplyApplicationIdRoute: typeof ApplyApplicationIdRoute
+  RespondSubmissionIdRoute: typeof RespondSubmissionIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -169,86 +169,86 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthIndexRouteImport
       parentRoute: typeof AuthRoute
     }
-    '/apply/$applicationId': {
-      id: '/apply/$applicationId'
-      path: '/apply/$applicationId'
-      fullPath: '/apply/$applicationId'
-      preLoaderRoute: typeof ApplyApplicationIdRouteImport
+    '/respond/$submissionId': {
+      id: '/respond/$submissionId'
+      path: '/respond/$submissionId'
+      fullPath: '/respond/$submissionId'
+      preLoaderRoute: typeof RespondSubmissionIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_auth/jobs/': {
-      id: '/_auth/jobs/'
-      path: '/jobs'
-      fullPath: '/jobs/'
-      preLoaderRoute: typeof AuthJobsIndexRouteImport
+    '/_auth/forms/': {
+      id: '/_auth/forms/'
+      path: '/forms'
+      fullPath: '/forms/'
+      preLoaderRoute: typeof AuthFormsIndexRouteImport
       parentRoute: typeof AuthRoute
     }
-    '/_auth/jobs/create': {
-      id: '/_auth/jobs/create'
-      path: '/jobs/create'
-      fullPath: '/jobs/create'
-      preLoaderRoute: typeof AuthJobsCreateRouteImport
+    '/_auth/forms/create': {
+      id: '/_auth/forms/create'
+      path: '/forms/create'
+      fullPath: '/forms/create'
+      preLoaderRoute: typeof AuthFormsCreateRouteImport
       parentRoute: typeof AuthRoute
     }
-    '/_auth/jobs/$jobId': {
-      id: '/_auth/jobs/$jobId'
-      path: '/jobs/$jobId'
-      fullPath: '/jobs/$jobId'
-      preLoaderRoute: typeof AuthJobsJobIdRouteImport
+    '/_auth/forms/$formId': {
+      id: '/_auth/forms/$formId'
+      path: '/forms/$formId'
+      fullPath: '/forms/$formId'
+      preLoaderRoute: typeof AuthFormsFormIdRouteImport
       parentRoute: typeof AuthRoute
     }
-    '/_auth/jobs/$jobId/': {
-      id: '/_auth/jobs/$jobId/'
+    '/_auth/forms/$formId/': {
+      id: '/_auth/forms/$formId/'
       path: '/'
-      fullPath: '/jobs/$jobId/'
-      preLoaderRoute: typeof AuthJobsJobIdIndexRouteImport
-      parentRoute: typeof AuthJobsJobIdRoute
+      fullPath: '/forms/$formId/'
+      preLoaderRoute: typeof AuthFormsFormIdIndexRouteImport
+      parentRoute: typeof AuthFormsFormIdRoute
     }
-    '/_auth/jobs/$jobId/preview': {
-      id: '/_auth/jobs/$jobId/preview'
+    '/_auth/forms/$formId/preview': {
+      id: '/_auth/forms/$formId/preview'
       path: '/preview'
-      fullPath: '/jobs/$jobId/preview'
-      preLoaderRoute: typeof AuthJobsJobIdPreviewRouteImport
-      parentRoute: typeof AuthJobsJobIdRoute
+      fullPath: '/forms/$formId/preview'
+      preLoaderRoute: typeof AuthFormsFormIdPreviewRouteImport
+      parentRoute: typeof AuthFormsFormIdRoute
     }
-    '/_auth/jobs/$jobId/edit': {
-      id: '/_auth/jobs/$jobId/edit'
+    '/_auth/forms/$formId/edit': {
+      id: '/_auth/forms/$formId/edit'
       path: '/edit'
-      fullPath: '/jobs/$jobId/edit'
-      preLoaderRoute: typeof AuthJobsJobIdEditRouteImport
-      parentRoute: typeof AuthJobsJobIdRoute
+      fullPath: '/forms/$formId/edit'
+      preLoaderRoute: typeof AuthFormsFormIdEditRouteImport
+      parentRoute: typeof AuthFormsFormIdRoute
     }
   }
 }
 
-interface AuthJobsJobIdRouteChildren {
-  AuthJobsJobIdEditRoute: typeof AuthJobsJobIdEditRoute
-  AuthJobsJobIdPreviewRoute: typeof AuthJobsJobIdPreviewRoute
-  AuthJobsJobIdIndexRoute: typeof AuthJobsJobIdIndexRoute
+interface AuthFormsFormIdRouteChildren {
+  AuthFormsFormIdEditRoute: typeof AuthFormsFormIdEditRoute
+  AuthFormsFormIdPreviewRoute: typeof AuthFormsFormIdPreviewRoute
+  AuthFormsFormIdIndexRoute: typeof AuthFormsFormIdIndexRoute
 }
 
-const AuthJobsJobIdRouteChildren: AuthJobsJobIdRouteChildren = {
-  AuthJobsJobIdEditRoute: AuthJobsJobIdEditRoute,
-  AuthJobsJobIdPreviewRoute: AuthJobsJobIdPreviewRoute,
-  AuthJobsJobIdIndexRoute: AuthJobsJobIdIndexRoute,
+const AuthFormsFormIdRouteChildren: AuthFormsFormIdRouteChildren = {
+  AuthFormsFormIdEditRoute: AuthFormsFormIdEditRoute,
+  AuthFormsFormIdPreviewRoute: AuthFormsFormIdPreviewRoute,
+  AuthFormsFormIdIndexRoute: AuthFormsFormIdIndexRoute,
 }
 
-const AuthJobsJobIdRouteWithChildren = AuthJobsJobIdRoute._addFileChildren(
-  AuthJobsJobIdRouteChildren,
+const AuthFormsFormIdRouteWithChildren = AuthFormsFormIdRoute._addFileChildren(
+  AuthFormsFormIdRouteChildren,
 )
 
 interface AuthRouteChildren {
   AuthIndexRoute: typeof AuthIndexRoute
-  AuthJobsJobIdRoute: typeof AuthJobsJobIdRouteWithChildren
-  AuthJobsCreateRoute: typeof AuthJobsCreateRoute
-  AuthJobsIndexRoute: typeof AuthJobsIndexRoute
+  AuthFormsFormIdRoute: typeof AuthFormsFormIdRouteWithChildren
+  AuthFormsCreateRoute: typeof AuthFormsCreateRoute
+  AuthFormsIndexRoute: typeof AuthFormsIndexRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthIndexRoute: AuthIndexRoute,
-  AuthJobsJobIdRoute: AuthJobsJobIdRouteWithChildren,
-  AuthJobsCreateRoute: AuthJobsCreateRoute,
-  AuthJobsIndexRoute: AuthJobsIndexRoute,
+  AuthFormsFormIdRoute: AuthFormsFormIdRouteWithChildren,
+  AuthFormsCreateRoute: AuthFormsCreateRoute,
+  AuthFormsIndexRoute: AuthFormsIndexRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
@@ -256,7 +256,7 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   LoginRoute: LoginRoute,
-  ApplyApplicationIdRoute: ApplyApplicationIdRoute,
+  RespondSubmissionIdRoute: RespondSubmissionIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

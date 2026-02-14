@@ -9,8 +9,8 @@ import type { CreateChatSession201DataTodosItemStatus } from './createChatSessio
 
 export type CreateChatSession201DataTodosItem = {
   id: string
-  applicationId: string
-  jobFormFieldId: string
+  submissionId: string
+  formFieldId: string
   fact: string
   doneCriteria: string
   required: boolean

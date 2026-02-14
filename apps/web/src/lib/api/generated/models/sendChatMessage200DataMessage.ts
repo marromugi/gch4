@@ -13,7 +13,7 @@ export type SendChatMessage200DataMessage = {
   role: SendChatMessage200DataMessageRole
   content: string
   /** @nullable */
-  targetJobFormFieldId: string | null
+  targetFormFieldId: string | null
   /** @nullable */
   reviewPassed: boolean | null
   createdAt: string

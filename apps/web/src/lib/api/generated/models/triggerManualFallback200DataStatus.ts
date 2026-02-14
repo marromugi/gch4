@@ -9,10 +9,9 @@
 export type TriggerManualFallback200DataStatus =
   (typeof TriggerManualFallback200DataStatus)[keyof typeof TriggerManualFallback200DataStatus]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TriggerManualFallback200DataStatus = {
   new: 'new',
-  scheduling: 'scheduling',
-  interviewed: 'interviewed',
-  closed: 'closed',
+  in_progress: 'in_progress',
+  review_completed: 'review_completed',
+  submitted: 'submitted',
 } as const

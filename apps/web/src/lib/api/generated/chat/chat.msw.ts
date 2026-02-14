@@ -6,16 +6,14 @@
  * OpenAPI spec version: 0.0.0
  */
 import { faker } from '@faker-js/faker'
-
 import { HttpResponse, delay, http } from 'msw'
-import type { RequestHandlerOptions } from 'msw'
-
 import type {
   CreateChatSession201,
   GetChatSession200,
   GetChatSessionFormData200,
   SendChatMessage200,
 } from '.././models'
+import type { RequestHandlerOptions } from 'msw'
 
 export const getCreateChatSessionResponseMock = (
   overrideResponse: Partial<CreateChatSession201> = {}
@@ -23,19 +21,15 @@ export const getCreateChatSessionResponseMock = (
   data: {
     session: {
       id: faker.string.alpha({ length: { min: 10, max: 20 } }),
-      applicationId: faker.helpers.arrayElement([
+      submissionId: faker.helpers.arrayElement([
         faker.string.alpha({ length: { min: 10, max: 20 } }),
         null,
       ]),
-      jobId: faker.helpers.arrayElement([
+      formId: faker.helpers.arrayElement([
         faker.string.alpha({ length: { min: 10, max: 20 } }),
         null,
       ]),
-      type: faker.helpers.arrayElement([
-        'application',
-        'interview_feedback',
-        'policy_creation',
-      ] as const),
+      type: faker.helpers.arrayElement(['form_response'] as const),
       bootstrapCompleted: faker.datatype.boolean(),
       status: faker.helpers.arrayElement(['active', 'completed'] as const),
       turnCount: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
@@ -43,10 +37,7 @@ export const getCreateChatSessionResponseMock = (
         'greeter',
         'architect',
         'interviewer',
-        'explorer',
         'reviewer',
-        'quick_check',
-        'auditor',
       ] as const),
       createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
       updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
@@ -54,8 +45,8 @@ export const getCreateChatSessionResponseMock = (
     todos: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
       () => ({
         id: faker.string.alpha({ length: { min: 10, max: 20 } }),
-        applicationId: faker.string.alpha({ length: { min: 10, max: 20 } }),
-        jobFormFieldId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        submissionId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        formFieldId: faker.string.alpha({ length: { min: 10, max: 20 } }),
         fact: faker.string.alpha({ length: { min: 10, max: 20 } }),
         doneCriteria: faker.string.alpha({ length: { min: 10, max: 20 } }),
         required: faker.datatype.boolean(),
@@ -80,7 +71,7 @@ export const getCreateChatSessionResponseMock = (
       chatSessionId: faker.string.alpha({ length: { min: 10, max: 20 } }),
       role: faker.helpers.arrayElement(['user', 'assistant', 'system'] as const),
       content: faker.string.alpha({ length: { min: 10, max: 20 } }),
-      targetJobFormFieldId: faker.helpers.arrayElement([
+      targetFormFieldId: faker.helpers.arrayElement([
         faker.string.alpha({ length: { min: 10, max: 20 } }),
         null,
       ]),
@@ -97,19 +88,15 @@ export const getGetChatSessionResponseMock = (
   data: {
     session: {
       id: faker.string.alpha({ length: { min: 10, max: 20 } }),
-      applicationId: faker.helpers.arrayElement([
+      submissionId: faker.helpers.arrayElement([
         faker.string.alpha({ length: { min: 10, max: 20 } }),
         null,
       ]),
-      jobId: faker.helpers.arrayElement([
+      formId: faker.helpers.arrayElement([
         faker.string.alpha({ length: { min: 10, max: 20 } }),
         null,
       ]),
-      type: faker.helpers.arrayElement([
-        'application',
-        'interview_feedback',
-        'policy_creation',
-      ] as const),
+      type: faker.helpers.arrayElement(['form_response'] as const),
       bootstrapCompleted: faker.datatype.boolean(),
       status: faker.helpers.arrayElement(['active', 'completed'] as const),
       turnCount: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
@@ -117,10 +104,7 @@ export const getGetChatSessionResponseMock = (
         'greeter',
         'architect',
         'interviewer',
-        'explorer',
         'reviewer',
-        'quick_check',
-        'auditor',
       ] as const),
       createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
       updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
@@ -131,7 +115,7 @@ export const getGetChatSessionResponseMock = (
         chatSessionId: faker.string.alpha({ length: { min: 10, max: 20 } }),
         role: faker.helpers.arrayElement(['user', 'assistant', 'system'] as const),
         content: faker.string.alpha({ length: { min: 10, max: 20 } }),
-        targetJobFormFieldId: faker.helpers.arrayElement([
+        targetFormFieldId: faker.helpers.arrayElement([
           faker.string.alpha({ length: { min: 10, max: 20 } }),
           null,
         ]),
@@ -142,8 +126,8 @@ export const getGetChatSessionResponseMock = (
     todos: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
       () => ({
         id: faker.string.alpha({ length: { min: 10, max: 20 } }),
-        applicationId: faker.string.alpha({ length: { min: 10, max: 20 } }),
-        jobFormFieldId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        submissionId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        formFieldId: faker.string.alpha({ length: { min: 10, max: 20 } }),
         fact: faker.string.alpha({ length: { min: 10, max: 20 } }),
         doneCriteria: faker.string.alpha({ length: { min: 10, max: 20 } }),
         required: faker.datatype.boolean(),
@@ -171,11 +155,34 @@ export const getGetChatSessionFormDataResponseMock = (
   overrideResponse: Partial<GetChatSessionFormData200> = {}
 ): GetChatSessionFormData200 => ({
   data: {
-    sessionId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    fields: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
+      () => ({
+        id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        formId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        fieldId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        label: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        intent: faker.helpers.arrayElement([
+          faker.string.alpha({ length: { min: 10, max: 20 } }),
+          null,
+        ]),
+        required: faker.datatype.boolean(),
+        sortOrder: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+        createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      })
+    ),
     collectedFields: {
-      [faker.string.alphanumeric(5)]: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      [faker.string.alphanumeric(5)]: {
+        id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        submissionId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        formFieldId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        value: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        source: faker.helpers.arrayElement(['llm', 'manual'] as const),
+        confirmed: faker.datatype.boolean(),
+        createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      },
     },
-    completedAt: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
   },
   ...overrideResponse,
 })
@@ -184,36 +191,29 @@ export const getSendChatMessageResponseMock = (
   overrideResponse: Partial<SendChatMessage200> = {}
 ): SendChatMessage200 => ({
   data: {
-    message: faker.helpers.arrayElement([
-      {
-        id: faker.string.alpha({ length: { min: 10, max: 20 } }),
-        chatSessionId: faker.string.alpha({ length: { min: 10, max: 20 } }),
-        role: faker.helpers.arrayElement(['user', 'assistant', 'system'] as const),
-        content: faker.string.alpha({ length: { min: 10, max: 20 } }),
-        targetJobFormFieldId: faker.helpers.arrayElement([
-          faker.string.alpha({ length: { min: 10, max: 20 } }),
-          null,
-        ]),
-        reviewPassed: faker.datatype.boolean(),
-        createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
-      },
-      undefined,
-    ]),
+    message: {
+      id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      chatSessionId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      role: faker.helpers.arrayElement(['user', 'assistant', 'system'] as const),
+      content: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      targetFormFieldId: faker.helpers.arrayElement([
+        faker.string.alpha({ length: { min: 10, max: 20 } }),
+        null,
+      ]),
+      reviewPassed: faker.datatype.boolean(),
+      createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    },
     session: {
       id: faker.string.alpha({ length: { min: 10, max: 20 } }),
-      applicationId: faker.helpers.arrayElement([
+      submissionId: faker.helpers.arrayElement([
         faker.string.alpha({ length: { min: 10, max: 20 } }),
         null,
       ]),
-      jobId: faker.helpers.arrayElement([
+      formId: faker.helpers.arrayElement([
         faker.string.alpha({ length: { min: 10, max: 20 } }),
         null,
       ]),
-      type: faker.helpers.arrayElement([
-        'application',
-        'interview_feedback',
-        'policy_creation',
-      ] as const),
+      type: faker.helpers.arrayElement(['form_response'] as const),
       bootstrapCompleted: faker.datatype.boolean(),
       status: faker.helpers.arrayElement(['active', 'completed'] as const),
       turnCount: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
@@ -221,10 +221,7 @@ export const getSendChatMessageResponseMock = (
         'greeter',
         'architect',
         'interviewer',
-        'explorer',
         'reviewer',
-        'quick_check',
-        'auditor',
       ] as const),
       createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
       updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
@@ -232,8 +229,8 @@ export const getSendChatMessageResponseMock = (
     todos: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
       () => ({
         id: faker.string.alpha({ length: { min: 10, max: 20 } }),
-        applicationId: faker.string.alpha({ length: { min: 10, max: 20 } }),
-        jobFormFieldId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        submissionId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        formFieldId: faker.string.alpha({ length: { min: 10, max: 20 } }),
         fact: faker.string.alpha({ length: { min: 10, max: 20 } }),
         doneCriteria: faker.string.alpha({ length: { min: 10, max: 20 } }),
         required: faker.datatype.boolean(),
@@ -253,8 +250,7 @@ export const getSendChatMessageResponseMock = (
         updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
       })
     ),
-    phase: faker.helpers.arrayElement(['bootstrap', 'questioning', 'fallback', 'wrapup'] as const),
-    isComplete: faker.datatype.boolean(),
+    phase: faker.string.alpha({ length: { min: 10, max: 20 } }),
   },
   ...overrideResponse,
 })
@@ -268,7 +264,7 @@ export const getCreateChatSessionMockHandler = (
   options?: RequestHandlerOptions
 ) => {
   return http.post(
-    '*/api/applications/:applicationId/chat/sessions',
+    '*/api/submissions/:submissionId/chat/sessions',
     async (info) => {
       await delay(1000)
 
@@ -296,7 +292,7 @@ export const getGetChatSessionMockHandler = (
   options?: RequestHandlerOptions
 ) => {
   return http.get(
-    '*/api/applications/:applicationId/chat/sessions/:sessionId',
+    '*/api/submissions/:submissionId/chat/sessions/:sessionId',
     async (info) => {
       await delay(1000)
 
@@ -324,7 +320,7 @@ export const getGetChatSessionFormDataMockHandler = (
   options?: RequestHandlerOptions
 ) => {
   return http.get(
-    '*/api/applications/:applicationId/chat/sessions/:sessionId/form-data',
+    '*/api/submissions/:submissionId/chat/sessions/:sessionId/form-data',
     async (info) => {
       await delay(1000)
 
@@ -352,7 +348,7 @@ export const getSendChatMessageMockHandler = (
   options?: RequestHandlerOptions
 ) => {
   return http.post(
-    '*/api/applications/:applicationId/chat/sessions/:sessionId/messages',
+    '*/api/submissions/:submissionId/chat/sessions/:sessionId/messages',
     async (info) => {
       await delay(1000)
 

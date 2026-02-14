@@ -5,8 +5,8 @@
  * Ding API Documentation
  * OpenAPI spec version: 0.0.0
  */
-import type { CreateReviewPolicyBodySignalsItem } from './createReviewPolicyBodySignalsItem'
 import type { CreateReviewPolicyBodyProhibitedTopicsItem } from './createReviewPolicyBodyProhibitedTopicsItem'
+import type { CreateReviewPolicyBodySignalsItem } from './createReviewPolicyBodySignalsItem'
 
 export type CreateReviewPolicyBody = {
   id?: string

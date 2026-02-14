@@ -5,9 +5,9 @@
  * Ding API Documentation
  * OpenAPI spec version: 0.0.0
  */
-import type { GetJobSchema200DataSchemaVersion } from './getJobSchema200DataSchemaVersion'
 import type { GetJobSchema200DataFactDefinitionsItem } from './getJobSchema200DataFactDefinitionsItem'
 import type { GetJobSchema200DataProhibitedTopicsItem } from './getJobSchema200DataProhibitedTopicsItem'
+import type { GetJobSchema200DataSchemaVersion } from './getJobSchema200DataSchemaVersion'
 
 export type GetJobSchema200Data = {
   schemaVersion: GetJobSchema200DataSchemaVersion

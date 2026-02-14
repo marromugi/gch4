@@ -5,5 +5,17 @@
  * Ding API Documentation
  * OpenAPI spec version: 0.0.0
  */
+import type { GetChatSessionFormData200DataCollectedFieldsSource } from './getChatSessionFormData200DataCollectedFieldsSource'
 
-export type GetChatSessionFormData200DataCollectedFields = { [key: string]: string }
+export type GetChatSessionFormData200DataCollectedFields = {
+  [key: string]: {
+    id: string
+    submissionId: string
+    formFieldId: string
+    value: string
+    source: GetChatSessionFormData200DataCollectedFieldsSource
+    confirmed: boolean
+    createdAt: string
+    updatedAt: string
+  }
+}

@@ -5,16 +5,16 @@
  * Ding API Documentation
  * OpenAPI spec version: 0.0.0
  */
-import type { GetChatSession200DataSessionType } from './getChatSession200DataSessionType'
-import type { GetChatSession200DataSessionStatus } from './getChatSession200DataSessionStatus'
 import type { GetChatSession200DataSessionCurrentAgent } from './getChatSession200DataSessionCurrentAgent'
+import type { GetChatSession200DataSessionStatus } from './getChatSession200DataSessionStatus'
+import type { GetChatSession200DataSessionType } from './getChatSession200DataSessionType'
 
 export type GetChatSession200DataSession = {
   id: string
   /** @nullable */
-  applicationId: string | null
+  submissionId: string | null
   /** @nullable */
-  jobId: string | null
+  formId: string | null
   type: GetChatSession200DataSessionType
   bootstrapCompleted: boolean
   status: GetChatSession200DataSessionStatus

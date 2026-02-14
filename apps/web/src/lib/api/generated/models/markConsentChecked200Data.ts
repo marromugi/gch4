@@ -9,12 +9,12 @@ import type { MarkConsentChecked200DataStatus } from './markConsentChecked200Dat
 
 export type MarkConsentChecked200Data = {
   id: string
-  jobId: string
+  formId: string
   schemaVersionId: string
   /** @nullable */
-  applicantName: string | null
+  respondentName: string | null
   /** @nullable */
-  applicantEmail: string | null
+  respondentEmail: string | null
   /** @nullable */
   language: string | null
   /** @nullable */
@@ -23,9 +23,7 @@ export type MarkConsentChecked200Data = {
   timezone: string | null
   status: MarkConsentChecked200DataStatus
   /** @nullable */
-  meetLink: string | null
-  /** @nullable */
-  extractionReviewedAt: string | null
+  reviewCompletedAt: string | null
   /** @nullable */
   consentCheckedAt: string | null
   /** @nullable */

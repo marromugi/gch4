@@ -1,35 +1,34 @@
 import { z } from '@hono/zod-openapi'
 
 // ============================================================
-// Job
+// Form
 // ============================================================
-export const jobResponseSchema = z.object({
+export const formResponseSchema = z.object({
   id: z.string(),
   title: z.string(),
   description: z.string().nullable(),
-  idealCandidate: z.string().nullable(),
-  cultureContext: z.string().nullable(),
-  status: z.enum(['draft', 'open', 'closed']),
+  purpose: z.string().nullable(),
+  completionMessage: z.string().nullable(),
+  status: z.enum(['draft', 'published', 'closed']),
   createdBy: z.string(),
   createdAt: z.string(),
   updatedAt: z.string(),
 })
 
 // ============================================================
-// Application
+// Submission
 // ============================================================
-export const applicationResponseSchema = z.object({
+export const submissionResponseSchema = z.object({
   id: z.string(),
-  jobId: z.string(),
+  formId: z.string(),
   schemaVersionId: z.string(),
-  applicantName: z.string().nullable(),
-  applicantEmail: z.string().nullable(),
+  respondentName: z.string().nullable(),
+  respondentEmail: z.string().nullable(),
   language: z.string().nullable(),
   country: z.string().nullable(),
   timezone: z.string().nullable(),
-  status: z.enum(['new', 'scheduling', 'interviewed', 'closed']),
-  meetLink: z.string().nullable(),
-  extractionReviewedAt: z.string().nullable(),
+  status: z.enum(['new', 'in_progress', 'review_completed', 'submitted']),
+  reviewCompletedAt: z.string().nullable(),
   consentCheckedAt: z.string().nullable(),
   submittedAt: z.string().nullable(),
   createdAt: z.string(),
@@ -37,11 +36,11 @@ export const applicationResponseSchema = z.object({
 })
 
 // ============================================================
-// JobFormField
+// FormField
 // ============================================================
-export const jobFormFieldResponseSchema = z.object({
+export const formFieldResponseSchema = z.object({
   id: z.string(),
-  jobId: z.string(),
+  formId: z.string(),
   fieldId: z.string(),
   label: z.string(),
   intent: z.string().nullable(),
@@ -52,11 +51,11 @@ export const jobFormFieldResponseSchema = z.object({
 })
 
 // ============================================================
-// JobSchemaVersion
+// FormSchemaVersion
 // ============================================================
-export const jobSchemaVersionResponseSchema = z.object({
+export const formSchemaVersionResponseSchema = z.object({
   id: z.string(),
-  jobId: z.string(),
+  formId: z.string(),
   version: z.number(),
   status: z.enum(['draft', 'approved']),
   approvedAt: z.string().nullable(),
@@ -64,37 +63,27 @@ export const jobSchemaVersionResponseSchema = z.object({
 })
 
 // ============================================================
-// FieldFactDefinition
+// FieldCompletionCriteria
 // ============================================================
-export const fieldFactDefinitionResponseSchema = z.object({
+export const fieldCompletionCriteriaResponseSchema = z.object({
   id: z.string(),
   schemaVersionId: z.string(),
-  jobFormFieldId: z.string(),
+  formFieldId: z.string(),
   factKey: z.string(),
   fact: z.string(),
   doneCriteria: z.string(),
+  questioningHints: z.string().nullable(),
   sortOrder: z.number(),
   createdAt: z.string(),
 })
 
 // ============================================================
-// ProhibitedTopic (Job Schema)
+// CollectedField
 // ============================================================
-export const prohibitedTopicResponseSchema = z.object({
+export const collectedFieldResponseSchema = z.object({
   id: z.string(),
-  schemaVersionId: z.string(),
-  jobFormFieldId: z.string(),
-  topic: z.string(),
-  createdAt: z.string(),
-})
-
-// ============================================================
-// ExtractedField
-// ============================================================
-export const extractedFieldResponseSchema = z.object({
-  id: z.string(),
-  applicationId: z.string(),
-  jobFormFieldId: z.string(),
+  submissionId: z.string(),
+  formFieldId: z.string(),
   value: z.string(),
   source: z.enum(['llm', 'manual']),
   confirmed: z.boolean(),
@@ -107,7 +96,7 @@ export const extractedFieldResponseSchema = z.object({
 // ============================================================
 export const consentLogResponseSchema = z.object({
   id: z.string(),
-  applicationId: z.string(),
+  submissionId: z.string(),
   consentType: z.enum(['data_usage', 'privacy_policy']),
   consented: z.boolean(),
   ipAddress: z.string().nullable(),
@@ -120,86 +109,18 @@ export const consentLogResponseSchema = z.object({
 // ============================================================
 export const eventLogResponseSchema = z.object({
   id: z.string(),
-  jobId: z.string().nullable(),
-  applicationId: z.string().nullable(),
+  formId: z.string().nullable(),
+  submissionId: z.string().nullable(),
   chatSessionId: z.string().nullable(),
-  policyVersionId: z.string().nullable(),
   eventType: z.enum([
     'chat_started',
     'session_bootstrap_completed',
-    'extraction_reviewed',
+    'review_completed',
     'consent_checked',
-    'application_submitted',
+    'submission_submitted',
     'manual_fallback_triggered',
-    'policy_draft_started',
-    'policy_draft_confirmed',
-    'policy_version_published',
-    'review_chat_started',
-    'review_turn_soft_capped',
-    'review_turn_hard_capped',
-    'review_summary_confirmed',
-    'review_submitted',
-    'review_manual_fallback_triggered',
   ]),
   metadata: z.string().nullable(),
-  createdAt: z.string(),
-})
-
-// ============================================================
-// InterviewFeedback
-// ============================================================
-export const interviewFeedbackResponseSchema = z.object({
-  id: z.string(),
-  applicationId: z.string(),
-  chatSessionId: z.string(),
-  policyVersionId: z.string(),
-  structuredData: z.string().nullable(),
-  structuredSchemaVersion: z.number(),
-  summaryConfirmedAt: z.string().nullable(),
-  submittedAt: z.string().nullable(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-})
-
-// ============================================================
-// ReviewPolicyVersion
-// ============================================================
-export const reviewPolicyVersionResponseSchema = z.object({
-  id: z.string(),
-  jobId: z.string(),
-  version: z.number(),
-  status: z.enum(['draft', 'confirmed', 'published']),
-  softCap: z.number(),
-  hardCap: z.number(),
-  createdBy: z.string(),
-  confirmedAt: z.string().nullable(),
-  publishedAt: z.string().nullable(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-})
-
-// ============================================================
-// ReviewPolicySignal
-// ============================================================
-export const reviewPolicySignalResponseSchema = z.object({
-  id: z.string(),
-  policyVersionId: z.string(),
-  signalKey: z.string(),
-  label: z.string(),
-  description: z.string().nullable(),
-  priority: z.enum(['high', 'supporting', 'concern']),
-  category: z.enum(['must', 'ng', 'nice']),
-  sortOrder: z.number(),
-  createdAt: z.string(),
-})
-
-// ============================================================
-// ReviewProhibitedTopic
-// ============================================================
-export const reviewProhibitedTopicResponseSchema = z.object({
-  id: z.string(),
-  policyVersionId: z.string(),
-  topic: z.string(),
   createdAt: z.string(),
 })
 
@@ -208,21 +129,13 @@ export const reviewProhibitedTopicResponseSchema = z.object({
 // ============================================================
 export const chatSessionResponseSchema = z.object({
   id: z.string(),
-  applicationId: z.string().nullable(),
-  jobId: z.string().nullable(),
-  type: z.enum(['application', 'interview_feedback', 'policy_creation']),
+  submissionId: z.string().nullable(),
+  formId: z.string().nullable(),
+  type: z.enum(['form_response']),
   bootstrapCompleted: z.boolean(),
   status: z.enum(['active', 'completed']),
   turnCount: z.number(),
-  currentAgent: z.enum([
-    'greeter',
-    'architect',
-    'interviewer',
-    'explorer',
-    'reviewer',
-    'quick_check',
-    'auditor',
-  ]),
+  currentAgent: z.enum(['greeter', 'architect', 'interviewer', 'reviewer']),
   createdAt: z.string(),
   updatedAt: z.string(),
 })
@@ -235,18 +148,18 @@ export const chatMessageResponseSchema = z.object({
   chatSessionId: z.string(),
   role: z.enum(['user', 'assistant', 'system']),
   content: z.string(),
-  targetJobFormFieldId: z.string().nullable(),
+  targetFormFieldId: z.string().nullable(),
   reviewPassed: z.boolean().nullable(),
   createdAt: z.string(),
 })
 
 // ============================================================
-// ApplicationTodo
+// SubmissionTask
 // ============================================================
-export const applicationTodoResponseSchema = z.object({
+export const submissionTaskResponseSchema = z.object({
   id: z.string(),
-  applicationId: z.string(),
-  jobFormFieldId: z.string(),
+  submissionId: z.string(),
+  formFieldId: z.string(),
   fact: z.string(),
   doneCriteria: z.string(),
   required: z.boolean(),

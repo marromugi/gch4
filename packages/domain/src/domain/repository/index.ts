@@ -1,6 +1,4 @@
-export type { IJobRepository } from './IJobRepository'
-export type { IApplicationRepository } from './IApplicationRepository'
-export type { IReviewPolicyRepository } from './IReviewPolicyRepository'
-export type { IInterviewFeedbackRepository } from './IInterviewFeedbackRepository'
+export type { IFormRepository } from './IFormRepository'
+export type { ISubmissionRepository } from './ISubmissionRepository'
 export type { IEventLogRepository } from './IEventLogRepository'
 export type { IToolCallLogRepository } from './IToolCallLogRepository'

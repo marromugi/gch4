@@ -9,12 +9,12 @@ import type { TriggerManualFallback200DataStatus } from './triggerManualFallback
 
 export type TriggerManualFallback200Data = {
   id: string
-  jobId: string
+  formId: string
   schemaVersionId: string
   /** @nullable */
-  applicantName: string | null
+  respondentName: string | null
   /** @nullable */
-  applicantEmail: string | null
+  respondentEmail: string | null
   /** @nullable */
   language: string | null
   /** @nullable */
@@ -23,9 +23,7 @@ export type TriggerManualFallback200Data = {
   timezone: string | null
   status: TriggerManualFallback200DataStatus
   /** @nullable */
-  meetLink: string | null
-  /** @nullable */
-  extractionReviewedAt: string | null
+  reviewCompletedAt: string | null
   /** @nullable */
   consentCheckedAt: string | null
   /** @nullable */

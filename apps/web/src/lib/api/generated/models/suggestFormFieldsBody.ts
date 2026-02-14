@@ -7,9 +7,5 @@
  */
 
 export type SuggestFormFieldsBody = {
-  title: string
-  /** @nullable */
-  idealCandidate?: string | null
-  /** @nullable */
-  cultureContext?: string | null
+  description: string
 }

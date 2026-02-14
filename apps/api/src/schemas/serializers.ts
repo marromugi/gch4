@@ -1,62 +1,57 @@
 import type {
-  Job,
-  Application,
-  JobFormField,
-  JobSchemaVersion,
-  FieldFactDefinition,
-  ProhibitedTopic,
-  ExtractedField,
+  Form,
+  Submission,
+  FormField,
+  FormSchemaVersion,
+  FieldCompletionCriteria,
+  CollectedField,
   ConsentLog,
   EventLog,
-  InterviewFeedback,
-  ReviewPolicyVersion,
-  ReviewPolicySignal,
-  ReviewProhibitedTopic,
   ChatSession,
   ChatMessage,
-  ApplicationTodo,
+  SubmissionTask,
 } from '@ding/domain/domain/entity'
 
-export function serializeJob(job: Job) {
+export function serializeForm(form: Form) {
   return {
-    id: job.id.value,
-    title: job.title,
-    description: job.description,
-    idealCandidate: job.idealCandidate,
-    cultureContext: job.cultureContext,
-    status: job.status.value,
-    createdBy: job.createdBy.value,
-    createdAt: job.createdAt.toISOString(),
-    updatedAt: job.updatedAt.toISOString(),
+    id: form.id.value,
+    title: form.title,
+    description: form.description,
+    purpose: form.purpose,
+    completionMessage: form.completionMessage,
+    status: form.status.value,
+    createdBy: form.createdBy.value,
+    createdAt: form.createdAt.toISOString(),
+    updatedAt: form.updatedAt.toISOString(),
   }
 }
 
-export function serializeApplication(app: Application) {
+export function serializeSubmission(submission: Submission) {
   return {
-    id: app.id.value,
-    jobId: app.jobId.value,
-    schemaVersionId: app.schemaVersionId.value,
-    applicantName: app.applicantName,
-    applicantEmail: app.applicantEmail,
-    language: app.language,
-    country: app.country,
-    timezone: app.timezone,
-    status: app.status.value,
-    meetLink: app.meetLink,
-    extractionReviewedAt: app.extractionReviewedAt?.toISOString() ?? null,
-    consentCheckedAt: app.consentCheckedAt?.toISOString() ?? null,
-    submittedAt: app.submittedAt?.toISOString() ?? null,
-    createdAt: app.createdAt.toISOString(),
-    updatedAt: app.updatedAt.toISOString(),
+    id: submission.id.value,
+    formId: submission.formId.value,
+    schemaVersionId: submission.schemaVersionId.value,
+    respondentName: submission.respondentName,
+    respondentEmail: submission.respondentEmail,
+    language: submission.language,
+    country: submission.country,
+    timezone: submission.timezone,
+    status: submission.status.value,
+    reviewCompletedAt: submission.reviewCompletedAt?.toISOString() ?? null,
+    consentCheckedAt: submission.consentCheckedAt?.toISOString() ?? null,
+    submittedAt: submission.submittedAt?.toISOString() ?? null,
+    createdAt: submission.createdAt.toISOString(),
+    updatedAt: submission.updatedAt.toISOString(),
   }
 }
 
-export function serializeJobFormField(field: JobFormField) {
+export function serializeFormField(field: FormField) {
   return {
     id: field.id.value,
-    jobId: field.jobId.value,
+    formId: field.formId.value,
     fieldId: field.fieldId,
     label: field.label,
+    description: field.description,
     intent: field.intent,
     required: field.required,
     sortOrder: field.sortOrder,
@@ -65,10 +60,10 @@ export function serializeJobFormField(field: JobFormField) {
   }
 }
 
-export function serializeJobSchemaVersion(version: JobSchemaVersion) {
+export function serializeFormSchemaVersion(version: FormSchemaVersion) {
   return {
     id: version.id.value,
-    jobId: version.jobId.value,
+    formId: version.formId.value,
     version: version.version,
     status: version.status.value,
     approvedAt: version.approvedAt?.toISOString() ?? null,
@@ -76,34 +71,25 @@ export function serializeJobSchemaVersion(version: JobSchemaVersion) {
   }
 }
 
-export function serializeFieldFactDefinition(def: FieldFactDefinition) {
+export function serializeFieldCompletionCriteria(criteria: FieldCompletionCriteria) {
   return {
-    id: def.id.value,
-    schemaVersionId: def.schemaVersionId.value,
-    jobFormFieldId: def.jobFormFieldId.value,
-    factKey: def.factKey,
-    fact: def.fact,
-    doneCriteria: def.doneCriteria,
-    sortOrder: def.sortOrder,
-    createdAt: def.createdAt.toISOString(),
+    id: criteria.id.value,
+    schemaVersionId: criteria.schemaVersionId.value,
+    formFieldId: criteria.formFieldId.value,
+    factKey: criteria.criteriaKey,
+    fact: criteria.criteria,
+    doneCriteria: criteria.doneCondition,
+    questioningHints: criteria.questioningHints,
+    sortOrder: criteria.sortOrder,
+    createdAt: criteria.createdAt.toISOString(),
   }
 }
 
-export function serializeProhibitedTopic(topic: ProhibitedTopic) {
-  return {
-    id: topic.id,
-    schemaVersionId: topic.schemaVersionId.value,
-    jobFormFieldId: topic.jobFormFieldId.value,
-    topic: topic.topic,
-    createdAt: topic.createdAt.toISOString(),
-  }
-}
-
-export function serializeExtractedField(field: ExtractedField) {
+export function serializeCollectedField(field: CollectedField) {
   return {
     id: field.id.value,
-    applicationId: field.applicationId.value,
-    jobFormFieldId: field.jobFormFieldId.value,
+    submissionId: field.submissionId.value,
+    formFieldId: field.formFieldId.value,
     value: field.value,
     source: field.source.value,
     confirmed: field.confirmed,
@@ -115,7 +101,7 @@ export function serializeExtractedField(field: ExtractedField) {
 export function serializeConsentLog(log: ConsentLog) {
   return {
     id: log.id.value,
-    applicationId: log.applicationId.value,
+    submissionId: log.submissionId.value,
     consentType: log.consentType.value,
     consented: log.consented,
     ipAddress: log.ipAddress,
@@ -127,75 +113,20 @@ export function serializeConsentLog(log: ConsentLog) {
 export function serializeEventLog(log: EventLog) {
   return {
     id: log.id.value,
-    jobId: log.jobId?.value ?? null,
-    applicationId: log.applicationId?.value ?? null,
+    formId: log.formId?.value ?? null,
+    submissionId: log.submissionId?.value ?? null,
     chatSessionId: log.chatSessionId?.value ?? null,
-    policyVersionId: log.policyVersionId?.value ?? null,
     eventType: log.eventType.value,
     metadata: log.metadata,
     createdAt: log.createdAt.toISOString(),
   }
 }
 
-export function serializeInterviewFeedback(feedback: InterviewFeedback) {
-  return {
-    id: feedback.id.value,
-    applicationId: feedback.applicationId.value,
-    chatSessionId: feedback.chatSessionId.value,
-    policyVersionId: feedback.policyVersionId.value,
-    structuredData: feedback.structuredData,
-    structuredSchemaVersion: feedback.structuredSchemaVersion,
-    summaryConfirmedAt: feedback.summaryConfirmedAt?.toISOString() ?? null,
-    submittedAt: feedback.submittedAt?.toISOString() ?? null,
-    createdAt: feedback.createdAt.toISOString(),
-    updatedAt: feedback.updatedAt.toISOString(),
-  }
-}
-
-export function serializeReviewPolicyVersion(policy: ReviewPolicyVersion) {
-  return {
-    id: policy.id.value,
-    jobId: policy.jobId.value,
-    version: policy.version,
-    status: policy.status.value,
-    softCap: policy.softCap,
-    hardCap: policy.hardCap,
-    createdBy: policy.createdBy.value,
-    confirmedAt: policy.confirmedAt?.toISOString() ?? null,
-    publishedAt: policy.publishedAt?.toISOString() ?? null,
-    createdAt: policy.createdAt.toISOString(),
-    updatedAt: policy.updatedAt.toISOString(),
-  }
-}
-
-export function serializeReviewPolicySignal(signal: ReviewPolicySignal) {
-  return {
-    id: signal.id.value,
-    policyVersionId: signal.policyVersionId.value,
-    signalKey: signal.signalKey,
-    label: signal.label,
-    description: signal.description,
-    priority: signal.priority.value,
-    category: signal.category.value,
-    sortOrder: signal.sortOrder,
-    createdAt: signal.createdAt.toISOString(),
-  }
-}
-
-export function serializeReviewProhibitedTopic(topic: ReviewProhibitedTopic) {
-  return {
-    id: topic.id,
-    policyVersionId: topic.policyVersionId.value,
-    topic: topic.topic,
-    createdAt: topic.createdAt.toISOString(),
-  }
-}
-
 export function serializeChatSession(session: ChatSession) {
   return {
     id: session.id.value,
-    applicationId: session.applicationId?.value ?? null,
-    jobId: session.jobId?.value ?? null,
+    submissionId: session.submissionId?.value ?? null,
+    formId: session.formId?.value ?? null,
     type: session.type.value,
     bootstrapCompleted: session.bootstrapCompleted,
     status: session.status.value,
@@ -212,23 +143,23 @@ export function serializeChatMessage(message: ChatMessage) {
     chatSessionId: message.chatSessionId.value,
     role: message.role.value,
     content: message.content,
-    targetJobFormFieldId: message.targetJobFormFieldId?.value ?? null,
+    targetFormFieldId: message.targetFormFieldId?.value ?? null,
     reviewPassed: message.reviewPassed,
     createdAt: message.createdAt.toISOString(),
   }
 }
 
-export function serializeApplicationTodo(todo: ApplicationTodo) {
+export function serializeSubmissionTask(task: SubmissionTask) {
   return {
-    id: todo.id.value,
-    applicationId: todo.applicationId.value,
-    jobFormFieldId: todo.jobFormFieldId.value,
-    fact: todo.fact,
-    doneCriteria: todo.doneCriteria,
-    required: todo.required,
-    status: todo.status.value,
-    extractedValue: todo.extractedValue,
-    createdAt: todo.createdAt.toISOString(),
-    updatedAt: todo.updatedAt.toISOString(),
+    id: task.id.value,
+    submissionId: task.submissionId.value,
+    formFieldId: task.formFieldId.value,
+    fact: task.criteria,
+    doneCriteria: task.doneCondition,
+    required: task.required,
+    status: task.status.value,
+    extractedValue: task.collectedValue,
+    createdAt: task.createdAt.toISOString(),
+    updatedAt: task.updatedAt.toISOString(),
   }
 }

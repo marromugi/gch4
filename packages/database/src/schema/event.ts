@@ -1,7 +1,6 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
-import { application, chatSession } from './application'
-import { job } from './job'
-import { reviewPolicyVersion } from './policy'
+import { submission, chatSession } from './submission'
+import { form } from './form'
 import type { InferSelectModel, InferInsertModel } from 'drizzle-orm'
 
 /**
@@ -10,10 +9,9 @@ import type { InferSelectModel, InferInsertModel } from 'drizzle-orm'
  */
 export const eventLog = sqliteTable('event_log', {
   id: text('id').primaryKey(),
-  jobId: text('job_id').references(() => job.id),
-  applicationId: text('application_id').references(() => application.id),
+  formId: text('form_id').references(() => form.id),
+  submissionId: text('submission_id').references(() => submission.id),
   chatSessionId: text('chat_session_id').references(() => chatSession.id),
-  policyVersionId: text('policy_version_id').references(() => reviewPolicyVersion.id),
   eventType: text('event_type').notNull(),
   metadata: text('metadata'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),

@@ -10,13 +10,11 @@ import type { RecordEventLog201DataEventType } from './recordEventLog201DataEven
 export type RecordEventLog201Data = {
   id: string
   /** @nullable */
-  jobId: string | null
+  formId: string | null
   /** @nullable */
-  applicationId: string | null
+  submissionId: string | null
   /** @nullable */
   chatSessionId: string | null
-  /** @nullable */
-  policyVersionId: string | null
   eventType: RecordEventLog201DataEventType
   /** @nullable */
   metadata: string | null

@@ -16,7 +16,7 @@ export type CreateChatSession201DataGreeting = {
   role: CreateChatSession201DataGreetingRole
   content: string
   /** @nullable */
-  targetJobFormFieldId: string | null
+  targetFormFieldId: string | null
   /** @nullable */
   reviewPassed: boolean | null
   createdAt: string

@@ -1,13 +1,10 @@
 import { GeminiProvider, CloudflareKVStore, createDefaultRegistry } from '@ding/agent'
 import { createDatabase } from '@ding/database'
 import {
-  DrizzleJobRepository,
-  DrizzleApplicationRepository,
-  DrizzleReviewPolicyRepository,
-  DrizzleInterviewFeedbackRepository,
+  DrizzleFormRepository,
+  DrizzleSubmissionRepository,
   DrizzleEventLogRepository,
   DrizzleToolCallLogRepository,
-  ApplicationSubmissionService,
   FallbackService,
 } from '@ding/domain'
 import type { HonoEnv } from '../types/hono'
@@ -26,16 +23,13 @@ export const diMiddleware: MiddlewareHandler<HonoEnv> = async (c, next) => {
   })
 
   const repositories = {
-    jobRepository: new DrizzleJobRepository(db),
-    applicationRepository: new DrizzleApplicationRepository(db),
-    reviewPolicyRepository: new DrizzleReviewPolicyRepository(db),
-    interviewFeedbackRepository: new DrizzleInterviewFeedbackRepository(db),
+    formRepository: new DrizzleFormRepository(db),
+    submissionRepository: new DrizzleSubmissionRepository(db),
     eventLogRepository: new DrizzleEventLogRepository(db),
     toolCallLogRepository: new DrizzleToolCallLogRepository(db),
   }
 
   const services = {
-    submissionService: new ApplicationSubmissionService(),
     fallbackService: new FallbackService(),
   }
 

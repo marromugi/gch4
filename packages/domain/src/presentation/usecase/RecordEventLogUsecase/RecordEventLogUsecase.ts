@@ -4,10 +4,9 @@ import type { IEventLogRepository } from '../../../domain/repository/IEventLogRe
 import { EventLog } from '../../../domain/entity/EventLog/EventLog'
 import { EventLogId } from '../../../domain/valueObject/EventLogId/EventLogId'
 import { EventType } from '../../../domain/valueObject/EventType/EventType'
-import { ApplicationId } from '../../../domain/valueObject/ApplicationId/ApplicationId'
-import { JobId } from '../../../domain/valueObject/JobId/JobId'
+import { SubmissionId } from '../../../domain/valueObject/SubmissionId/SubmissionId'
+import { FormId } from '../../../domain/valueObject/FormId/FormId'
 import { ChatSessionId } from '../../../domain/valueObject/ChatSessionId/ChatSessionId'
-import { ReviewPolicyVersionId } from '../../../domain/valueObject/ReviewPolicyVersionId/ReviewPolicyVersionId'
 
 // --- Error ---
 export class RecordEventLogValidationError extends Error {
@@ -32,10 +31,9 @@ export type RecordEventLogError = RecordEventLogValidationError | RecordEventLog
 export interface RecordEventLogInput {
   eventLogId: string
   eventType: string
-  applicationId?: string
-  jobId?: string
+  submissionId?: string
+  formId?: string
   chatSessionId?: string
-  policyVersionId?: string
   metadata?: string
 }
 
@@ -64,12 +62,9 @@ export class RecordEventLogUsecase {
     const eventLog = EventLog.create({
       id: EventLogId.fromString(input.eventLogId),
       eventType,
-      applicationId: input.applicationId ? ApplicationId.fromString(input.applicationId) : null,
-      jobId: input.jobId ? JobId.fromString(input.jobId) : null,
+      submissionId: input.submissionId ? SubmissionId.fromString(input.submissionId) : null,
+      formId: input.formId ? FormId.fromString(input.formId) : null,
       chatSessionId: input.chatSessionId ? ChatSessionId.fromString(input.chatSessionId) : null,
-      policyVersionId: input.policyVersionId
-        ? ReviewPolicyVersionId.fromString(input.policyVersionId)
-        : null,
       metadata: input.metadata ?? null,
       createdAt: new Date(),
     })

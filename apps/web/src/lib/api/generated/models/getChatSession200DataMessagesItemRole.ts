@@ -9,7 +9,6 @@
 export type GetChatSession200DataMessagesItemRole =
   (typeof GetChatSession200DataMessagesItemRole)[keyof typeof GetChatSession200DataMessagesItemRole]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetChatSession200DataMessagesItemRole = {
   user: 'user',
   assistant: 'assistant',

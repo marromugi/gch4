@@ -9,7 +9,6 @@
 export type GetApplication200DataStatus =
   (typeof GetApplication200DataStatus)[keyof typeof GetApplication200DataStatus]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetApplication200DataStatus = {
   new: 'new',
   scheduling: 'scheduling',

@@ -4,17 +4,15 @@ import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { diMiddleware } from './middleware/di'
 import { sessionMiddleware } from './middleware/session'
-import { applicationRoutes } from './routes/applications'
 import { authRoutes } from './routes/auth'
 import { consentLogRoutes } from './routes/consent-logs'
 import { eventLogRoutes } from './routes/event-logs'
+import { formRoutes } from './routes/forms'
 import GetHealth from './routes/health/get'
 import GetHealthLive from './routes/health/live/get'
 import GetHealthReady from './routes/health/ready/get'
-import { interviewFeedbackRoutes } from './routes/interview-feedbacks'
-import { jobRoutes } from './routes/jobs'
 import GetMe from './routes/me/get'
-import { reviewPolicyRoutes } from './routes/review-policies'
+import { submissionRoutes } from './routes/submissions'
 import { userRoutes } from './routes/users'
 import type { HonoEnv } from './types/hono'
 
@@ -48,13 +46,11 @@ app.route('/api/auth', authRoutes)
 app.route('/me', GetMe)
 
 // Domain API Routes
-app.route('/api/jobs', jobRoutes)
+app.route('/api/forms', formRoutes)
 app.route('/api/users', userRoutes)
-app.route('/api/applications', applicationRoutes)
+app.route('/api/submissions', submissionRoutes)
 app.route('/api/consent-logs', consentLogRoutes)
 app.route('/api/event-logs', eventLogRoutes)
-app.route('/api/review-policies', reviewPolicyRoutes)
-app.route('/api/interview-feedbacks', interviewFeedbackRoutes)
 
 // OpenAPI documentation
 app.doc('/openapi.json', {

@@ -7,7 +7,7 @@
  */
 
 export type SaveConsentLogBody = {
-  applicationId: string
+  submissionId: string
   consentType: string
   consentLogId?: string
   consented: boolean

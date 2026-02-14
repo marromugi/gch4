@@ -6,6 +6,16 @@
  * OpenAPI spec version: 0.0.0
  */
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { customFetch } from '../../fetcher'
+import type {
+  GetInterviewFeedback200,
+  GetInterviewFeedback400,
+  GetInterviewFeedback500,
+  SaveInterviewFeedback201,
+  SaveInterviewFeedback400,
+  SaveInterviewFeedback500,
+  SaveInterviewFeedbackBody,
+} from '.././models'
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -20,18 +30,6 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query'
-
-import type {
-  GetInterviewFeedback200,
-  GetInterviewFeedback400,
-  GetInterviewFeedback500,
-  SaveInterviewFeedback201,
-  SaveInterviewFeedback400,
-  SaveInterviewFeedback500,
-  SaveInterviewFeedbackBody,
-} from '.././models'
-
-import { customFetch } from '../../fetcher'
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 

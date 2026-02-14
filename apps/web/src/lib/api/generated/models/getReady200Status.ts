@@ -8,7 +8,6 @@
 
 export type GetReady200Status = (typeof GetReady200Status)[keyof typeof GetReady200Status]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetReady200Status = {
   ready: 'ready',
 } as const

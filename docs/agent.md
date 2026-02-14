@@ -1,9 +1,9 @@
-# 応募エージェント設計
+# フォーム回答エージェント設計
 
 ## 概要
 
-応募者との対話を通じてフォームを埋めるエージェントシステム。
-複数の専門エージェントが連携し、コンプライアンスを守りながらインタビューを進行する。
+回答者との対話を通じてフォームを埋めるエージェントシステム。
+複数の専門エージェントが連携し、効率的にフォームを収集する。
 
 ## エージェント一覧
 
@@ -11,10 +11,8 @@
 | ----------- | ---------------------------- | ---------------------------------------------------- |
 | Greeter     | 最初の挨拶・言語・居住国確認 | `ask`, `set_language`, `set_country`, `set_timezone` |
 | Architect   | インタビュー全体の設計       | `create_plan`                                        |
-| Interviewer | インタビューの指揮者         | `subtask(*)`, `ask`                                  |
+| Interviewer | インタビューの指揮者         | `subtask(reviewer)`, `ask`                           |
 | Reviewer    | 回答の充足確認               | `review`                                             |
-| QuickCheck  | 質問前の簡易コンプラチェック | `result`                                             |
-| Auditor     | 最終監査                     | `result`                                             |
 
 ## フロー図
 
@@ -35,8 +33,6 @@
 │ 3. Interviewer ← システムが現在のfieldを注入                     │
 │    tools:                                                       │
 │      - subtask(reviewer)                                        │
-│      - subtask(quick_check)                                     │
-│      - subtask(auditor)                                         │
 │      - ask                                                      │
 │    「インタビューを進める指揮者」                                  │
 └─────────────────────────────────────────────────────────────────┘
@@ -45,36 +41,23 @@
 ┌─────────────────────────────────────────────────────────────────┐
 │ 質問フロー（すべての質問で共通）                                   │
 │                                                                 │
-│  subtask(quick_check) → ask → subtask(reviewer)                 │
-│         ↑                             │                         │
-│         │                             ↓                         │
-│         │                    ┌────────────────────┐             │
-│         │                    │ Reviewer           │             │
-│         │                    │ - passed: true     │ → 次フィールド│
-│         │                    │ - passed: false    │             │
-│         │                    │   + missingFacts   │             │
-│         │                    └────────────────────┘             │
-│         │                             │                         │
-│         └───── フォローアップ質問 ─────┘                          │
+│  ask → subtask(reviewer)                                        │
+│         │                                                       │
+│         ↓                                                       │
+│  ┌────────────────────┐                                         │
+│  │ Reviewer           │                                         │
+│  │ - passed: true     │ → 次フィールドへ                         │
+│  │ - passed: false    │                                         │
+│  │   + missingFacts   │                                         │
+│  └────────────────────┘                                         │
+│         │                                                       │
+│         └───── フォローアップ質問を生成 → ask → ...               │
 │                                                                 │
 │  ※ 深掘りが必要な質問は Reviewer の missingFacts を基に            │
 │    自然なフォローアップ質問を生成する                              │
 └─────────────────────────────────────────────────────────────────┘
                               ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ 4. Reviewer                                                     │
-│    tool: review                                                 │
-│    ├→ 不足あり → Interviewer に feedback                         │
-│    └→ OK → 次のフィールドへ                                      │
-│    「回答の充足をレビュー」                                        │
-└─────────────────────────────────────────────────────────────────┘
-                           ↓ (全フィールド完了)
-┌─────────────────────────────────────────────────────────────────┐
-│ 5. Auditor                                                      │
-│    tool: result                                                 │
-│    └→ システムがユーザーに結果を返す                              │
-│    「最終監査」                                                   │
-└─────────────────────────────────────────────────────────────────┘
+              全フィールド完了 → 確認画面へ
 ```
 
 ## 各エージェント詳細
@@ -86,13 +69,13 @@
 **tools**:
 
 - `ask`: ユーザーに質問やメッセージを送る
-- `set_language`: 応募者の使用言語を設定する
-- `set_country`: 応募者の居住国を設定する
+- `set_language`: 回答者の使用言語を設定する
+- `set_country`: 回答者の居住国を設定する
 - `set_timezone`: 居住国からタイムゾーンを推測して設定する
 
 **動作**:
 
-1. 応募者に挨拶する
+1. 回答者に挨拶する
 2. 使用言語を確認し、`set_language` で設定
 3. 居住国を確認し、`set_country` で設定
 4. `set_timezone` でタイムゾーンを自動推測（失敗時は Asia/Tokyo にフォールバック）
@@ -123,7 +106,7 @@ function getSection(state: State): Section {
 
 **動作**:
 
-1. 求人のフィールド定義を読み込む
+1. フォームのフィールド定義を読み込む
 2. インタビューの順序を決定する
 3. `create_plan` でプランを出力する（Zod でパース）
 4. 完了後、Interviewer に制御を渡す
@@ -147,30 +130,27 @@ const PlanSchema = z.object({
 
 ### Interviewer
 
-**役割**: インタビューのオーケストレーター。各サブエージェントを呼び出しながら進行する。
+**役割**: インタビューのオーケストレーター。Reviewer を呼び出しながら進行する。
 
 **tools**:
 
 - `subtask(reviewer)`: Reviewer をサブセッションで起動
-- `subtask(quick_check)`: QuickCheck をサブセッションで起動
-- `subtask(auditor)`: Auditor をサブセッションで起動
-- `ask`: 応募者に質問する
+- `ask`: 回答者に質問する
 
 **動作**:
 
 1. システムから現在の field を受け取る
-2. `subtask(quick_check)` でコンプラチェック
-3. チェック通過後、`ask` で質問
-4. 回答後、`subtask(reviewer)` で Reviewer を起動
-5. Reviewer の結果を処理:
+2. `ask` で質問
+3. 回答後、`subtask(reviewer)` で Reviewer を起動
+4. Reviewer の結果を処理:
    - `passed: true` → 次の field へ進む
    - `passed: false` + `missingFacts` → フォローアップ質問を生成
-6. フォローアップ質問も同様に quick_check → ask → reviewer のフローを繰り返す
-7. 全 field 完了後、`subtask(auditor)` で Auditor を起動
+5. フォローアップ質問も同様に ask → reviewer のフローを繰り返す
+6. 全 field 完了後、確認画面へ誘導
 
 **深掘りの仕組み**:
 
-- 志望動機や経験など深掘りが必要な質問では、Reviewer が `missingFacts` を返す
+- 深掘りが必要な質問では、Reviewer が `missingFacts` を返す
 - Interviewer は `missingFacts` を基に自然なフォローアップ質問を生成
 - LLM の会話能力を活かし、形式的なステップ管理なしで自然な深掘りを実現
 
@@ -187,8 +167,8 @@ const PlanSchema = z.object({
 **動作**:
 
 1. 収集した回答と field 定義を照合
-2. `required_facts` が満たされているか確認
-3. `done_criteria` を満たしているか確認
+2. `criteria` が満たされているか確認
+3. `done_condition` を満たしているか確認
 4. 不足があれば feedback を返す
 5. OK ならパスを返す
 
@@ -199,88 +179,12 @@ const ReviewResultSchema = z.object({
   passed: z.boolean(),
   feedback: z.string().optional(),
   missing_facts: z.array(z.string()).optional(),
+  extracted_facts: z.array(z.string()).optional(),
+  field_value: z.string().optional(),
 })
 ```
 
 ---
-
-### QuickCheck
-
-**役割**: 質問送信前の軽量コンプライアンスチェック。
-
-**tools**:
-
-- `result`: チェック結果を返す
-
-**チェック項目**:
-
-- `field_id` / `intent` への紐づきがあるか
-- 禁止トピックに該当しないか
-- 既回答の fact を再質問していないか
-- トーン違反がないか
-
-**出力**:
-
-```typescript
-const QuickCheckResultSchema = z.object({
-  passed: z.boolean(),
-  violations: z
-    .array(
-      z.object({
-        type: z.enum([
-          'prohibited_topic',
-          'duplicate_question',
-          'tone_violation',
-          'no_intent_binding',
-        ]),
-        message: z.string(),
-      })
-    )
-    .optional(),
-})
-```
-
----
-
-### Auditor
-
-**役割**: 全フィールド完了後の最終監査とサマリー作成。
-
-**tools**:
-
-- `result`: 監査結果とサマリーを返す
-
-**チェック項目**:
-
-- 過剰な情報収集がないか
-- 失礼な表現がないか
-- 会話全体の一貫性
-- 禁止トピックへの抵触がないか
-
-**動作**:
-
-1. 会話履歴全体を精査
-2. コンプライアンス違反がないか確認
-3. 最終サマリーを作成
-4. システムに結果を返す
-
-**出力**:
-
-```typescript
-const AuditResultSchema = z.object({
-  passed: z.boolean(),
-  violations: z
-    .array(
-      z.object({
-        type: z.string(),
-        message: z.string(),
-        severity: z.enum(['error', 'warning']),
-      })
-    )
-    .optional(),
-  summary: z.string(),
-})
-```
 
 ## サブセッションのコンテキスト引き継ぎ
 
@@ -303,10 +207,8 @@ pending → interviewing → reviewing → done
 
 ## 不変条件
 
-- `ask` 実行前には必ず `quick_check` を通す
 - `reviewer` を通さないと次の field に進めない
-- 全 field 完了後は必ず `auditor` を通す
-- `required` な field がすべて `done` でなければ応募確定できない
+- `required` な field がすべて `done` でなければ回答確定できない
 
 ---
 
@@ -315,17 +217,17 @@ pending → interviewing → reviewing → done
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                         API Layer                           │
-│  - データ取得（Application, Session, Messages）              │
+│  - データ取得（Submission, Session, Messages）               │
 │  - Orchestrator 呼び出し                                    │
 │  - 結果の永続化（Repository 経由）                           │
 └─────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                      Orchestrator                           │
-│  - Context 構築（buildContext）                             │
+│                      OrchestratorV2                         │
+│  - KV Store によるセッション状態管理                         │
 │  - エージェント制御・遷移                                    │
-│  - 結果処理（StateChange[] の収集）                         │
+│  - サブセッション管理                                        │
 └─────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -339,9 +241,9 @@ pending → interviewing → reviewing → done
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                       Agents                                │
-│  ┌─────────┐ ┌───────────┐ ┌──────────────┐                │
-│  │ Greeter │ │ Architect │ │ Interviewer  │ ...            │
-│  └─────────┘ └───────────┘ └──────────────┘                │
+│  ┌─────────┐ ┌───────────┐ ┌──────────────┐ ┌──────────┐   │
+│  │ Greeter │ │ Architect │ │ Interviewer  │ │ Reviewer │   │
+│  └─────────┘ └───────────┘ └──────────────┘ └──────────┘   │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -403,48 +305,6 @@ interface AgentLoopResult {
 
 ---
 
-## StateChange
-
-Orchestrator はエージェントの実行結果から `StateChange[]` を収集し、API レイヤーに返す。
-API レイヤーはこれを使って永続化を行う。
-
-### StateChange の種類
-
-```typescript
-type StateChangeType =
-  | 'SET_LANGUAGE' // 言語設定
-  | 'SET_COUNTRY' // 居住国設定
-  | 'SET_TIMEZONE' // タイムゾーン設定
-  | 'SET_CURRENT_AGENT' // エージェント遷移
-  | 'ADD_USER_MESSAGE' // ユーザーメッセージ追加
-  | 'ADD_ASSISTANT_MESSAGE' // アシスタントメッセージ追加
-
-interface StateChange {
-  type: StateChangeType
-  payload: unknown
-}
-```
-
-### StateChange の収集
-
-```typescript
-// Orchestrator.collectStateChanges
-private collectStateChanges(toolCalls?: ToolCallResult[]): StateChange[] {
-  const changes: StateChange[] = []
-  for (const toolCall of toolCalls) {
-    switch (toolCall.toolName) {
-      case 'set_language':
-        changes.push({ type: 'SET_LANGUAGE', payload: { language: ... } })
-        break
-      // ...
-    }
-  }
-  return changes
-}
-```
-
----
-
 ## Logger
 
 デバッグ用の Logger インターフェースを提供。
@@ -472,52 +332,11 @@ interface LogContext {
 - **ConsoleLogger**: タイムスタンプ付きのコンソール出力（開発用）
 - **NoOpLogger**: 何も出力しない（デフォルト/テスト用）
 
-### 使用例
-
-```typescript
-const logger = new ConsoleLogger('[Orchestrator]')
-const orchestrator = new Orchestrator({
-  provider: llmProvider,
-  createAgent,
-  logger,
-})
-```
-
-### ログ出力ポイント
-
-| コンポーネント | ログ内容                                           |
-| -------------- | -------------------------------------------------- |
-| Orchestrator   | ワークフロー開始、エージェント遷移、メッセージ処理 |
-| BaseAgent      | ツール実行、LLM 呼び出し、ループイテレーション     |
-| Agent (個別)   | 各エージェント固有のイベント                       |
-
----
-
-## OrchestratorInput
-
-API レイヤーから Orchestrator に渡す入力データ。
-
-```typescript
-interface OrchestratorInput {
-  sessionId: string
-  currentAgent?: AgentType
-  state: {
-    language?: string
-    country?: string
-    timezone?: string
-  }
-  chatHistory: Array<{
-    role: 'user' | 'assistant'
-    content: string
-  }>
-}
-```
-
 ---
 
 ## エージェント遷移
 
-Orchestrator が管理するエージェント間の遷移ルール:
+OrchestratorV2 が管理するエージェント間の遷移ルール:
 
 ```typescript
 private getNextAgent(currentAgent: AgentType, state: State): AgentType | null {
@@ -527,13 +346,65 @@ private getNextAgent(currentAgent: AgentType, state: State): AgentType | null {
     case 'architect':
       return 'interviewer'    // Architect → Interviewer
     case 'interviewer':
-      return null             // 状態による（TODO）
+      return null             // Interviewer で終了 or reviewer を経由
     case 'reviewer':
       return 'interviewer'    // Reviewer → Interviewer
-    case 'auditor':
-      return null             // ワークフロー終了
     default:
       return null
   }
+}
+```
+
+---
+
+## KV Store ベースの状態管理
+
+### MainSessionState
+
+```typescript
+interface MainSessionState {
+  sessionId: string
+  agentStack: AgentStackEntry[]
+  messages: LLMMessage[]
+  subSessionResults: Record<string, unknown>
+  bootstrap: {
+    language?: string
+    country?: string
+    timezone?: string
+  }
+  form: SessionForm
+  plan?: unknown
+  currentFieldIndex: number
+  collectedFields: Record<string, string>
+  followUpCount: number
+  createdAt: number
+  updatedAt: number
+}
+```
+
+### SessionForm
+
+```typescript
+interface SessionForm {
+  fields: FormField[]
+  facts: FactDefinition[]
+}
+
+interface FormField {
+  id: string
+  fieldId: string
+  label: string
+  intent: string | null
+  required: boolean
+  sortOrder: number
+}
+
+interface FactDefinition {
+  id: string
+  formFieldId: string
+  factKey: string
+  fact: string
+  doneCriteria: string
+  questioningHints: string | null
 }
 ```

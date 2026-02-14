@@ -1,16 +1,16 @@
 import type { Result } from '../../../domain/shared/Result/Result'
 import { Result as R } from '../../../domain/shared/Result/Result'
-import type { IApplicationRepository } from '../../../domain/repository/IApplicationRepository/IApplicationRepository'
+import type { ISubmissionRepository } from '../../../domain/repository/ISubmissionRepository/ISubmissionRepository'
 import { ConsentLog } from '../../../domain/entity/ConsentLog/ConsentLog'
-import { ApplicationId } from '../../../domain/valueObject/ApplicationId/ApplicationId'
+import { SubmissionId } from '../../../domain/valueObject/SubmissionId/SubmissionId'
 import { ConsentLogId } from '../../../domain/valueObject/ConsentLogId/ConsentLogId'
 import { ConsentType } from '../../../domain/valueObject/ConsentType/ConsentType'
 
 // --- Error ---
 export class SaveConsentLogNotFoundError extends Error {
   readonly type = 'not_found' as const
-  constructor(applicationId: string) {
-    super(`Application not found: ${applicationId}`)
+  constructor(submissionId: string) {
+    super(`Submission not found: ${submissionId}`)
     this.name = 'SaveConsentLogNotFoundError'
   }
 }
@@ -38,7 +38,7 @@ export type SaveConsentLogError =
 
 // --- Input / Output / Deps ---
 export interface SaveConsentLogInput {
-  applicationId: string
+  submissionId: string
   consentType: string
   consentLogId: string
   consented: boolean
@@ -47,7 +47,7 @@ export interface SaveConsentLogInput {
 }
 
 export interface SaveConsentLogDeps {
-  applicationRepository: IApplicationRepository
+  submissionRepository: ISubmissionRepository
 }
 
 export type SaveConsentLogOutput = ConsentLog
@@ -67,10 +67,10 @@ export class SaveConsentLogUsecase {
       return R.err(new SaveConsentLogValidationError(`Invalid consentType: ${input.consentType}`))
     }
 
-    const applicationId = ApplicationId.fromString(input.applicationId)
+    const submissionId = SubmissionId.fromString(input.submissionId)
 
-    // Application の存在確認
-    const findResult = await this.deps.applicationRepository.findById(applicationId)
+    // Submission の存在確認
+    const findResult = await this.deps.submissionRepository.findById(submissionId)
     if (!findResult.success) {
       return R.err(new SaveConsentLogRepositoryError(findResult.error.message))
     }
@@ -78,7 +78,7 @@ export class SaveConsentLogUsecase {
     // ConsentLog を作成
     const consentLog = ConsentLog.create({
       id: ConsentLogId.fromString(input.consentLogId),
-      applicationId,
+      submissionId,
       consentType,
       consented: input.consented,
       ipAddress: input.ipAddress ?? null,
@@ -87,7 +87,7 @@ export class SaveConsentLogUsecase {
     })
 
     // 保存
-    const saveResult = await this.deps.applicationRepository.saveConsentLog(consentLog)
+    const saveResult = await this.deps.submissionRepository.saveConsentLog(consentLog)
     if (!saveResult.success) {
       return R.err(new SaveConsentLogRepositoryError(saveResult.error.message))
     }

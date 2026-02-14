@@ -6,21 +6,19 @@
  * OpenAPI spec version: 0.0.0
  */
 import { useMutation } from '@tanstack/react-query'
-import type {
-  MutationFunction,
-  QueryClient,
-  UseMutationOptions,
-  UseMutationResult,
-} from '@tanstack/react-query'
-
+import { customFetch } from '../../fetcher'
 import type {
   RecordEventLog201,
   RecordEventLog400,
   RecordEventLog500,
   RecordEventLogBody,
 } from '.././models'
-
-import { customFetch } from '../../fetcher'
+import type {
+  MutationFunction,
+  QueryClient,
+  UseMutationOptions,
+  UseMutationResult,
+} from '@tanstack/react-query'
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 

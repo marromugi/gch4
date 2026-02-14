@@ -5,16 +5,16 @@
  * Ding API Documentation
  * OpenAPI spec version: 0.0.0
  */
-import type { SendChatMessage200DataSessionType } from './sendChatMessage200DataSessionType'
-import type { SendChatMessage200DataSessionStatus } from './sendChatMessage200DataSessionStatus'
 import type { SendChatMessage200DataSessionCurrentAgent } from './sendChatMessage200DataSessionCurrentAgent'
+import type { SendChatMessage200DataSessionStatus } from './sendChatMessage200DataSessionStatus'
+import type { SendChatMessage200DataSessionType } from './sendChatMessage200DataSessionType'
 
 export type SendChatMessage200DataSession = {
   id: string
   /** @nullable */
-  applicationId: string | null
+  submissionId: string | null
   /** @nullable */
-  jobId: string | null
+  formId: string | null
   type: SendChatMessage200DataSessionType
   bootstrapCompleted: boolean
   status: SendChatMessage200DataSessionStatus

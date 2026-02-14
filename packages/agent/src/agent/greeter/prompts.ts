@@ -81,13 +81,13 @@ const COMMON_INSTRUCTIONS = `## ツール使用ルール
 ## 会話トーン
 - 丁寧で親しみやすい
 - 命令口調や圧迫的な表現は禁止
-- 応募者が不安にならないよう、温かみのある対応を心がける
+- 回答者が不安にならないよう、温かみのある対応を心がける
 
 ## 注意事項
 - 言語・居住国の確認以外の質問には答えない（次のステップで対応すると伝える）
 - 個人情報は聞かない
-- 応募プロセスの詳細説明は次のステップで行う
-- **居住国は言語から推測してはいけない**（例: 日本語を話す人が日本在住とは限らない。必ず応募者に直接確認すること）`
+- 回答プロセスの詳細説明は次のステップで行う
+- **居住国は言語から推測してはいけない**（例: 日本語を話す人が日本在住とは限らない。必ず回答者に直接確認すること）`
 
 /**
  * 利用可能なツールセクションを構築
@@ -121,14 +121,14 @@ function buildStepsSection(state: State): string {
   // 言語設定が未完了の場合
   if (!state.language) {
     steps.push(`### ${stepNum}. 言語確認
-1. 最初に応募者に親しみやすく挨拶する
-2. 使用言語を確認する（直接聞くか、応募者のメッセージから推測）
+1. 最初に回答者に親しみやすく挨拶する
+2. 使用言語を確認する（直接聞くか、回答者のメッセージから推測）
 3. 言語が確認できたら set_language を呼ぶ
 
 言語推測ルール:
-- 応募者が日本語で話しかけてきた場合は日本語（ja）と推測
-- 応募者が英語で話しかけてきた場合は英語（en）と推測
-- 推測に自信がない場合は、応募者に確認する`)
+- 回答者が日本語で話しかけてきた場合は日本語（ja）と推測
+- 回答者が英語で話しかけてきた場合は英語（en）と推測
+- 推測に自信がない場合は、回答者に確認する`)
     stepNum++
   }
 
@@ -196,7 +196,7 @@ function buildRoleSection(state: State): string {
     return '## 役割\n設定は全て完了しています。確認メッセージを送ってください。'
   }
 
-  return `## 役割\n応募者の${tasks.join('と')}を行うことが目的です。`
+  return `## 役割\n回答者の${tasks.join('と')}を行うことが目的です。`
 }
 
 /**
@@ -206,7 +206,7 @@ export function buildGreeterSystemPrompt(state: State): string {
   const sections: string[] = []
 
   // 基本説明
-  sections.push('あなたは採用応募プロセスの最初のステップを担当するアシスタントです。')
+  sections.push('あなたはフォーム入力プロセスの最初のステップを担当するアシスタントです。')
 
   // 現在の設定状況（あれば）
   const currentStateSection = buildCurrentStateSection(state)
@@ -239,7 +239,7 @@ export const GREETER_SYSTEM_PROMPT = buildGreeterSystemPrompt({})
  * 言語別の挨拶メッセージ
  */
 export const GREETING_MESSAGES: Record<string, string> = {
-  ja: 'こんにちは！ご応募いただきありがとうございます。',
+  ja: 'こんにちは！ご回答いただきありがとうございます。',
   en: 'Hello! Thank you for your application.',
   zh: '您好！感谢您的申请。',
   ko: '안녕하세요! 지원해 주셔서 감사합니다.',
@@ -290,7 +290,7 @@ export function getCountryAskMessage(languageCode: string): string {
  * 言語別の完了メッセージ
  */
 export const COMPLETION_MESSAGES: Record<string, string> = {
-  ja: 'ありがとうございます。設定が完了しました。それでは、応募に関する質問を始めさせていただきます。',
+  ja: 'ありがとうございます。設定が完了しました。それでは、回答に関する質問を始めさせていただきます。',
   en: 'Thank you. The setup is complete. Now, let me begin with the application questions.',
   zh: '谢谢您。设置已完成。现在让我开始申请相关的问题。',
   ko: '감사합니다. 설정이 완료되었습니다. 이제 지원 관련 질문을 시작하겠습니다.',

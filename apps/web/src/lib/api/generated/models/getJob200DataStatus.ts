@@ -8,7 +8,6 @@
 
 export type GetJob200DataStatus = (typeof GetJob200DataStatus)[keyof typeof GetJob200DataStatus]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetJob200DataStatus = {
   draft: 'draft',
   open: 'open',

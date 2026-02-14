@@ -1,11 +1,4 @@
-const AGENT_TYPES = [
-  'greeter',
-  'architect',
-  'interviewer',
-  'reviewer',
-  'quick_check',
-  'auditor',
-] as const
+const AGENT_TYPES = ['greeter', 'architect', 'interviewer', 'reviewer'] as const
 
 export type AgentTypeValue = (typeof AGENT_TYPES)[number]
 
@@ -42,14 +35,6 @@ export class AgentType {
     return new AgentType('reviewer')
   }
 
-  static quickCheck(): AgentType {
-    return new AgentType('quick_check')
-  }
-
-  static auditor(): AgentType {
-    return new AgentType('auditor')
-  }
-
   isGreeter(): boolean {
     return this._value === 'greeter'
   }
@@ -64,14 +49,6 @@ export class AgentType {
 
   isReviewer(): boolean {
     return this._value === 'reviewer'
-  }
-
-  isQuickCheck(): boolean {
-    return this._value === 'quick_check'
-  }
-
-  isAuditor(): boolean {
-    return this._value === 'auditor'
   }
 
   equals(other: AgentType): boolean {

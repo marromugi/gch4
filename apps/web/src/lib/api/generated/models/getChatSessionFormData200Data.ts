@@ -6,9 +6,9 @@
  * OpenAPI spec version: 0.0.0
  */
 import type { GetChatSessionFormData200DataCollectedFields } from './getChatSessionFormData200DataCollectedFields'
+import type { GetChatSessionFormData200DataFieldsItem } from './getChatSessionFormData200DataFieldsItem'
 
 export type GetChatSessionFormData200Data = {
-  sessionId: string
+  fields: GetChatSessionFormData200DataFieldsItem[]
   collectedFields: GetChatSessionFormData200DataCollectedFields
-  completedAt: number
 }

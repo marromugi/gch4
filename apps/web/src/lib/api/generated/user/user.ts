@@ -6,6 +6,14 @@
  * OpenAPI spec version: 0.0.0
  */
 import { useQuery } from '@tanstack/react-query'
+import { customFetch } from '../../fetcher'
+import type {
+  GetMe200,
+  GetMe401,
+  ListFormsByUser200,
+  ListFormsByUser401,
+  ListFormsByUser500,
+} from '.././models'
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -17,16 +25,6 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query'
-
-import type {
-  GetMe200,
-  GetMe401,
-  ListJobsByUser200,
-  ListJobsByUser401,
-  ListJobsByUser500,
-} from '.././models'
-
-import { customFetch } from '../../fetcher'
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
@@ -126,62 +124,62 @@ export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = Get
 }
 
 /**
- * @summary List jobs by user
+ * @summary List forms by user
  */
-export const listJobsByUser = (
+export const listFormsByUser = (
   userId: string,
   options?: SecondParameter<typeof customFetch>,
   signal?: AbortSignal
 ) => {
-  return customFetch<ListJobsByUser200>(
-    { url: `API_BASE_URL/api/users/${userId}/jobs`, method: 'GET', signal },
+  return customFetch<ListFormsByUser200>(
+    { url: `API_BASE_URL/api/users/${userId}/forms`, method: 'GET', signal },
     options
   )
 }
 
-export const getListJobsByUserQueryKey = (userId?: string) => {
-  return [`API_BASE_URL/api/users/${userId}/jobs`] as const
+export const getListFormsByUserQueryKey = (userId?: string) => {
+  return [`API_BASE_URL/api/users/${userId}/forms`] as const
 }
 
-export const getListJobsByUserQueryOptions = <
-  TData = Awaited<ReturnType<typeof listJobsByUser>>,
-  TError = ListJobsByUser401 | ListJobsByUser500,
+export const getListFormsByUserQueryOptions = <
+  TData = Awaited<ReturnType<typeof listFormsByUser>>,
+  TError = ListFormsByUser401 | ListFormsByUser500,
 >(
   userId: string,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listJobsByUser>>, TError, TData>>
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listFormsByUser>>, TError, TData>>
     request?: SecondParameter<typeof customFetch>
   }
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey = queryOptions?.queryKey ?? getListJobsByUserQueryKey(userId)
+  const queryKey = queryOptions?.queryKey ?? getListFormsByUserQueryKey(userId)
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof listJobsByUser>>> = ({ signal }) =>
-    listJobsByUser(userId, requestOptions, signal)
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listFormsByUser>>> = ({ signal }) =>
+    listFormsByUser(userId, requestOptions, signal)
 
   return { queryKey, queryFn, enabled: !!userId, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof listJobsByUser>>,
+    Awaited<ReturnType<typeof listFormsByUser>>,
     TError,
     TData
   > & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type ListJobsByUserQueryResult = NonNullable<Awaited<ReturnType<typeof listJobsByUser>>>
-export type ListJobsByUserQueryError = ListJobsByUser401 | ListJobsByUser500
+export type ListFormsByUserQueryResult = NonNullable<Awaited<ReturnType<typeof listFormsByUser>>>
+export type ListFormsByUserQueryError = ListFormsByUser401 | ListFormsByUser500
 
-export function useListJobsByUser<
-  TData = Awaited<ReturnType<typeof listJobsByUser>>,
-  TError = ListJobsByUser401 | ListJobsByUser500,
+export function useListFormsByUser<
+  TData = Awaited<ReturnType<typeof listFormsByUser>>,
+  TError = ListFormsByUser401 | ListFormsByUser500,
 >(
   userId: string,
   options: {
-    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof listJobsByUser>>, TError, TData>> &
+    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof listFormsByUser>>, TError, TData>> &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof listJobsByUser>>,
+          Awaited<ReturnType<typeof listFormsByUser>>,
           TError,
-          Awaited<ReturnType<typeof listJobsByUser>>
+          Awaited<ReturnType<typeof listFormsByUser>>
         >,
         'initialData'
       >
@@ -189,18 +187,18 @@ export function useListJobsByUser<
   },
   queryClient?: QueryClient
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListJobsByUser<
-  TData = Awaited<ReturnType<typeof listJobsByUser>>,
-  TError = ListJobsByUser401 | ListJobsByUser500,
+export function useListFormsByUser<
+  TData = Awaited<ReturnType<typeof listFormsByUser>>,
+  TError = ListFormsByUser401 | ListFormsByUser500,
 >(
   userId: string,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listJobsByUser>>, TError, TData>> &
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listFormsByUser>>, TError, TData>> &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof listJobsByUser>>,
+          Awaited<ReturnType<typeof listFormsByUser>>,
           TError,
-          Awaited<ReturnType<typeof listJobsByUser>>
+          Awaited<ReturnType<typeof listFormsByUser>>
         >,
         'initialData'
       >
@@ -208,33 +206,33 @@ export function useListJobsByUser<
   },
   queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListJobsByUser<
-  TData = Awaited<ReturnType<typeof listJobsByUser>>,
-  TError = ListJobsByUser401 | ListJobsByUser500,
+export function useListFormsByUser<
+  TData = Awaited<ReturnType<typeof listFormsByUser>>,
+  TError = ListFormsByUser401 | ListFormsByUser500,
 >(
   userId: string,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listJobsByUser>>, TError, TData>>
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listFormsByUser>>, TError, TData>>
     request?: SecondParameter<typeof customFetch>
   },
   queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
- * @summary List jobs by user
+ * @summary List forms by user
  */
 
-export function useListJobsByUser<
-  TData = Awaited<ReturnType<typeof listJobsByUser>>,
-  TError = ListJobsByUser401 | ListJobsByUser500,
+export function useListFormsByUser<
+  TData = Awaited<ReturnType<typeof listFormsByUser>>,
+  TError = ListFormsByUser401 | ListFormsByUser500,
 >(
   userId: string,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listJobsByUser>>, TError, TData>>
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listFormsByUser>>, TError, TData>>
     request?: SecondParameter<typeof customFetch>
   },
   queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getListJobsByUserQueryOptions(userId, options)
+  const queryOptions = getListFormsByUserQueryOptions(userId, options)
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
     queryKey: DataTag<QueryKey, TData, TError>

@@ -8,7 +8,6 @@
 
 export type GetLive200Status = (typeof GetLive200Status)[keyof typeof GetLive200Status]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetLive200Status = {
   alive: 'alive',
 } as const

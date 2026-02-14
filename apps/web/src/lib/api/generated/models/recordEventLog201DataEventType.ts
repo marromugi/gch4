@@ -9,21 +9,11 @@
 export type RecordEventLog201DataEventType =
   (typeof RecordEventLog201DataEventType)[keyof typeof RecordEventLog201DataEventType]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const RecordEventLog201DataEventType = {
   chat_started: 'chat_started',
   session_bootstrap_completed: 'session_bootstrap_completed',
-  extraction_reviewed: 'extraction_reviewed',
+  review_completed: 'review_completed',
   consent_checked: 'consent_checked',
-  application_submitted: 'application_submitted',
+  submission_submitted: 'submission_submitted',
   manual_fallback_triggered: 'manual_fallback_triggered',
-  policy_draft_started: 'policy_draft_started',
-  policy_draft_confirmed: 'policy_draft_confirmed',
-  policy_version_published: 'policy_version_published',
-  review_chat_started: 'review_chat_started',
-  review_turn_soft_capped: 'review_turn_soft_capped',
-  review_turn_hard_capped: 'review_turn_hard_capped',
-  review_summary_confirmed: 'review_summary_confirmed',
-  review_submitted: 'review_submitted',
-  review_manual_fallback_triggered: 'review_manual_fallback_triggered',
 } as const

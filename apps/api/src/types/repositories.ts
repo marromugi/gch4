@@ -1,23 +1,19 @@
 import type { ILLMProvider, IKVStore, AgentRegistry } from '@ding/agent'
 import type { Database } from '@ding/database/client'
 import type {
-  IJobRepository,
-  IApplicationRepository,
-  IReviewPolicyRepository,
-  IInterviewFeedbackRepository,
+  IFormRepository,
+  ISubmissionRepository,
   IEventLogRepository,
   IToolCallLogRepository,
 } from '@ding/domain/domain/repository'
-import type { ApplicationSubmissionService, FallbackService } from '@ding/domain/domain/service'
+import type { FallbackService } from '@ding/domain/domain/service'
 
 /**
  * データベースベースのリポジトリの型定義
  */
 export interface DatabaseRepositories {
-  jobRepository: IJobRepository
-  applicationRepository: IApplicationRepository
-  reviewPolicyRepository: IReviewPolicyRepository
-  interviewFeedbackRepository: IInterviewFeedbackRepository
+  formRepository: IFormRepository
+  submissionRepository: ISubmissionRepository
   eventLogRepository: IEventLogRepository
   toolCallLogRepository: IToolCallLogRepository
 }
@@ -32,7 +28,6 @@ export interface Repositories extends DatabaseRepositories {}
  * アプリケーション全体で使用するサービスの型定義
  */
 export interface Services {
-  submissionService: ApplicationSubmissionService
   fallbackService: FallbackService
 }
 

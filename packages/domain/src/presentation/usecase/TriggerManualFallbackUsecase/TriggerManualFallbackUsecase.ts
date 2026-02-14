@@ -1,19 +1,19 @@
 import type { Result } from '../../../domain/shared/Result/Result'
 import { Result as R } from '../../../domain/shared/Result/Result'
-import type { IApplicationRepository } from '../../../domain/repository/IApplicationRepository/IApplicationRepository'
+import type { ISubmissionRepository } from '../../../domain/repository/ISubmissionRepository/ISubmissionRepository'
 import type { IEventLogRepository } from '../../../domain/repository/IEventLogRepository/IEventLogRepository'
-import type { Application } from '../../../domain/entity/Application/Application'
+import type { Submission } from '../../../domain/entity/Submission/Submission'
 import { FallbackService } from '../../../domain/service/FallbackService/FallbackService'
 import { EventLog } from '../../../domain/entity/EventLog/EventLog'
-import { ApplicationId } from '../../../domain/valueObject/ApplicationId/ApplicationId'
+import { SubmissionId } from '../../../domain/valueObject/SubmissionId/SubmissionId'
 import { EventLogId } from '../../../domain/valueObject/EventLogId/EventLogId'
 import { EventType } from '../../../domain/valueObject/EventType/EventType'
 
 // --- Error ---
 export class TriggerManualFallbackNotFoundError extends Error {
   readonly type = 'not_found' as const
-  constructor(applicationId: string) {
-    super(`Application not found: ${applicationId}`)
+  constructor(submissionId: string) {
+    super(`Submission not found: ${submissionId}`)
     this.name = 'TriggerManualFallbackNotFoundError'
   }
 }
@@ -32,17 +32,17 @@ export type TriggerManualFallbackError =
 
 // --- Input / Output / Deps ---
 export interface TriggerManualFallbackInput {
-  applicationId: string
+  submissionId: string
   eventLogId: string
 }
 
 export interface TriggerManualFallbackDeps {
-  applicationRepository: IApplicationRepository
+  submissionRepository: ISubmissionRepository
   eventLogRepository: IEventLogRepository
   fallbackService: FallbackService
 }
 
-export type TriggerManualFallbackOutput = Application
+export type TriggerManualFallbackOutput = Submission
 
 // --- Usecase ---
 export class TriggerManualFallbackUsecase {
@@ -51,40 +51,38 @@ export class TriggerManualFallbackUsecase {
   async execute(
     input: TriggerManualFallbackInput
   ): Promise<Result<TriggerManualFallbackOutput, TriggerManualFallbackError>> {
-    const applicationId = ApplicationId.fromString(input.applicationId)
+    const submissionId = SubmissionId.fromString(input.submissionId)
 
-    // Application の存在確認
-    const appResult = await this.deps.applicationRepository.findById(applicationId)
-    if (!appResult.success) {
-      return R.err(new TriggerManualFallbackRepositoryError(appResult.error.message))
+    // Submission の存在確認
+    const submissionResult = await this.deps.submissionRepository.findById(submissionId)
+    if (!submissionResult.success) {
+      return R.err(new TriggerManualFallbackRepositoryError(submissionResult.error.message))
     }
 
-    const application = appResult.value
+    const submission = submissionResult.value
 
-    // 未完了Todoを取得
-    const todosResult =
-      await this.deps.applicationRepository.findTodosByApplicationId(applicationId)
-    if (!todosResult.success) {
-      return R.err(new TriggerManualFallbackRepositoryError(todosResult.error.message))
+    // 未完了Taskを取得
+    const tasksResult = await this.deps.submissionRepository.findTasksBySubmissionId(submissionId)
+    if (!tasksResult.success) {
+      return R.err(new TriggerManualFallbackRepositoryError(tasksResult.error.message))
     }
 
-    // FallbackService で未完了Todoを manual_input に遷移
-    const updatedTodos = this.deps.fallbackService.triggerFallback(todosResult.value)
+    // FallbackService で未完了Taskを manual_input に遷移
+    const updatedTasks = this.deps.fallbackService.triggerFallback(tasksResult.value)
 
-    // Todoを保存
-    const saveTodosResult = await this.deps.applicationRepository.saveTodos(updatedTodos)
-    if (!saveTodosResult.success) {
-      return R.err(new TriggerManualFallbackRepositoryError(saveTodosResult.error.message))
+    // Taskを保存
+    const saveTasksResult = await this.deps.submissionRepository.saveTasks(updatedTasks)
+    if (!saveTasksResult.success) {
+      return R.err(new TriggerManualFallbackRepositoryError(saveTasksResult.error.message))
     }
 
     // manual_fallback_triggered イベントを記録
     const eventLog = EventLog.create({
       id: EventLogId.fromString(input.eventLogId),
       eventType: EventType.manualFallbackTriggered(),
-      applicationId,
-      jobId: null,
+      submissionId,
+      formId: null,
       chatSessionId: null,
-      policyVersionId: null,
       metadata: null,
       createdAt: new Date(),
     })
@@ -94,6 +92,6 @@ export class TriggerManualFallbackUsecase {
       return R.err(new TriggerManualFallbackRepositoryError(eventResult.error.message))
     }
 
-    return R.ok(application)
+    return R.ok(submission)
   }
 }

@@ -7,6 +7,5 @@
  */
 
 export type SendChatMessageBody = {
-  /** @minLength 1 */
-  message: string
+  content: string
 }

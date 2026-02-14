@@ -9,13 +9,9 @@
 export type GetChatSession200DataSessionCurrentAgent =
   (typeof GetChatSession200DataSessionCurrentAgent)[keyof typeof GetChatSession200DataSessionCurrentAgent]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetChatSession200DataSessionCurrentAgent = {
   greeter: 'greeter',
   architect: 'architect',
   interviewer: 'interviewer',
-  explorer: 'explorer',
   reviewer: 'reviewer',
-  quick_check: 'quick_check',
-  auditor: 'auditor',
 } as const

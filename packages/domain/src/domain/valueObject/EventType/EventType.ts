@@ -1,19 +1,10 @@
 const EVENT_TYPES = [
   'chat_started',
   'session_bootstrap_completed',
-  'extraction_reviewed',
+  'review_completed',
   'consent_checked',
-  'application_submitted',
+  'submission_submitted',
   'manual_fallback_triggered',
-  'policy_draft_started',
-  'policy_draft_confirmed',
-  'policy_version_published',
-  'review_chat_started',
-  'review_turn_soft_capped',
-  'review_turn_hard_capped',
-  'review_summary_confirmed',
-  'review_submitted',
-  'review_manual_fallback_triggered',
 ] as const
 export type EventTypeValue = (typeof EVENT_TYPES)[number]
 
@@ -42,16 +33,16 @@ export class EventType {
     return new EventType('session_bootstrap_completed')
   }
 
-  static extractionReviewed(): EventType {
-    return new EventType('extraction_reviewed')
+  static reviewCompleted(): EventType {
+    return new EventType('review_completed')
   }
 
   static consentChecked(): EventType {
     return new EventType('consent_checked')
   }
 
-  static applicationSubmitted(): EventType {
-    return new EventType('application_submitted')
+  static submissionSubmitted(): EventType {
+    return new EventType('submission_submitted')
   }
 
   static manualFallbackTriggered(): EventType {

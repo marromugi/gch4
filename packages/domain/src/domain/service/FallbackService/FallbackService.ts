@@ -1,5 +1,5 @@
 import type { ChatSession } from '../../entity/ChatSession/ChatSession'
-import type { ApplicationTodo } from '../../entity/ApplicationTodo/ApplicationTodo'
+import type { SubmissionTask } from '../../entity/SubmissionTask/SubmissionTask'
 
 /**
  * フォールバック条件判定サービス
@@ -18,21 +18,21 @@ export class FallbackService {
   }
 
   /**
-   * フォールバック対象のTodo（未完了のもの）を取得する
+   * フォールバック対象のTask（未完了のもの）を取得する
    */
-  getIncompleteTodos(todos: ApplicationTodo[]): ApplicationTodo[] {
-    return todos.filter((todo) => !todo.status.isDone() && !todo.status.isManualInput())
+  getIncompleteTasks(tasks: SubmissionTask[]): SubmissionTask[] {
+    return tasks.filter((task) => !task.status.isDone() && !task.status.isManualInput())
   }
 
   /**
-   * 全Todoをmanual_inputに切り替える
+   * 全Taskをmanual_inputに切り替える
    */
-  triggerFallback(todos: ApplicationTodo[]): ApplicationTodo[] {
-    return todos.map((todo) => {
-      if (!todo.status.isDone() && !todo.status.isManualInput()) {
-        return todo.fallbackToManualInput()
+  triggerFallback(tasks: SubmissionTask[]): SubmissionTask[] {
+    return tasks.map((task) => {
+      if (!task.status.isDone() && !task.status.isManualInput()) {
+        return task.fallbackToManualInput()
       }
-      return todo
+      return task
     })
   }
 }

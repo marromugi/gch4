@@ -6,18 +6,16 @@
  * OpenAPI spec version: 0.0.0
  */
 import { faker } from '@faker-js/faker'
-
 import { HttpResponse, delay, http } from 'msw'
-import type { RequestHandlerOptions } from 'msw'
-
 import type { SaveConsentLog201 } from '.././models'
+import type { RequestHandlerOptions } from 'msw'
 
 export const getSaveConsentLogResponseMock = (
   overrideResponse: Partial<SaveConsentLog201> = {}
 ): SaveConsentLog201 => ({
   data: {
     id: faker.string.alpha({ length: { min: 10, max: 20 } }),
-    applicationId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    submissionId: faker.string.alpha({ length: { min: 10, max: 20 } }),
     consentType: faker.helpers.arrayElement(['data_usage', 'privacy_policy'] as const),
     consented: faker.datatype.boolean(),
     ipAddress: faker.helpers.arrayElement([

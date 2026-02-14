@@ -9,7 +9,6 @@
 export type SendChatMessage200DataSessionStatus =
   (typeof SendChatMessage200DataSessionStatus)[keyof typeof SendChatMessage200DataSessionStatus]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SendChatMessage200DataSessionStatus = {
   active: 'active',
   completed: 'completed',

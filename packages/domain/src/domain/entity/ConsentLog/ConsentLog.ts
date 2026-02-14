@@ -1,11 +1,11 @@
 import type { Entity } from '../../shared/Entity/Entity'
 import type { ConsentLogId } from '../../valueObject/ConsentLogId/ConsentLogId'
-import type { ApplicationId } from '../../valueObject/ApplicationId/ApplicationId'
+import type { SubmissionId } from '../../valueObject/SubmissionId/SubmissionId'
 import type { ConsentType } from '../../valueObject/ConsentType/ConsentType'
 
 export interface ConsentLogProps {
   id: ConsentLogId
-  applicationId: ApplicationId
+  submissionId: SubmissionId
   consentType: ConsentType
   consented: boolean
   ipAddress: string | null
@@ -14,7 +14,7 @@ export interface ConsentLogProps {
 }
 
 /**
- * 同意ログエンティティ（Application集約の子、追記のみ）
+ * 同意ログエンティティ（Submission集約の子、追記のみ）
  */
 export class ConsentLog implements Entity<ConsentLogId> {
   private constructor(private readonly props: ConsentLogProps) {}
@@ -23,8 +23,8 @@ export class ConsentLog implements Entity<ConsentLogId> {
     return this.props.id
   }
 
-  get applicationId(): ApplicationId {
-    return this.props.applicationId
+  get submissionId(): SubmissionId {
+    return this.props.submissionId
   }
 
   get consentType(): ConsentType {

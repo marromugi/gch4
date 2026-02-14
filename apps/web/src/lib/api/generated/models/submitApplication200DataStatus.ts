@@ -9,7 +9,6 @@
 export type SubmitApplication200DataStatus =
   (typeof SubmitApplication200DataStatus)[keyof typeof SubmitApplication200DataStatus]
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SubmitApplication200DataStatus = {
   new: 'new',
   scheduling: 'scheduling',

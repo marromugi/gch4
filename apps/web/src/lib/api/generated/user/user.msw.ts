@@ -6,11 +6,9 @@
  * OpenAPI spec version: 0.0.0
  */
 import { faker } from '@faker-js/faker'
-
 import { HttpResponse, delay, http } from 'msw'
+import type { GetMe200, ListFormsByUser200 } from '.././models'
 import type { RequestHandlerOptions } from 'msw'
-
-import type { GetMe200, ListJobsByUser200 } from '.././models'
 
 export const getGetMeResponseMock = (overrideResponse: Partial<GetMe200> = {}): GetMe200 => ({
   user: {
@@ -41,9 +39,9 @@ export const getGetMeResponseMock = (overrideResponse: Partial<GetMe200> = {}): 
   ...overrideResponse,
 })
 
-export const getListJobsByUserResponseMock = (
-  overrideResponse: Partial<ListJobsByUser200> = {}
-): ListJobsByUser200 => ({
+export const getListFormsByUserResponseMock = (
+  overrideResponse: Partial<ListFormsByUser200> = {}
+): ListFormsByUser200 => ({
   data: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
     id: faker.string.alpha({ length: { min: 10, max: 20 } }),
     title: faker.string.alpha({ length: { min: 10, max: 20 } }),
@@ -51,15 +49,15 @@ export const getListJobsByUserResponseMock = (
       faker.string.alpha({ length: { min: 10, max: 20 } }),
       null,
     ]),
-    idealCandidate: faker.helpers.arrayElement([
+    purpose: faker.helpers.arrayElement([
       faker.string.alpha({ length: { min: 10, max: 20 } }),
       null,
     ]),
-    cultureContext: faker.helpers.arrayElement([
+    completionMessage: faker.helpers.arrayElement([
       faker.string.alpha({ length: { min: 10, max: 20 } }),
       null,
     ]),
-    status: faker.helpers.arrayElement(['draft', 'open', 'closed'] as const),
+    status: faker.helpers.arrayElement(['draft', 'published', 'closed'] as const),
     createdBy: faker.string.alpha({ length: { min: 10, max: 20 } }),
     createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
     updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
@@ -93,16 +91,16 @@ export const getGetMeMockHandler = (
   )
 }
 
-export const getListJobsByUserMockHandler = (
+export const getListFormsByUserMockHandler = (
   overrideResponse?:
-    | ListJobsByUser200
+    | ListFormsByUser200
     | ((
         info: Parameters<Parameters<typeof http.get>[1]>[0]
-      ) => Promise<ListJobsByUser200> | ListJobsByUser200),
+      ) => Promise<ListFormsByUser200> | ListFormsByUser200),
   options?: RequestHandlerOptions
 ) => {
   return http.get(
-    '*/api/users/:userId/jobs',
+    '*/api/users/:userId/forms',
     async (info) => {
       await delay(1000)
 
@@ -112,7 +110,7 @@ export const getListJobsByUserMockHandler = (
             ? typeof overrideResponse === 'function'
               ? await overrideResponse(info)
               : overrideResponse
-            : getListJobsByUserResponseMock()
+            : getListFormsByUserResponseMock()
         ),
         { status: 200, headers: { 'Content-Type': 'application/json' } }
       )
@@ -120,4 +118,4 @@ export const getListJobsByUserMockHandler = (
     options
   )
 }
-export const getUserMock = () => [getGetMeMockHandler(), getListJobsByUserMockHandler()]
+export const getUserMock = () => [getGetMeMockHandler(), getListFormsByUserMockHandler()]

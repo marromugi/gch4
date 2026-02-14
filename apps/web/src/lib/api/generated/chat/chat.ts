@@ -6,21 +6,7 @@
  * OpenAPI spec version: 0.0.0
  */
 import { useMutation, useQuery } from '@tanstack/react-query'
-import type {
-  DataTag,
-  DefinedInitialDataOptions,
-  DefinedUseQueryResult,
-  MutationFunction,
-  QueryClient,
-  QueryFunction,
-  QueryKey,
-  UndefinedInitialDataOptions,
-  UseMutationOptions,
-  UseMutationResult,
-  UseQueryOptions,
-  UseQueryResult,
-} from '@tanstack/react-query'
-
+import { customFetch } from '../../fetcher'
 import type {
   CreateChatSession201,
   CreateChatSession404,
@@ -36,21 +22,33 @@ import type {
   SendChatMessage500,
   SendChatMessageBody,
 } from '.././models'
-
-import { customFetch } from '../../fetcher'
+import type {
+  DataTag,
+  DefinedInitialDataOptions,
+  DefinedUseQueryResult,
+  MutationFunction,
+  QueryClient,
+  QueryFunction,
+  QueryKey,
+  UndefinedInitialDataOptions,
+  UseMutationOptions,
+  UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult,
+} from '@tanstack/react-query'
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
 /**
- * @summary Create a new chat session for an application
+ * @summary Create a new chat session for a submission
  */
 export const createChatSession = (
-  applicationId: string,
+  submissionId: string,
   options?: SecondParameter<typeof customFetch>,
   signal?: AbortSignal
 ) => {
   return customFetch<CreateChatSession201>(
-    { url: `API_BASE_URL/api/applications/${applicationId}/chat/sessions`, method: 'POST', signal },
+    { url: `API_BASE_URL/api/submissions/${submissionId}/chat/sessions`, method: 'POST', signal },
     options
   )
 }
@@ -62,14 +60,14 @@ export const getCreateChatSessionMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof createChatSession>>,
     TError,
-    { applicationId: string },
+    { submissionId: string },
     TContext
   >
   request?: SecondParameter<typeof customFetch>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof createChatSession>>,
   TError,
-  { applicationId: string },
+  { submissionId: string },
   TContext
 > => {
   const mutationKey = ['createChatSession']
@@ -81,11 +79,11 @@ export const getCreateChatSessionMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof createChatSession>>,
-    { applicationId: string }
+    { submissionId: string }
   > = (props) => {
-    const { applicationId } = props ?? {}
+    const { submissionId } = props ?? {}
 
-    return createChatSession(applicationId, requestOptions)
+    return createChatSession(submissionId, requestOptions)
   }
 
   return { mutationFn, ...mutationOptions }
@@ -98,7 +96,7 @@ export type CreateChatSessionMutationResult = NonNullable<
 export type CreateChatSessionMutationError = CreateChatSession404 | CreateChatSession500
 
 /**
- * @summary Create a new chat session for an application
+ * @summary Create a new chat session for a submission
  */
 export const useCreateChatSession = <
   TError = CreateChatSession404 | CreateChatSession500,
@@ -108,7 +106,7 @@ export const useCreateChatSession = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof createChatSession>>,
       TError,
-      { applicationId: string },
+      { submissionId: string },
       TContext
     >
     request?: SecondParameter<typeof customFetch>
@@ -117,7 +115,7 @@ export const useCreateChatSession = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof createChatSession>>,
   TError,
-  { applicationId: string },
+  { submissionId: string },
   TContext
 > => {
   const mutationOptions = getCreateChatSessionMutationOptions(options)
@@ -128,14 +126,14 @@ export const useCreateChatSession = <
  * @summary Get a chat session with messages and todos
  */
 export const getChatSession = (
-  applicationId: string,
+  submissionId: string,
   sessionId: string,
   options?: SecondParameter<typeof customFetch>,
   signal?: AbortSignal
 ) => {
   return customFetch<GetChatSession200>(
     {
-      url: `API_BASE_URL/api/applications/${applicationId}/chat/sessions/${sessionId}`,
+      url: `API_BASE_URL/api/submissions/${submissionId}/chat/sessions/${sessionId}`,
       method: 'GET',
       signal,
     },
@@ -143,15 +141,15 @@ export const getChatSession = (
   )
 }
 
-export const getGetChatSessionQueryKey = (applicationId?: string, sessionId?: string) => {
-  return [`API_BASE_URL/api/applications/${applicationId}/chat/sessions/${sessionId}`] as const
+export const getGetChatSessionQueryKey = (submissionId?: string, sessionId?: string) => {
+  return [`API_BASE_URL/api/submissions/${submissionId}/chat/sessions/${sessionId}`] as const
 }
 
 export const getGetChatSessionQueryOptions = <
   TData = Awaited<ReturnType<typeof getChatSession>>,
   TError = GetChatSession404 | GetChatSession500,
 >(
-  applicationId: string,
+  submissionId: string,
   sessionId: string,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getChatSession>>, TError, TData>>
@@ -160,15 +158,15 @@ export const getGetChatSessionQueryOptions = <
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {}
 
-  const queryKey = queryOptions?.queryKey ?? getGetChatSessionQueryKey(applicationId, sessionId)
+  const queryKey = queryOptions?.queryKey ?? getGetChatSessionQueryKey(submissionId, sessionId)
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getChatSession>>> = ({ signal }) =>
-    getChatSession(applicationId, sessionId, requestOptions, signal)
+    getChatSession(submissionId, sessionId, requestOptions, signal)
 
   return {
     queryKey,
     queryFn,
-    enabled: !!(applicationId && sessionId),
+    enabled: !!(submissionId && sessionId),
     ...queryOptions,
   } as UseQueryOptions<Awaited<ReturnType<typeof getChatSession>>, TError, TData> & {
     queryKey: DataTag<QueryKey, TData, TError>
@@ -182,7 +180,7 @@ export function useGetChatSession<
   TData = Awaited<ReturnType<typeof getChatSession>>,
   TError = GetChatSession404 | GetChatSession500,
 >(
-  applicationId: string,
+  submissionId: string,
   sessionId: string,
   options: {
     query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getChatSession>>, TError, TData>> &
@@ -202,7 +200,7 @@ export function useGetChatSession<
   TData = Awaited<ReturnType<typeof getChatSession>>,
   TError = GetChatSession404 | GetChatSession500,
 >(
-  applicationId: string,
+  submissionId: string,
   sessionId: string,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getChatSession>>, TError, TData>> &
@@ -222,7 +220,7 @@ export function useGetChatSession<
   TData = Awaited<ReturnType<typeof getChatSession>>,
   TError = GetChatSession404 | GetChatSession500,
 >(
-  applicationId: string,
+  submissionId: string,
   sessionId: string,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getChatSession>>, TError, TData>>
@@ -238,7 +236,7 @@ export function useGetChatSession<
   TData = Awaited<ReturnType<typeof getChatSession>>,
   TError = GetChatSession404 | GetChatSession500,
 >(
-  applicationId: string,
+  submissionId: string,
   sessionId: string,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getChatSession>>, TError, TData>>
@@ -246,7 +244,7 @@ export function useGetChatSession<
   },
   queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getGetChatSessionQueryOptions(applicationId, sessionId, options)
+  const queryOptions = getGetChatSessionQueryOptions(submissionId, sessionId, options)
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
     queryKey: DataTag<QueryKey, TData, TError>
@@ -258,17 +256,17 @@ export function useGetChatSession<
 }
 
 /**
- * @summary Get collected form data from a completed chat session
+ * @summary Get collected form data for a chat session
  */
 export const getChatSessionFormData = (
-  applicationId: string,
+  submissionId: string,
   sessionId: string,
   options?: SecondParameter<typeof customFetch>,
   signal?: AbortSignal
 ) => {
   return customFetch<GetChatSessionFormData200>(
     {
-      url: `API_BASE_URL/api/applications/${applicationId}/chat/sessions/${sessionId}/form-data`,
+      url: `API_BASE_URL/api/submissions/${submissionId}/chat/sessions/${sessionId}/form-data`,
       method: 'GET',
       signal,
     },
@@ -276,9 +274,9 @@ export const getChatSessionFormData = (
   )
 }
 
-export const getGetChatSessionFormDataQueryKey = (applicationId?: string, sessionId?: string) => {
+export const getGetChatSessionFormDataQueryKey = (submissionId?: string, sessionId?: string) => {
   return [
-    `API_BASE_URL/api/applications/${applicationId}/chat/sessions/${sessionId}/form-data`,
+    `API_BASE_URL/api/submissions/${submissionId}/chat/sessions/${sessionId}/form-data`,
   ] as const
 }
 
@@ -286,7 +284,7 @@ export const getGetChatSessionFormDataQueryOptions = <
   TData = Awaited<ReturnType<typeof getChatSessionFormData>>,
   TError = GetChatSessionFormData404 | GetChatSessionFormData500,
 >(
-  applicationId: string,
+  submissionId: string,
   sessionId: string,
   options?: {
     query?: Partial<
@@ -298,15 +296,15 @@ export const getGetChatSessionFormDataQueryOptions = <
   const { query: queryOptions, request: requestOptions } = options ?? {}
 
   const queryKey =
-    queryOptions?.queryKey ?? getGetChatSessionFormDataQueryKey(applicationId, sessionId)
+    queryOptions?.queryKey ?? getGetChatSessionFormDataQueryKey(submissionId, sessionId)
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getChatSessionFormData>>> = ({ signal }) =>
-    getChatSessionFormData(applicationId, sessionId, requestOptions, signal)
+    getChatSessionFormData(submissionId, sessionId, requestOptions, signal)
 
   return {
     queryKey,
     queryFn,
-    enabled: !!(applicationId && sessionId),
+    enabled: !!(submissionId && sessionId),
     ...queryOptions,
   } as UseQueryOptions<Awaited<ReturnType<typeof getChatSessionFormData>>, TError, TData> & {
     queryKey: DataTag<QueryKey, TData, TError>
@@ -322,7 +320,7 @@ export function useGetChatSessionFormData<
   TData = Awaited<ReturnType<typeof getChatSessionFormData>>,
   TError = GetChatSessionFormData404 | GetChatSessionFormData500,
 >(
-  applicationId: string,
+  submissionId: string,
   sessionId: string,
   options: {
     query: Partial<
@@ -344,7 +342,7 @@ export function useGetChatSessionFormData<
   TData = Awaited<ReturnType<typeof getChatSessionFormData>>,
   TError = GetChatSessionFormData404 | GetChatSessionFormData500,
 >(
-  applicationId: string,
+  submissionId: string,
   sessionId: string,
   options?: {
     query?: Partial<
@@ -366,7 +364,7 @@ export function useGetChatSessionFormData<
   TData = Awaited<ReturnType<typeof getChatSessionFormData>>,
   TError = GetChatSessionFormData404 | GetChatSessionFormData500,
 >(
-  applicationId: string,
+  submissionId: string,
   sessionId: string,
   options?: {
     query?: Partial<
@@ -377,14 +375,14 @@ export function useGetChatSessionFormData<
   queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
- * @summary Get collected form data from a completed chat session
+ * @summary Get collected form data for a chat session
  */
 
 export function useGetChatSessionFormData<
   TData = Awaited<ReturnType<typeof getChatSessionFormData>>,
   TError = GetChatSessionFormData404 | GetChatSessionFormData500,
 >(
-  applicationId: string,
+  submissionId: string,
   sessionId: string,
   options?: {
     query?: Partial<
@@ -394,7 +392,7 @@ export function useGetChatSessionFormData<
   },
   queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getGetChatSessionFormDataQueryOptions(applicationId, sessionId, options)
+  const queryOptions = getGetChatSessionFormDataQueryOptions(submissionId, sessionId, options)
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
     queryKey: DataTag<QueryKey, TData, TError>
@@ -406,10 +404,10 @@ export function useGetChatSessionFormData<
 }
 
 /**
- * @summary Send a message in a chat session
+ * @summary Send a message to a chat session
  */
 export const sendChatMessage = (
-  applicationId: string,
+  submissionId: string,
   sessionId: string,
   sendChatMessageBody: SendChatMessageBody,
   options?: SecondParameter<typeof customFetch>,
@@ -417,7 +415,7 @@ export const sendChatMessage = (
 ) => {
   return customFetch<SendChatMessage200>(
     {
-      url: `API_BASE_URL/api/applications/${applicationId}/chat/sessions/${sessionId}/messages`,
+      url: `API_BASE_URL/api/submissions/${submissionId}/chat/sessions/${sessionId}/messages`,
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       data: sendChatMessageBody,
@@ -434,14 +432,14 @@ export const getSendChatMessageMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof sendChatMessage>>,
     TError,
-    { applicationId: string; sessionId: string; data: SendChatMessageBody },
+    { submissionId: string; sessionId: string; data: SendChatMessageBody },
     TContext
   >
   request?: SecondParameter<typeof customFetch>
 }): UseMutationOptions<
   Awaited<ReturnType<typeof sendChatMessage>>,
   TError,
-  { applicationId: string; sessionId: string; data: SendChatMessageBody },
+  { submissionId: string; sessionId: string; data: SendChatMessageBody },
   TContext
 > => {
   const mutationKey = ['sendChatMessage']
@@ -453,11 +451,11 @@ export const getSendChatMessageMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof sendChatMessage>>,
-    { applicationId: string; sessionId: string; data: SendChatMessageBody }
+    { submissionId: string; sessionId: string; data: SendChatMessageBody }
   > = (props) => {
-    const { applicationId, sessionId, data } = props ?? {}
+    const { submissionId, sessionId, data } = props ?? {}
 
-    return sendChatMessage(applicationId, sessionId, data, requestOptions)
+    return sendChatMessage(submissionId, sessionId, data, requestOptions)
   }
 
   return { mutationFn, ...mutationOptions }
@@ -468,7 +466,7 @@ export type SendChatMessageMutationBody = SendChatMessageBody
 export type SendChatMessageMutationError = SendChatMessage404 | SendChatMessage500
 
 /**
- * @summary Send a message in a chat session
+ * @summary Send a message to a chat session
  */
 export const useSendChatMessage = <
   TError = SendChatMessage404 | SendChatMessage500,
@@ -478,7 +476,7 @@ export const useSendChatMessage = <
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof sendChatMessage>>,
       TError,
-      { applicationId: string; sessionId: string; data: SendChatMessageBody },
+      { submissionId: string; sessionId: string; data: SendChatMessageBody },
       TContext
     >
     request?: SecondParameter<typeof customFetch>
@@ -487,7 +485,7 @@ export const useSendChatMessage = <
 ): UseMutationResult<
   Awaited<ReturnType<typeof sendChatMessage>>,
   TError,
-  { applicationId: string; sessionId: string; data: SendChatMessageBody },
+  { submissionId: string; sessionId: string; data: SendChatMessageBody },
   TContext
 > => {
   const mutationOptions = getSendChatMessageMutationOptions(options)

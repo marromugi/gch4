@@ -1,4 +1,4 @@
-const CHAT_SESSION_TYPES = ['application', 'interview_feedback', 'policy_creation'] as const
+const CHAT_SESSION_TYPES = ['form_response'] as const
 export type ChatSessionTypeValue = (typeof CHAT_SESSION_TYPES)[number]
 
 /**
@@ -18,28 +18,12 @@ export class ChatSessionType {
     return new ChatSessionType(value as ChatSessionTypeValue)
   }
 
-  static application(): ChatSessionType {
-    return new ChatSessionType('application')
+  static formResponse(): ChatSessionType {
+    return new ChatSessionType('form_response')
   }
 
-  static interviewFeedback(): ChatSessionType {
-    return new ChatSessionType('interview_feedback')
-  }
-
-  static policyCreation(): ChatSessionType {
-    return new ChatSessionType('policy_creation')
-  }
-
-  isApplication(): boolean {
-    return this._value === 'application'
-  }
-
-  isInterviewFeedback(): boolean {
-    return this._value === 'interview_feedback'
-  }
-
-  isPolicyCreation(): boolean {
-    return this._value === 'policy_creation'
+  isFormResponse(): boolean {
+    return this._value === 'form_response'
   }
 
   equals(other: ChatSessionType): boolean {

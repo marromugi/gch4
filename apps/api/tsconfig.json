@@ -8,5 +8,13 @@
     "target": "ES2022",
     "types": ["node", "@cloudflare/workers-types"]
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": [
+    "src/routes/applications",
+    "src/routes/jobs",
+    "src/routes/review-policies",
+    "src/routes/interview-feedbacks",
+    "src/routes/extracted-fields",
+    "src/routes/users/[userId]/jobs"
+  ]
 }

@@ -6,19 +6,20 @@
  * OpenAPI spec version: 0.0.0
  */
 import { faker } from '@faker-js/faker'
-
 import { HttpResponse, delay, http } from 'msw'
-import type { RequestHandlerOptions } from 'msw'
-
 import type { RecordEventLog201 } from '.././models'
+import type { RequestHandlerOptions } from 'msw'
 
 export const getRecordEventLogResponseMock = (
   overrideResponse: Partial<RecordEventLog201> = {}
 ): RecordEventLog201 => ({
   data: {
     id: faker.string.alpha({ length: { min: 10, max: 20 } }),
-    jobId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
-    applicationId: faker.helpers.arrayElement([
+    formId: faker.helpers.arrayElement([
+      faker.string.alpha({ length: { min: 10, max: 20 } }),
+      null,
+    ]),
+    submissionId: faker.helpers.arrayElement([
       faker.string.alpha({ length: { min: 10, max: 20 } }),
       null,
     ]),
@@ -26,26 +27,13 @@ export const getRecordEventLogResponseMock = (
       faker.string.alpha({ length: { min: 10, max: 20 } }),
       null,
     ]),
-    policyVersionId: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
     eventType: faker.helpers.arrayElement([
       'chat_started',
       'session_bootstrap_completed',
-      'extraction_reviewed',
+      'review_completed',
       'consent_checked',
-      'application_submitted',
+      'submission_submitted',
       'manual_fallback_triggered',
-      'policy_draft_started',
-      'policy_draft_confirmed',
-      'policy_version_published',
-      'review_chat_started',
-      'review_turn_soft_capped',
-      'review_turn_hard_capped',
-      'review_summary_confirmed',
-      'review_submitted',
-      'review_manual_fallback_triggered',
     ] as const),
     metadata: faker.helpers.arrayElement([
       faker.string.alpha({ length: { min: 10, max: 20 } }),

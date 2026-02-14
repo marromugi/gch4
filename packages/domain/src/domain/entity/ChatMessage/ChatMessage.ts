@@ -1,8 +1,7 @@
 import type { Entity } from '../../shared/Entity/Entity'
 import type { ChatMessageId } from '../../valueObject/ChatMessageId/ChatMessageId'
 import type { ChatSessionId } from '../../valueObject/ChatSessionId/ChatSessionId'
-import type { JobFormFieldId } from '../../valueObject/JobFormFieldId/JobFormFieldId'
-import type { ReviewPolicySignalId } from '../../valueObject/ReviewPolicySignalId/ReviewPolicySignalId'
+import type { FormFieldId } from '../../valueObject/FormFieldId/FormFieldId'
 import type { ChatMessageRole } from '../../valueObject/ChatMessageRole/ChatMessageRole'
 
 export interface ChatMessageProps {
@@ -10,8 +9,7 @@ export interface ChatMessageProps {
   chatSessionId: ChatSessionId
   role: ChatMessageRole
   content: string
-  targetJobFormFieldId: JobFormFieldId | null
-  targetReviewSignalId: ReviewPolicySignalId | null
+  targetFormFieldId: FormFieldId | null
   reviewPassed: boolean | null
   createdAt: Date
 }
@@ -38,12 +36,8 @@ export class ChatMessage implements Entity<ChatMessageId> {
     return this.props.content
   }
 
-  get targetJobFormFieldId(): JobFormFieldId | null {
-    return this.props.targetJobFormFieldId
-  }
-
-  get targetReviewSignalId(): ReviewPolicySignalId | null {
-    return this.props.targetReviewSignalId
+  get targetFormFieldId(): FormFieldId | null {
+    return this.props.targetFormFieldId
   }
 
   get reviewPassed(): boolean | null {

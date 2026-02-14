@@ -13,7 +13,7 @@ export type GetChatSession200DataMessagesItem = {
   role: GetChatSession200DataMessagesItemRole
   content: string
   /** @nullable */
-  targetJobFormFieldId: string | null
+  targetFormFieldId: string | null
   /** @nullable */
   reviewPassed: boolean | null
   createdAt: string

@@ -1,5 +1,5 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
-import { application } from './application'
+import { submission } from './submission'
 import type { InferSelectModel, InferInsertModel } from 'drizzle-orm'
 
 /**
@@ -8,9 +8,9 @@ import type { InferSelectModel, InferInsertModel } from 'drizzle-orm'
  */
 export const consentLog = sqliteTable('consent_log', {
   id: text('id').primaryKey(),
-  applicationId: text('application_id')
+  submissionId: text('submission_id')
     .notNull()
-    .references(() => application.id, { onDelete: 'cascade' }),
+    .references(() => submission.id, { onDelete: 'cascade' }),
   consentType: text('consent_type').notNull(),
   consented: integer('consented', { mode: 'boolean' }).notNull(),
   ipAddress: text('ip_address'),

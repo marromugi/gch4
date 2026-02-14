@@ -15,7 +15,7 @@ const route = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            applicationId: z.string(),
+            submissionId: z.string(),
             consentType: z.string(),
             consentLogId: z.string().optional(),
             consented: z.boolean(),
@@ -71,11 +71,11 @@ app.openapi(route, async (c) => {
   const body = c.req.valid('json')
 
   const usecase = new SaveConsentLogUsecase({
-    applicationRepository: repositories.applicationRepository,
+    submissionRepository: repositories.submissionRepository,
   })
 
   const result = await usecase.execute({
-    applicationId: body.applicationId,
+    submissionId: body.submissionId,
     consentType: body.consentType,
     consentLogId: body.consentLogId ?? crypto.randomUUID(),
     consented: body.consented,

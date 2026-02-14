@@ -9,7 +9,7 @@ import type { SaveConsentLog201DataConsentType } from './saveConsentLog201DataCo
 
 export type SaveConsentLog201Data = {
   id: string
-  applicationId: string
+  submissionId: string
   consentType: SaveConsentLog201DataConsentType
   consented: boolean
   /** @nullable */

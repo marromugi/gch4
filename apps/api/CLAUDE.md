@@ -2,11 +2,50 @@
 
 ### `src/routes/`
 
-APIエンドポイントの定義。HTTPメソッドごとにファイルを分割する。
+APIエンドポイントの定義。`@hono/zod-openapi` を使用してルートを定義する。
 
-- `get.ts` → GETリクエスト
-- `post.ts` → POSTリクエスト
-- `index.ts` → 同階層のルートをまとめてexport
+| ファイル   | 役割                           |
+| ---------- | ------------------------------ |
+| `get.ts`   | GETリクエストハンドラ          |
+| `post.ts`  | POSTリクエストハンドラ         |
+| `put.ts`   | PUTリクエストハンドラ          |
+| `index.ts` | 同階層のルートをまとめてexport |
+
+#### ルート定義パターン
+
+```typescript
+import { createRoute, z } from '@hono/zod-openapi'
+
+// 1. Zodスキーマを定義
+const ParamsSchema = z.object({
+  id: z.string().openapi({ example: '123' }),
+})
+
+const ResponseSchema = z
+  .object({
+    data: z.object({ id: z.string(), name: z.string() }),
+  })
+  .openapi('ResourceResponse')
+
+// 2. createRouteでOpenAPIメタデータ付きルートを作成
+export const route = createRoute({
+  method: 'get',
+  path: '/resources/{id}',
+  request: { params: ParamsSchema },
+  responses: {
+    200: {
+      content: { 'application/json': { schema: ResponseSchema } },
+      description: 'Success',
+    },
+  },
+})
+
+// 3. app.openapiでハンドラを登録
+app.openapi(route, async (c) => {
+  const { id } = c.req.valid('param')
+  return c.json({ data: { id, name: 'example' } }, 200)
+})
+```
 
 ### `src/middleware/`
 

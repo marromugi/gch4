@@ -9,9 +9,11 @@
 export type RecordEventLogBody = {
   eventLogId?: string
   eventType: string
-  applicationId: string
-  jobId: string
-  chatSessionId: string
-  policyVersionId: string
+  /** @nullable */
+  submissionId: string | null
+  /** @nullable */
+  formId: string | null
+  /** @nullable */
+  chatSessionId: string | null
   metadata?: string
 }

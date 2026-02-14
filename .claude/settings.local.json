@@ -104,7 +104,9 @@
       "Bash(pnpm --filter @ding/web exec tsr generate:*)",
       "Bash(pnpm --filter @ding/web build:*)",
       "Bash(pnpm -F @ding/api typecheck:*)",
-      "Bash(pnpm --filter @ding/web generate:client:*)"
+      "Bash(pnpm --filter @ding/web generate:client:*)",
+      "Bash(pnpm -F @ding/database build:*)",
+      "Bash(pnpm exec tsc:*)"
     ],
     "deny": ["Bash(npm:*)", "Bash(yarn:*)", "Bash(bun:*)", "Bash(rm -rf:*)", "Bash(sudo :*)"]
   },
