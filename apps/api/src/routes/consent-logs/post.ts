@@ -1,8 +1,8 @@
-import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 import { SaveConsentLogUsecase } from '@ding/domain'
-import type { HonoEnv } from '../../types/hono'
+import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 import { consentLogResponseSchema } from '../../schemas/response'
 import { serializeConsentLog } from '../../schemas/serializers'
+import type { HonoEnv } from '../../types/hono'
 
 const route = createRoute({
   method: 'post',

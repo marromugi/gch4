@@ -6,19 +6,6 @@
  * OpenAPI spec version: 0.0.0
  */
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { customFetch } from '../../fetcher'
-import type {
-  CreateChatSession201,
-  CreateChatSession404,
-  CreateChatSession500,
-  GetChatSession200,
-  GetChatSession404,
-  GetChatSession500,
-  SendChatMessage200,
-  SendChatMessage404,
-  SendChatMessage500,
-  SendChatMessageBody,
-} from '.././models'
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -33,6 +20,24 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query'
+
+import type {
+  CreateChatSession201,
+  CreateChatSession404,
+  CreateChatSession500,
+  GetChatSession200,
+  GetChatSession404,
+  GetChatSession500,
+  GetChatSessionFormData200,
+  GetChatSessionFormData404,
+  GetChatSessionFormData500,
+  SendChatMessage200,
+  SendChatMessage404,
+  SendChatMessage500,
+  SendChatMessageBody,
+} from '.././models'
+
+import { customFetch } from '../../fetcher'
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
@@ -242,6 +247,154 @@ export function useGetChatSession<
   queryClient?: QueryClient
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetChatSessionQueryOptions(applicationId, sessionId, options)
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>
+  }
+
+  query.queryKey = queryOptions.queryKey
+
+  return query
+}
+
+/**
+ * @summary Get collected form data from a completed chat session
+ */
+export const getChatSessionFormData = (
+  applicationId: string,
+  sessionId: string,
+  options?: SecondParameter<typeof customFetch>,
+  signal?: AbortSignal
+) => {
+  return customFetch<GetChatSessionFormData200>(
+    {
+      url: `API_BASE_URL/api/applications/${applicationId}/chat/sessions/${sessionId}/form-data`,
+      method: 'GET',
+      signal,
+    },
+    options
+  )
+}
+
+export const getGetChatSessionFormDataQueryKey = (applicationId?: string, sessionId?: string) => {
+  return [
+    `API_BASE_URL/api/applications/${applicationId}/chat/sessions/${sessionId}/form-data`,
+  ] as const
+}
+
+export const getGetChatSessionFormDataQueryOptions = <
+  TData = Awaited<ReturnType<typeof getChatSessionFormData>>,
+  TError = GetChatSessionFormData404 | GetChatSessionFormData500,
+>(
+  applicationId: string,
+  sessionId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getChatSessionFormData>>, TError, TData>
+    >
+    request?: SecondParameter<typeof customFetch>
+  }
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {}
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetChatSessionFormDataQueryKey(applicationId, sessionId)
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getChatSessionFormData>>> = ({ signal }) =>
+    getChatSessionFormData(applicationId, sessionId, requestOptions, signal)
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!(applicationId && sessionId),
+    ...queryOptions,
+  } as UseQueryOptions<Awaited<ReturnType<typeof getChatSessionFormData>>, TError, TData> & {
+    queryKey: DataTag<QueryKey, TData, TError>
+  }
+}
+
+export type GetChatSessionFormDataQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getChatSessionFormData>>
+>
+export type GetChatSessionFormDataQueryError = GetChatSessionFormData404 | GetChatSessionFormData500
+
+export function useGetChatSessionFormData<
+  TData = Awaited<ReturnType<typeof getChatSessionFormData>>,
+  TError = GetChatSessionFormData404 | GetChatSessionFormData500,
+>(
+  applicationId: string,
+  sessionId: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getChatSessionFormData>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getChatSessionFormData>>,
+          TError,
+          Awaited<ReturnType<typeof getChatSessionFormData>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetChatSessionFormData<
+  TData = Awaited<ReturnType<typeof getChatSessionFormData>>,
+  TError = GetChatSessionFormData404 | GetChatSessionFormData500,
+>(
+  applicationId: string,
+  sessionId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getChatSessionFormData>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getChatSessionFormData>>,
+          TError,
+          Awaited<ReturnType<typeof getChatSessionFormData>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetChatSessionFormData<
+  TData = Awaited<ReturnType<typeof getChatSessionFormData>>,
+  TError = GetChatSessionFormData404 | GetChatSessionFormData500,
+>(
+  applicationId: string,
+  sessionId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getChatSessionFormData>>, TError, TData>
+    >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get collected form data from a completed chat session
+ */
+
+export function useGetChatSessionFormData<
+  TData = Awaited<ReturnType<typeof getChatSessionFormData>>,
+  TError = GetChatSessionFormData404 | GetChatSessionFormData500,
+>(
+  applicationId: string,
+  sessionId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getChatSessionFormData>>, TError, TData>
+    >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetChatSessionFormDataQueryOptions(applicationId, sessionId, options)
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
     queryKey: DataTag<QueryKey, TData, TError>

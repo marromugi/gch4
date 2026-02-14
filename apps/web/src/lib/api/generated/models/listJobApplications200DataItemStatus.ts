@@ -9,6 +9,7 @@
 export type ListJobApplications200DataItemStatus =
   (typeof ListJobApplications200DataItemStatus)[keyof typeof ListJobApplications200DataItemStatus]
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ListJobApplications200DataItemStatus = {
   new: 'new',
   scheduling: 'scheduling',

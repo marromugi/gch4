@@ -1,11 +1,14 @@
+import type { ILLMProvider, IKVStore, AgentRegistry } from '@ding/agent'
 import type { Database } from '@ding/database/client'
-import type { IJobRepository } from '@ding/domain/domain/repository'
-import type { IApplicationRepository } from '@ding/domain/domain/repository'
-import type { IReviewPolicyRepository } from '@ding/domain/domain/repository'
-import type { IInterviewFeedbackRepository } from '@ding/domain/domain/repository'
-import type { IEventLogRepository } from '@ding/domain/domain/repository'
+import type {
+  IJobRepository,
+  IApplicationRepository,
+  IReviewPolicyRepository,
+  IInterviewFeedbackRepository,
+  IEventLogRepository,
+  IToolCallLogRepository,
+} from '@ding/domain/domain/repository'
 import type { ApplicationSubmissionService, FallbackService } from '@ding/domain/domain/service'
-import type { ILLMProvider } from '@ding/agent/provider'
 
 /**
  * データベースベースのリポジトリの型定義
@@ -16,6 +19,7 @@ export interface DatabaseRepositories {
   reviewPolicyRepository: IReviewPolicyRepository
   interviewFeedbackRepository: IInterviewFeedbackRepository
   eventLogRepository: IEventLogRepository
+  toolCallLogRepository: IToolCallLogRepository
 }
 
 /**
@@ -36,7 +40,12 @@ export interface Services {
  * インフラストラクチャ層の型定義
  */
 export interface Infrastructure {
+  /** LLM プロバイダー */
   llmProvider: ILLMProvider
+  /** KV ストア (OrchestratorV2 用) */
+  kvStore: IKVStore
+  /** エージェントレジストリ (OrchestratorV2 用) */
+  agentRegistry: AgentRegistry
 }
 
 /**

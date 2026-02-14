@@ -1,6 +1,6 @@
 import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi'
-import type { HonoEnv } from '../../types/hono'
 import { userResponseSchema, sessionResponseSchema } from '../../schemas/response'
+import type { HonoEnv } from '../../types/hono'
 
 const route = createRoute({
   method: 'get',

@@ -5,8 +5,8 @@
  * Ding API Documentation
  * OpenAPI spec version: 0.0.0
  */
-import type { CreateReviewPolicy201DataSignalsItemCategory } from './createReviewPolicy201DataSignalsItemCategory'
 import type { CreateReviewPolicy201DataSignalsItemPriority } from './createReviewPolicy201DataSignalsItemPriority'
+import type { CreateReviewPolicy201DataSignalsItemCategory } from './createReviewPolicy201DataSignalsItemCategory'
 
 export type CreateReviewPolicy201DataSignalsItem = {
   id: string

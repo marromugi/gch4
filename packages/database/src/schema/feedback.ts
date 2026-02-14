@@ -1,7 +1,7 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
-import type { InferSelectModel, InferInsertModel } from 'drizzle-orm'
 import { application, chatSession } from './application'
 import { reviewPolicyVersion } from './policy'
+import type { InferSelectModel, InferInsertModel } from 'drizzle-orm'
 
 /**
  * InterviewFeedback テーブル

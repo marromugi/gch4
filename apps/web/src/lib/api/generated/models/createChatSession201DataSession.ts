@@ -5,8 +5,9 @@
  * Ding API Documentation
  * OpenAPI spec version: 0.0.0
  */
-import type { CreateChatSession201DataSessionStatus } from './createChatSession201DataSessionStatus'
 import type { CreateChatSession201DataSessionType } from './createChatSession201DataSessionType'
+import type { CreateChatSession201DataSessionStatus } from './createChatSession201DataSessionStatus'
+import type { CreateChatSession201DataSessionCurrentAgent } from './createChatSession201DataSessionCurrentAgent'
 
 export type CreateChatSession201DataSession = {
   id: string
@@ -18,6 +19,7 @@ export type CreateChatSession201DataSession = {
   bootstrapCompleted: boolean
   status: CreateChatSession201DataSessionStatus
   turnCount: number
+  currentAgent: CreateChatSession201DataSessionCurrentAgent
   createdAt: string
   updatedAt: string
 }

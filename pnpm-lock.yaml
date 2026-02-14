@@ -220,6 +220,9 @@ importers:
       '@google/genai':
         specifier: ^1.0.0
         version: 1.40.0
+      zod:
+        specifier: ^4.3.6
+        version: 4.3.6
     devDependencies:
       '@ding/config':
         specifier: workspace:*

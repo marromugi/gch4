@@ -14,3 +14,4 @@ export type {
 } from './types'
 export { LLMProviderError } from './errors'
 export type { LLMProviderErrorType } from './errors'
+export { GeminiProvider } from './gemini'

@@ -1,6 +1,5 @@
-import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 import { GetReviewPolicyUsecase } from '@ding/domain'
-import type { HonoEnv } from '../../../types/hono'
+import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 import {
   reviewPolicyVersionResponseSchema,
   reviewPolicySignalResponseSchema,
@@ -11,6 +10,7 @@ import {
   serializeReviewPolicySignal,
   serializeReviewProhibitedTopic,
 } from '../../../schemas/serializers'
+import type { HonoEnv } from '../../../types/hono'
 
 const route = createRoute({
   method: 'get',

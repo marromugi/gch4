@@ -9,6 +9,7 @@
 export type SaveConsentLog201DataConsentType =
   (typeof SaveConsentLog201DataConsentType)[keyof typeof SaveConsentLog201DataConsentType]
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SaveConsentLog201DataConsentType = {
   data_usage: 'data_usage',
   privacy_policy: 'privacy_policy',

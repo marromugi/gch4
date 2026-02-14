@@ -6,12 +6,12 @@
  * OpenAPI spec version: 0.0.0
  */
 import type { SendChatMessage200DataMessage } from './sendChatMessage200DataMessage'
-import type { SendChatMessage200DataPhase } from './sendChatMessage200DataPhase'
 import type { SendChatMessage200DataSession } from './sendChatMessage200DataSession'
 import type { SendChatMessage200DataTodosItem } from './sendChatMessage200DataTodosItem'
+import type { SendChatMessage200DataPhase } from './sendChatMessage200DataPhase'
 
 export type SendChatMessage200Data = {
-  message: SendChatMessage200DataMessage
+  message?: SendChatMessage200DataMessage
   session: SendChatMessage200DataSession
   todos: SendChatMessage200DataTodosItem[]
   phase: SendChatMessage200DataPhase

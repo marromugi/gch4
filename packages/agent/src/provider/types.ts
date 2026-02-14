@@ -16,6 +16,8 @@ export interface GenerateOptions {
   systemPrompt?: string
   /** thinking モデル用: thinking トークン予算。0=無効、-1=自動 */
   thinkingBudget?: number
+  /** ツール呼び出しを強制する（chatWithTools 用） */
+  forceToolCall?: boolean
 }
 
 /** 構造化出力オプション */

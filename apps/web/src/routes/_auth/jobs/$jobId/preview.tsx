@@ -4,7 +4,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useRef, useState } from 'react'
 import { JobApplicationPage } from '@/components/pages'
 import { useCreateApplication } from '@/lib/api/generated/application/application'
-import { useGetJobSchema } from '@/lib/api/generated/job/job'
+import { useGetJob, useGetJobSchema } from '@/lib/api/generated/job/job'
 
 export const Route = createFileRoute('/_auth/jobs/$jobId/preview')({
   component: PreviewRoute,
@@ -17,6 +17,7 @@ function PreviewRoute() {
   const createdRef = useRef(false)
 
   const { data: schemaData, isLoading: isLoadingSchema } = useGetJobSchema(jobId)
+  const { data: jobData } = useGetJob(jobId)
   const { mutateAsync: createApplication } = useCreateApplication()
 
   const schemaVersionId = schemaData?.data?.schemaVersion?.id
@@ -54,5 +55,13 @@ function PreviewRoute() {
     )
   }
 
-  return <JobApplicationPage applicationId={applicationId!} mode="preview" jobId={jobId} />
+  return (
+    <JobApplicationPage
+      applicationId={applicationId!}
+      mode="preview"
+      jobId={jobId}
+      jobTitle={jobData?.data?.title}
+      backHref={`/jobs/${jobId}`}
+    />
+  )
 }

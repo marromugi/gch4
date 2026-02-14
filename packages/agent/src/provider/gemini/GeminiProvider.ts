@@ -1,4 +1,4 @@
-import { GoogleGenAI } from '@google/genai'
+import { FunctionCallingConfigMode, GoogleGenAI } from '@google/genai'
 import { LLMProviderError } from '../errors'
 import type {
   GenerateOptions,
@@ -123,6 +123,24 @@ export class GeminiProvider implements ILLMProvider {
       const { systemInstruction, contents } = this.convertMessages(messages, options?.systemPrompt)
       const model = options?.model ?? this.defaultModel
 
+      // デバッグ: ツール定義の内容を確認
+      const functionDeclarations = tools.map((t) => ({
+        name: t.name,
+        description: t.description,
+        parameters: t.parameters,
+      }))
+
+      console.log(
+        '[GeminiProvider.chatWithTools] functionDeclarations:',
+        JSON.stringify(functionDeclarations, null, 2)
+      )
+      console.log(
+        '[GeminiProvider.chatWithTools] forceToolCall:',
+        options?.forceToolCall,
+        'model:',
+        model
+      )
+
       const response = await this.client.models.generateContent({
         model,
         contents,
@@ -131,15 +149,11 @@ export class GeminiProvider implements ILLMProvider {
           temperature: options?.temperature,
           maxOutputTokens: options?.maxOutputTokens,
           topP: options?.topP,
-          tools: [
-            {
-              functionDeclarations: tools.map((t) => ({
-                name: t.name,
-                description: t.description,
-                parameters: t.parameters,
-              })),
-            },
-          ],
+          tools: [{ functionDeclarations }],
+          // forceToolCall が true の場合、ツール呼び出しを強制する
+          toolConfig: options?.forceToolCall
+            ? { functionCallingConfig: { mode: FunctionCallingConfigMode.ANY } }
+            : undefined,
         },
       })
 
@@ -219,6 +233,19 @@ export class GeminiProvider implements ILLMProvider {
     for (const msg of messages) {
       if (msg.role === 'system') {
         systemParts.push(msg.content)
+        continue
+      }
+
+      // tool_result ロールはローカル状態追跡用なのでスキップ
+      // (Explorer の状態復元などに使用される)
+      // 注: 呼び出し元で SubSessionMessage[] を LLMMessage[] としてキャストしている場合があるため、
+      // 実行時の安全性のために型アサーションを使用
+      if ((msg.role as string) === 'tool_result') {
+        continue
+      }
+
+      // content が undefined または空の場合はスキップ
+      if (!msg.content) {
         continue
       }
 

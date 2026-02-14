@@ -6,7 +6,21 @@
  * OpenAPI spec version: 0.0.0
  */
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { customFetch } from '../../fetcher'
+import type {
+  DataTag,
+  DefinedInitialDataOptions,
+  DefinedUseQueryResult,
+  MutationFunction,
+  QueryClient,
+  QueryFunction,
+  QueryKey,
+  UndefinedInitialDataOptions,
+  UseMutationOptions,
+  UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult,
+} from '@tanstack/react-query'
+
 import type {
   CreateApplication201,
   CreateApplication400,
@@ -43,20 +57,8 @@ import type {
   UpdateApplicationStatus500,
   UpdateApplicationStatusBody,
 } from '.././models'
-import type {
-  DataTag,
-  DefinedInitialDataOptions,
-  DefinedUseQueryResult,
-  MutationFunction,
-  QueryClient,
-  QueryFunction,
-  QueryKey,
-  UndefinedInitialDataOptions,
-  UseMutationOptions,
-  UseMutationResult,
-  UseQueryOptions,
-  UseQueryResult,
-} from '@tanstack/react-query'
+
+import { customFetch } from '../../fetcher'
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 

@@ -9,6 +9,7 @@
 export type CreateReviewPolicy201DataPolicyStatus =
   (typeof CreateReviewPolicy201DataPolicyStatus)[keyof typeof CreateReviewPolicy201DataPolicyStatus]
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateReviewPolicy201DataPolicyStatus = {
   draft: 'draft',
   confirmed: 'confirmed',

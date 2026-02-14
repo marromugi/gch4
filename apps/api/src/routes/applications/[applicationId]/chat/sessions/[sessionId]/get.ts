@@ -1,7 +1,5 @@
+import { ApplicationId, ChatSessionId } from '@ding/domain/domain/valueObject'
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
-import { ApplicationId } from '@ding/domain/domain/valueObject'
-import { ChatSessionId } from '@ding/domain/domain/valueObject'
-import type { HonoEnv } from '../../../../../../types/hono'
 import {
   chatSessionResponseSchema,
   chatMessageResponseSchema,
@@ -12,6 +10,7 @@ import {
   serializeChatMessage,
   serializeApplicationTodo,
 } from '../../../../../../schemas/serializers'
+import type { HonoEnv } from '../../../../../../types/hono'
 
 const route = createRoute({
   method: 'get',

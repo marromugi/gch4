@@ -10,16 +10,6 @@ export const chatBubble = tv({
       user: {
         wrapper: ['justify-end'],
         bubble: [
-          'bg-neutral-900',
-          'dark:bg-neutral-100',
-          'text-white',
-          'dark:text-neutral-900',
-          'rounded-br-sm',
-        ],
-      },
-      assistant: {
-        wrapper: ['justify-start'],
-        bubble: [
           'bg-white',
           'dark:bg-neutral-800',
           'text-neutral-900',
@@ -27,8 +17,11 @@ export const chatBubble = tv({
           'border',
           'border-neutral-200',
           'dark:border-neutral-700',
-          'rounded-bl-sm',
         ],
+      },
+      assistant: {
+        wrapper: ['justify-start'],
+        bubble: ['text-neutral-900', 'dark:text-neutral-100'],
       },
       system: {
         wrapper: ['justify-center'],

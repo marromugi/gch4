@@ -7,8 +7,11 @@
  */
 import type { CreateChatSession201DataSession } from './createChatSession201DataSession'
 import type { CreateChatSession201DataTodosItem } from './createChatSession201DataTodosItem'
+import type { CreateChatSession201DataGreeting } from './createChatSession201DataGreeting'
 
 export type CreateChatSession201Data = {
   session: CreateChatSession201DataSession
   todos: CreateChatSession201DataTodosItem[]
+  /** @nullable */
+  greeting: CreateChatSession201DataGreeting
 }

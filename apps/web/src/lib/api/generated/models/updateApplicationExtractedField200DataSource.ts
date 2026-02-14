@@ -9,6 +9,7 @@
 export type UpdateApplicationExtractedField200DataSource =
   (typeof UpdateApplicationExtractedField200DataSource)[keyof typeof UpdateApplicationExtractedField200DataSource]
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UpdateApplicationExtractedField200DataSource = {
   llm: 'llm',
   manual: 'manual',

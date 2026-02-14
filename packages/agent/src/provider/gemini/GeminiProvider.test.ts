@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { GeminiProvider } from './GeminiProvider'
 import { LLMProviderError } from '../errors'
+import { GeminiProvider } from './GeminiProvider'
 
 // @google/genai のモック
 const mockGenerateContent = vi.fn()

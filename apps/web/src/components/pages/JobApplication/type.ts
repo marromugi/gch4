@@ -6,7 +6,9 @@ export interface JobApplicationPageProps {
   applicationId: string
   mode?: ApplicationMode
   jobId?: string
+  jobTitle?: string
   className?: string
+  backHref?: string
 }
 
 export type { GetApplication200Data as ApplicationData } from '@/lib/api/generated/models'

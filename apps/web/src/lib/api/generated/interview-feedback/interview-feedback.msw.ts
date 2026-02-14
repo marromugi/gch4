@@ -6,9 +6,11 @@
  * OpenAPI spec version: 0.0.0
  */
 import { faker } from '@faker-js/faker'
+
 import { HttpResponse, delay, http } from 'msw'
-import type { GetInterviewFeedback200, SaveInterviewFeedback201 } from '.././models'
 import type { RequestHandlerOptions } from 'msw'
+
+import type { GetInterviewFeedback200, SaveInterviewFeedback201 } from '.././models'
 
 export const getSaveInterviewFeedbackResponseMock = (
   overrideResponse: Partial<SaveInterviewFeedback201> = {}

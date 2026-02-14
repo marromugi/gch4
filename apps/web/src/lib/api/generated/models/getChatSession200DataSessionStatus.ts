@@ -9,6 +9,7 @@
 export type GetChatSession200DataSessionStatus =
   (typeof GetChatSession200DataSessionStatus)[keyof typeof GetChatSession200DataSessionStatus]
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetChatSession200DataSessionStatus = {
   active: 'active',
   completed: 'completed',

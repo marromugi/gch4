@@ -9,6 +9,7 @@ import { JobFormFieldId } from '../../valueObject/JobFormFieldId/JobFormFieldId'
 import { ChatSessionType } from '../../valueObject/ChatSessionType/ChatSessionType'
 import { ChatSessionStatus } from '../../valueObject/ChatSessionStatus/ChatSessionStatus'
 import { TodoStatus } from '../../valueObject/TodoStatus/TodoStatus'
+import { AgentType } from '../../valueObject/AgentType/AgentType'
 
 const service = new FallbackService()
 
@@ -30,6 +31,9 @@ const createSession = (overrides: Partial<Parameters<typeof ChatSession.create>[
     reviewFailStreak: 0,
     extractionFailStreak: 0,
     timeoutStreak: 0,
+    currentAgent: AgentType.greeter(),
+    plan: null,
+    planSchemaVersion: null,
     createdAt: new Date(),
     updatedAt: new Date(),
     ...overrides,

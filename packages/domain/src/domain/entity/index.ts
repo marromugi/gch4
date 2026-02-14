@@ -39,3 +39,7 @@ export type { InterviewFeedbackProps } from './InterviewFeedback'
 // EventLog（集約外）
 export { EventLog } from './EventLog'
 export type { EventLogProps } from './EventLog'
+
+// ToolCallLog（集約外、Event Sourcing用）
+export { ToolCallLog } from './ToolCallLog'
+export type { ToolCallLogProps } from './ToolCallLog'

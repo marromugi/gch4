@@ -1,19 +1,21 @@
-import type { Job } from '@ding/domain/domain/entity'
-import type { Application } from '@ding/domain/domain/entity'
-import type { JobFormField } from '@ding/domain/domain/entity'
-import type { JobSchemaVersion } from '@ding/domain/domain/entity'
-import type { FieldFactDefinition } from '@ding/domain/domain/entity'
-import type { ProhibitedTopic } from '@ding/domain/domain/entity'
-import type { ExtractedField } from '@ding/domain/domain/entity'
-import type { ConsentLog } from '@ding/domain/domain/entity'
-import type { EventLog } from '@ding/domain/domain/entity'
-import type { InterviewFeedback } from '@ding/domain/domain/entity'
-import type { ReviewPolicyVersion } from '@ding/domain/domain/entity'
-import type { ReviewPolicySignal } from '@ding/domain/domain/entity'
-import type { ReviewProhibitedTopic } from '@ding/domain/domain/entity'
-import type { ChatSession } from '@ding/domain/domain/entity'
-import type { ChatMessage } from '@ding/domain/domain/entity'
-import type { ApplicationTodo } from '@ding/domain/domain/entity'
+import type {
+  Job,
+  Application,
+  JobFormField,
+  JobSchemaVersion,
+  FieldFactDefinition,
+  ProhibitedTopic,
+  ExtractedField,
+  ConsentLog,
+  EventLog,
+  InterviewFeedback,
+  ReviewPolicyVersion,
+  ReviewPolicySignal,
+  ReviewProhibitedTopic,
+  ChatSession,
+  ChatMessage,
+  ApplicationTodo,
+} from '@ding/domain/domain/entity'
 
 export function serializeJob(job: Job) {
   return {
@@ -198,6 +200,7 @@ export function serializeChatSession(session: ChatSession) {
     bootstrapCompleted: session.bootstrapCompleted,
     status: session.status.value,
     turnCount: session.turnCount,
+    currentAgent: session.currentAgent.value,
     createdAt: session.createdAt.toISOString(),
     updatedAt: session.updatedAt.toISOString(),
   }

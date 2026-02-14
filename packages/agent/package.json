@@ -34,7 +34,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@google/genai": "^1.0.0"
+    "@google/genai": "^1.0.0",
+    "zod": "^4.3.6"
   },
   "peerDependencies": {
     "@ding/domain": "workspace:*"

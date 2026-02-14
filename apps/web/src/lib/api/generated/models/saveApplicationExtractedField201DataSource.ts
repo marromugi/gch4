@@ -9,6 +9,7 @@
 export type SaveApplicationExtractedField201DataSource =
   (typeof SaveApplicationExtractedField201DataSource)[keyof typeof SaveApplicationExtractedField201DataSource]
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SaveApplicationExtractedField201DataSource = {
   llm: 'llm',
   manual: 'manual',

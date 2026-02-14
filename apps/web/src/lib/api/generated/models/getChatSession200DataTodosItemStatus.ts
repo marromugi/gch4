@@ -9,6 +9,7 @@
 export type GetChatSession200DataTodosItemStatus =
   (typeof GetChatSession200DataTodosItemStatus)[keyof typeof GetChatSession200DataTodosItemStatus]
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetChatSession200DataTodosItemStatus = {
   pending: 'pending',
   awaiting_answer: 'awaiting_answer',

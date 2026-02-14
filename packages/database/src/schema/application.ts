@@ -1,8 +1,8 @@
 import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core'
-import type { InferSelectModel, InferInsertModel } from 'drizzle-orm'
 import { user } from './auth'
 import { job, jobFormField, jobSchemaVersion, fieldFactDefinition } from './job'
 import { reviewPolicyVersion, reviewPolicySignal } from './policy'
+import type { InferSelectModel, InferInsertModel } from 'drizzle-orm'
 
 /**
  * Application テーブル
@@ -61,6 +61,11 @@ export const chatSession = sqliteTable('chat_session', {
   reviewFailStreak: integer('review_fail_streak').notNull().default(0),
   extractionFailStreak: integer('extraction_fail_streak').notNull().default(0),
   timeoutStreak: integer('timeout_streak').notNull().default(0),
+  currentAgent: text('current_agent').notNull().default('greeter'),
+  /** インタビュープラン（JSON文字列） */
+  plan: text('plan'),
+  /** プランスキーマバージョン */
+  planSchemaVersion: integer('plan_schema_version'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
 })
@@ -106,14 +111,42 @@ export const applicationTodo = sqliteTable('application_todo', {
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
 })
 
+/**
+ * ToolCallLog テーブル
+ * ツール呼び出しログ（Event Sourcing用、サブセッション復元に使用）
+ */
+export const toolCallLog = sqliteTable(
+  'tool_call_log',
+  {
+    id: text('id').primaryKey(),
+    sessionId: text('session_id')
+      .notNull()
+      .references(() => chatSession.id, { onDelete: 'cascade' }),
+    /** ログの順序（セッション内で一意） */
+    sequence: integer('sequence').notNull(),
+    /** 実行したエージェント */
+    agent: text('agent').notNull(),
+    /** ツール名 */
+    toolName: text('tool_name').notNull(),
+    /** ツールの引数（JSON文字列） */
+    args: text('args').notNull(),
+    /** ツールの結果（JSON文字列） */
+    result: text('result'),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  },
+  (table) => [index('tool_call_log_session_sequence_idx').on(table.sessionId, table.sequence)]
+)
+
 // Select 型
 export type Application = InferSelectModel<typeof application>
 export type ChatSession = InferSelectModel<typeof chatSession>
 export type ChatMessage = InferSelectModel<typeof chatMessage>
 export type ApplicationTodo = InferSelectModel<typeof applicationTodo>
+export type ToolCallLog = InferSelectModel<typeof toolCallLog>
 
 // Insert 型
 export type NewApplication = InferInsertModel<typeof application>
 export type NewChatSession = InferInsertModel<typeof chatSession>
 export type NewChatMessage = InferInsertModel<typeof chatMessage>
 export type NewApplicationTodo = InferInsertModel<typeof applicationTodo>
+export type NewToolCallLog = InferInsertModel<typeof toolCallLog>

@@ -9,6 +9,7 @@
 export type RecordEventLog201DataEventType =
   (typeof RecordEventLog201DataEventType)[keyof typeof RecordEventLog201DataEventType]
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const RecordEventLog201DataEventType = {
   chat_started: 'chat_started',
   session_bootstrap_completed: 'session_bootstrap_completed',

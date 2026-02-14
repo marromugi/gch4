@@ -1,20 +1,23 @@
 import { Typography } from '@ding/ui'
+import { ChevronLeft } from '@ding/ui/icon'
 import { cn } from '@ding/ui/lib'
+import { Link } from '@tanstack/react-router'
 import { ChatPanel } from './ChatPanel'
 import { CompletionScreen } from './CompletionScreen'
 import { ConsentCheck } from './ConsentCheck'
 import { jobApplicationPage } from './const'
 import { ExtractionReview } from './ExtractionReview'
 import { useJobApplication } from './hook'
-import { PreviewComplete } from './PreviewComplete'
-import { TodoProgress } from './TodoProgress'
+import { PreviewFormDataModal } from './PreviewFormDataModal'
 import type { JobApplicationPageProps } from './type'
 
 export function JobApplicationPage({
   applicationId,
   mode = 'live',
   jobId,
+  jobTitle,
   className,
+  backHref,
 }: JobApplicationPageProps) {
   const styles = jobApplicationPage()
   const {
@@ -25,10 +28,12 @@ export function JobApplicationPage({
     isComplete,
     isLoading,
     error,
+    formData,
+    formFieldLabels,
     handleSendMessage,
     handleReviewComplete,
     handleConsentComplete,
-  } = useJobApplication(applicationId, mode)
+  } = useJobApplication(applicationId, mode, jobId)
 
   if (isLoading) {
     return (
@@ -51,8 +56,13 @@ export function JobApplicationPage({
   return (
     <div className={cn(styles.container(), className)}>
       <div className={styles.header()}>
+        {backHref && (
+          <Link to={backHref} className={styles.backButton()}>
+            <ChevronLeft width={20} height={20} />
+          </Link>
+        )}
         <Typography variant="body" size="md" weight="bold">
-          {mode === 'preview' ? 'チャットプレビュー' : '応募フォーム'}
+          {mode === 'preview' ? (jobTitle ?? '求人プレビュー') : '応募フォーム'}
         </Typography>
       </div>
 
@@ -65,9 +75,6 @@ export function JobApplicationPage({
               isComplete={isComplete}
               onSendMessage={handleSendMessage}
             />
-          </div>
-          <div className={styles.sidebar()}>
-            <TodoProgress todos={todos} />
           </div>
         </div>
       )}
@@ -84,14 +91,14 @@ export function JobApplicationPage({
         </div>
       )}
 
-      {phase === 'complete' && (
+      {phase === 'complete' && mode === 'live' && (
         <div className={styles.centerContent()}>
-          {mode === 'preview' ? (
-            <PreviewComplete jobId={jobId} />
-          ) : (
-            <CompletionScreen applicationId={applicationId} />
-          )}
+          <CompletionScreen applicationId={applicationId} />
         </div>
+      )}
+
+      {mode === 'preview' && isComplete && (
+        <PreviewFormDataModal formData={formData} formFieldLabels={formFieldLabels} jobId={jobId} />
       )}
     </div>
   )

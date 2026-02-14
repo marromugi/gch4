@@ -4,6 +4,9 @@ export const jobApplicationPage = tv({
   slots: {
     container: ['min-h-dvh', 'bg-neutral-50', 'dark:bg-neutral-950'],
     header: [
+      'flex',
+      'items-center',
+      'gap-3',
       'border-b',
       'border-neutral-200',
       'dark:border-neutral-800',
@@ -12,9 +15,19 @@ export const jobApplicationPage = tv({
       'px-6',
       'py-4',
     ],
+    backButton: [
+      'flex',
+      'items-center',
+      'gap-1',
+      'text-neutral-600',
+      'dark:text-neutral-400',
+      'hover:text-neutral-900',
+      'dark:hover:text-neutral-100',
+      'transition-colors',
+    ],
     main: ['flex-1', 'flex', 'flex-col'],
     chatLayout: ['flex', 'flex-1', 'h-[calc(100dvh-64px)]'],
-    chatArea: ['flex-1', 'flex', 'flex-col', 'min-w-0'],
+    chatArea: ['flex-1', 'flex', 'flex-col', 'min-w-0', 'max-w-3xl', 'mx-auto', 'w-full'],
     sidebar: [
       'w-80',
       'border-l',

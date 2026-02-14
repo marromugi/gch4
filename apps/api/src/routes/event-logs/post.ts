@@ -1,8 +1,8 @@
-import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 import { RecordEventLogUsecase } from '@ding/domain'
-import type { HonoEnv } from '../../types/hono'
+import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 import { eventLogResponseSchema } from '../../schemas/response'
 import { serializeEventLog } from '../../schemas/serializers'
+import type { HonoEnv } from '../../types/hono'
 
 const route = createRoute({
   method: 'post',

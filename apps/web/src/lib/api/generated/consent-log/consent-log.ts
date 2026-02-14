@@ -6,7 +6,13 @@
  * OpenAPI spec version: 0.0.0
  */
 import { useMutation } from '@tanstack/react-query'
-import { customFetch } from '../../fetcher'
+import type {
+  MutationFunction,
+  QueryClient,
+  UseMutationOptions,
+  UseMutationResult,
+} from '@tanstack/react-query'
+
 import type {
   SaveConsentLog201,
   SaveConsentLog400,
@@ -14,12 +20,8 @@ import type {
   SaveConsentLog500,
   SaveConsentLogBody,
 } from '.././models'
-import type {
-  MutationFunction,
-  QueryClient,
-  UseMutationOptions,
-  UseMutationResult,
-} from '@tanstack/react-query'
+
+import { customFetch } from '../../fetcher'
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 

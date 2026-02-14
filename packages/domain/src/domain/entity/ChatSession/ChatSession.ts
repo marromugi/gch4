@@ -6,6 +6,7 @@ import type { ReviewPolicyVersionId } from '../../valueObject/ReviewPolicyVersio
 import type { UserId } from '../../valueObject/UserId/UserId'
 import type { ChatSessionType } from '../../valueObject/ChatSessionType/ChatSessionType'
 import { ChatSessionStatus } from '../../valueObject/ChatSessionStatus/ChatSessionStatus'
+import type { AgentType } from '../../valueObject/AgentType/AgentType'
 
 export interface ChatSessionProps {
   id: ChatSessionId
@@ -24,6 +25,11 @@ export interface ChatSessionProps {
   reviewFailStreak: number
   extractionFailStreak: number
   timeoutStreak: number
+  currentAgent: AgentType
+  /** インタビュープラン（JSON文字列） */
+  plan: string | null
+  /** プランスキーマバージョン */
+  planSchemaVersion: number | null
   createdAt: Date
   updatedAt: Date
 }
@@ -96,6 +102,20 @@ export class ChatSession implements TimestampedEntity<ChatSessionId> {
 
   get timeoutStreak(): number {
     return this.props.timeoutStreak
+  }
+
+  get currentAgent(): AgentType {
+    return this.props.currentAgent
+  }
+
+  /** インタビュープラン（JSON文字列） */
+  get plan(): string | null {
+    return this.props.plan
+  }
+
+  /** プランスキーマバージョン */
+  get planSchemaVersion(): number | null {
+    return this.props.planSchemaVersion
   }
 
   get createdAt(): Date {
@@ -176,6 +196,45 @@ export class ChatSession implements TimestampedEntity<ChatSessionId> {
       timeoutStreak: 0,
       updatedAt: new Date(),
     })
+  }
+
+  /**
+   * 現在のエージェントを変更
+   */
+  changeAgent(newAgent: AgentType): ChatSession {
+    return new ChatSession({
+      ...this.props,
+      currentAgent: newAgent,
+      updatedAt: new Date(),
+    })
+  }
+
+  /**
+   * インタビュープランを設定
+   * @param plan プランオブジェクト（JSON.stringifyされる）
+   * @param schemaVersion スキーマバージョン（デフォルト: 1）
+   */
+  setPlan(plan: unknown, schemaVersion: number = 1): ChatSession {
+    return new ChatSession({
+      ...this.props,
+      plan: JSON.stringify(plan),
+      planSchemaVersion: schemaVersion,
+      updatedAt: new Date(),
+    })
+  }
+
+  /**
+   * インタビュープランを取得（パース済み）
+   * @returns パース成功時はオブジェクト、失敗時は null
+   */
+  getPlan<T = unknown>(): T | null {
+    if (!this.props.plan) return null
+
+    try {
+      return JSON.parse(this.props.plan) as T
+    } catch {
+      return null
+    }
   }
 
   /**

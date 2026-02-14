@@ -1,8 +1,8 @@
-import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 import { UpdateExtractedFieldUsecase } from '@ding/domain'
-import type { HonoEnv } from '../../../../types/hono'
+import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 import { extractedFieldResponseSchema } from '../../../../schemas/response'
 import { serializeExtractedField } from '../../../../schemas/serializers'
+import type { HonoEnv } from '../../../../types/hono'
 
 const route = createRoute({
   method: 'put',

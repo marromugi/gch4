@@ -9,6 +9,7 @@
 export type MarkExtractionReviewed200DataStatus =
   (typeof MarkExtractionReviewed200DataStatus)[keyof typeof MarkExtractionReviewed200DataStatus]
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const MarkExtractionReviewed200DataStatus = {
   new: 'new',
   scheduling: 'scheduling',

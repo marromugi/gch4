@@ -6,8 +6,8 @@
  * OpenAPI spec version: 0.0.0
  */
 import type { CreateReviewPolicy201DataPolicy } from './createReviewPolicy201DataPolicy'
-import type { CreateReviewPolicy201DataProhibitedTopicsItem } from './createReviewPolicy201DataProhibitedTopicsItem'
 import type { CreateReviewPolicy201DataSignalsItem } from './createReviewPolicy201DataSignalsItem'
+import type { CreateReviewPolicy201DataProhibitedTopicsItem } from './createReviewPolicy201DataProhibitedTopicsItem'
 
 export type CreateReviewPolicy201Data = {
   policy: CreateReviewPolicy201DataPolicy

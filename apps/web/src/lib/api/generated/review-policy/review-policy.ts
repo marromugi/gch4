@@ -6,21 +6,6 @@
  * OpenAPI spec version: 0.0.0
  */
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { customFetch } from '../../fetcher'
-import type {
-  CreateReviewPolicy201,
-  CreateReviewPolicy400,
-  CreateReviewPolicy401,
-  CreateReviewPolicy500,
-  CreateReviewPolicyBody,
-  GetReviewPolicy200,
-  GetReviewPolicy400,
-  GetReviewPolicy500,
-  PublishReviewPolicy200,
-  PublishReviewPolicy400,
-  PublishReviewPolicy404,
-  PublishReviewPolicy500,
-} from '.././models'
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -35,6 +20,23 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query'
+
+import type {
+  CreateReviewPolicy201,
+  CreateReviewPolicy400,
+  CreateReviewPolicy401,
+  CreateReviewPolicy500,
+  CreateReviewPolicyBody,
+  GetReviewPolicy200,
+  GetReviewPolicy400,
+  GetReviewPolicy500,
+  PublishReviewPolicy200,
+  PublishReviewPolicy400,
+  PublishReviewPolicy404,
+  PublishReviewPolicy500,
+} from '.././models'
+
+import { customFetch } from '../../fetcher'
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 

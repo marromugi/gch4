@@ -15,6 +15,11 @@ export { ReviewPolicySignalId } from './ReviewPolicySignalId'
 export { InterviewFeedbackId } from './InterviewFeedbackId'
 export { EventLogId } from './EventLogId'
 export { PrivacyRequestId } from './PrivacyRequestId'
+export { ToolCallLogId } from './ToolCallLogId'
+
+// エージェント系
+export { AgentType } from './AgentType'
+export type { AgentTypeValue } from './AgentType'
 
 // ステータス系
 export { JobStatus } from './JobStatus'

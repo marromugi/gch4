@@ -1,3 +1,4 @@
+import { GeminiProvider, CloudflareKVStore, createDefaultRegistry } from '@ding/agent'
 import { createDatabase } from '@ding/database'
 import {
   DrizzleJobRepository,
@@ -5,11 +6,15 @@ import {
   DrizzleReviewPolicyRepository,
   DrizzleInterviewFeedbackRepository,
   DrizzleEventLogRepository,
+  DrizzleToolCallLogRepository,
+  ApplicationSubmissionService,
+  FallbackService,
 } from '@ding/domain'
-import { ApplicationSubmissionService, FallbackService } from '@ding/domain'
-import { GeminiProvider } from '@ding/agent/provider/gemini'
 import type { HonoEnv } from '../types/hono'
 import type { MiddlewareHandler } from 'hono'
+
+// グローバルな AgentRegistry インスタンス
+const globalAgentRegistry = createDefaultRegistry()
 
 /**
  * DI (Dependency Injection) ミドルウェア
@@ -26,6 +31,7 @@ export const diMiddleware: MiddlewareHandler<HonoEnv> = async (c, next) => {
     reviewPolicyRepository: new DrizzleReviewPolicyRepository(db),
     interviewFeedbackRepository: new DrizzleInterviewFeedbackRepository(db),
     eventLogRepository: new DrizzleEventLogRepository(db),
+    toolCallLogRepository: new DrizzleToolCallLogRepository(db),
   }
 
   const services = {
@@ -38,6 +44,8 @@ export const diMiddleware: MiddlewareHandler<HonoEnv> = async (c, next) => {
       apiKey: c.env.GEMINI_API_KEY,
       defaultModel: c.env.GEMINI_MODEL,
     }),
+    kvStore: new CloudflareKVStore(c.env.SESSIONS),
+    agentRegistry: globalAgentRegistry,
   }
 
   c.set('di', {

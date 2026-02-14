@@ -1,8 +1,8 @@
 import { GetJobUsecase } from '@ding/domain'
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
-import type { HonoEnv } from '../../../types/hono'
 import { jobResponseSchema } from '../../../schemas/response'
 import { serializeJob } from '../../../schemas/serializers'
+import type { HonoEnv } from '../../../types/hono'
 
 const route = createRoute({
   method: 'get',

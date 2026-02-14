@@ -6,9 +6,16 @@
  * OpenAPI spec version: 0.0.0
  */
 import { faker } from '@faker-js/faker'
+
 import { HttpResponse, delay, http } from 'msw'
-import type { CreateChatSession201, GetChatSession200, SendChatMessage200 } from '.././models'
 import type { RequestHandlerOptions } from 'msw'
+
+import type {
+  CreateChatSession201,
+  GetChatSession200,
+  GetChatSessionFormData200,
+  SendChatMessage200,
+} from '.././models'
 
 export const getCreateChatSessionResponseMock = (
   overrideResponse: Partial<CreateChatSession201> = {}
@@ -32,6 +39,15 @@ export const getCreateChatSessionResponseMock = (
       bootstrapCompleted: faker.datatype.boolean(),
       status: faker.helpers.arrayElement(['active', 'completed'] as const),
       turnCount: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+      currentAgent: faker.helpers.arrayElement([
+        'greeter',
+        'architect',
+        'interviewer',
+        'explorer',
+        'reviewer',
+        'quick_check',
+        'auditor',
+      ] as const),
       createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
       updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
     },
@@ -59,6 +75,18 @@ export const getCreateChatSessionResponseMock = (
         updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
       })
     ),
+    greeting: {
+      id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      chatSessionId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      role: faker.helpers.arrayElement(['user', 'assistant', 'system'] as const),
+      content: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      targetJobFormFieldId: faker.helpers.arrayElement([
+        faker.string.alpha({ length: { min: 10, max: 20 } }),
+        null,
+      ]),
+      reviewPassed: faker.datatype.boolean(),
+      createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    },
   },
   ...overrideResponse,
 })
@@ -85,6 +113,15 @@ export const getGetChatSessionResponseMock = (
       bootstrapCompleted: faker.datatype.boolean(),
       status: faker.helpers.arrayElement(['active', 'completed'] as const),
       turnCount: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+      currentAgent: faker.helpers.arrayElement([
+        'greeter',
+        'architect',
+        'interviewer',
+        'explorer',
+        'reviewer',
+        'quick_check',
+        'auditor',
+      ] as const),
       createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
       updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
     },
@@ -130,22 +167,38 @@ export const getGetChatSessionResponseMock = (
   ...overrideResponse,
 })
 
+export const getGetChatSessionFormDataResponseMock = (
+  overrideResponse: Partial<GetChatSessionFormData200> = {}
+): GetChatSessionFormData200 => ({
+  data: {
+    sessionId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    collectedFields: {
+      [faker.string.alphanumeric(5)]: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    },
+    completedAt: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+  },
+  ...overrideResponse,
+})
+
 export const getSendChatMessageResponseMock = (
   overrideResponse: Partial<SendChatMessage200> = {}
 ): SendChatMessage200 => ({
   data: {
-    message: {
-      id: faker.string.alpha({ length: { min: 10, max: 20 } }),
-      chatSessionId: faker.string.alpha({ length: { min: 10, max: 20 } }),
-      role: faker.helpers.arrayElement(['user', 'assistant', 'system'] as const),
-      content: faker.string.alpha({ length: { min: 10, max: 20 } }),
-      targetJobFormFieldId: faker.helpers.arrayElement([
-        faker.string.alpha({ length: { min: 10, max: 20 } }),
-        null,
-      ]),
-      reviewPassed: faker.datatype.boolean(),
-      createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
-    },
+    message: faker.helpers.arrayElement([
+      {
+        id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        chatSessionId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        role: faker.helpers.arrayElement(['user', 'assistant', 'system'] as const),
+        content: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        targetJobFormFieldId: faker.helpers.arrayElement([
+          faker.string.alpha({ length: { min: 10, max: 20 } }),
+          null,
+        ]),
+        reviewPassed: faker.datatype.boolean(),
+        createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      },
+      undefined,
+    ]),
     session: {
       id: faker.string.alpha({ length: { min: 10, max: 20 } }),
       applicationId: faker.helpers.arrayElement([
@@ -164,6 +217,15 @@ export const getSendChatMessageResponseMock = (
       bootstrapCompleted: faker.datatype.boolean(),
       status: faker.helpers.arrayElement(['active', 'completed'] as const),
       turnCount: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+      currentAgent: faker.helpers.arrayElement([
+        'greeter',
+        'architect',
+        'interviewer',
+        'explorer',
+        'reviewer',
+        'quick_check',
+        'auditor',
+      ] as const),
       createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
       updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
     },
@@ -253,6 +315,34 @@ export const getGetChatSessionMockHandler = (
   )
 }
 
+export const getGetChatSessionFormDataMockHandler = (
+  overrideResponse?:
+    | GetChatSessionFormData200
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0]
+      ) => Promise<GetChatSessionFormData200> | GetChatSessionFormData200),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    '*/api/applications/:applicationId/chat/sessions/:sessionId/form-data',
+    async (info) => {
+      await delay(1000)
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getGetChatSessionFormDataResponseMock()
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      )
+    },
+    options
+  )
+}
+
 export const getSendChatMessageMockHandler = (
   overrideResponse?:
     | SendChatMessage200
@@ -283,5 +373,6 @@ export const getSendChatMessageMockHandler = (
 export const getChatMock = () => [
   getCreateChatSessionMockHandler(),
   getGetChatSessionMockHandler(),
+  getGetChatSessionFormDataMockHandler(),
   getSendChatMessageMockHandler(),
 ]

@@ -9,6 +9,7 @@
 export type SendChatMessage200DataPhase =
   (typeof SendChatMessage200DataPhase)[keyof typeof SendChatMessage200DataPhase]
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SendChatMessage200DataPhase = {
   bootstrap: 'bootstrap',
   questioning: 'questioning',

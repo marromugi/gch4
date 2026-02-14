@@ -1,20 +1,19 @@
+import { OrchestratorV2, ConsoleLogger, type SessionForm } from '@ding/agent'
+import { ChatSession, ChatMessage, ApplicationTodo, EventLog } from '@ding/domain/domain/entity'
+import {
+  ChatSessionId,
+  ChatMessageId,
+  ChatMessageRole,
+  ApplicationId,
+  ChatSessionType,
+  ChatSessionStatus,
+  ApplicationTodoId,
+  TodoStatus,
+  EventLogId,
+  EventType,
+  AgentType as DomainAgentType,
+} from '@ding/domain/domain/valueObject'
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
-import { ApplicationAgent } from '@ding/agent'
-import { ChatSession } from '@ding/domain/domain/entity'
-import { ChatMessage } from '@ding/domain/domain/entity'
-import { ApplicationTodo } from '@ding/domain/domain/entity'
-import { EventLog } from '@ding/domain/domain/entity'
-import { ChatSessionId } from '@ding/domain/domain/valueObject'
-import { ChatMessageId } from '@ding/domain/domain/valueObject'
-import { ChatMessageRole } from '@ding/domain/domain/valueObject'
-import { ApplicationId } from '@ding/domain/domain/valueObject'
-import { ChatSessionType } from '@ding/domain/domain/valueObject'
-import { ChatSessionStatus } from '@ding/domain/domain/valueObject'
-import { ApplicationTodoId } from '@ding/domain/domain/valueObject'
-import { TodoStatus } from '@ding/domain/domain/valueObject'
-import { EventLogId } from '@ding/domain/domain/valueObject'
-import { EventType } from '@ding/domain/domain/valueObject'
-import type { HonoEnv } from '../../../../../types/hono'
 import {
   chatSessionResponseSchema,
   chatMessageResponseSchema,
@@ -25,7 +24,7 @@ import {
   serializeChatMessage,
   serializeApplicationTodo,
 } from '../../../../../schemas/serializers'
-import { buildAgentContext } from './[sessionId]/messages/buildAgentContext'
+import type { HonoEnv } from '../../../../../types/hono'
 
 const route = createRoute({
   method: 'post',
@@ -92,7 +91,7 @@ app.openapi(route, async (c) => {
   if (!jobResult.success) {
     return c.json({ error: 'Job not found' }, 404)
   }
-  const job = jobResult.value
+  // jobResult.value は現在使用していないが、存在確認は完了
 
   // 3. FormField 一覧
   const formFieldsResult = await repositories.jobRepository.findFormFieldsByJobId(application.jobId)
@@ -130,6 +129,9 @@ app.openapi(route, async (c) => {
     reviewFailStreak: 0,
     extractionFailStreak: 0,
     timeoutStreak: 0,
+    currentAgent: DomainAgentType.greeter(),
+    plan: null,
+    planSchemaVersion: null,
     createdAt: now,
     updatedAt: now,
   })
@@ -178,37 +180,55 @@ app.openapi(route, async (c) => {
   })
   await repositories.eventLogRepository.create(eventLog)
 
-  // 9. 挨拶メッセージ生成
+  // 9. 挨拶メッセージ生成（OrchestratorV2 使用）
   let greeting: ReturnType<typeof serializeChatMessage> | null = null
   try {
-    const agentContext = buildAgentContext({
-      application,
-      job,
-      session,
-      messages: [],
-      todos,
-      formFields,
-      factDefinitions: factDefsResult.value,
-      prohibitedTopics: [],
+    const logger = new ConsoleLogger('[OrchestratorV2]')
+    const orchestrator = new OrchestratorV2({
+      kvStore: infrastructure.kvStore,
+      registry: infrastructure.agentRegistry,
+      provider: infrastructure.llmProvider,
+      logger,
     })
 
-    const agent = new ApplicationAgent(infrastructure.llmProvider, {
-      logDir: c.env.AGENT_LOG_DIR,
-    })
-    const greetingResult = await agent.generateGreeting(agentContext)
+    // フォーム情報を構築
+    const form: SessionForm = {
+      fields: formFields.map((f) => ({
+        id: f.id.value,
+        fieldId: f.fieldId,
+        label: f.label,
+        intent: f.intent,
+        required: f.required,
+        sortOrder: f.sortOrder,
+      })),
+      facts: factDefinitions.map((d) => ({
+        id: d.id.value,
+        jobFormFieldId: d.jobFormFieldId.value,
+        factKey: d.factKey,
+        fact: d.fact,
+        doneCriteria: d.doneCriteria,
+        questioningHints: d.questioningHints,
+      })),
+    }
 
-    // アシスタントメッセージのみ DB に保存
+    const result = await orchestrator.start(sessionId.value, form)
+
+    // アシスタントメッセージを DB に保存
     const greetingMsg = ChatMessage.create({
       id: ChatMessageId.fromString(crypto.randomUUID()),
       chatSessionId: sessionId,
       role: ChatMessageRole.assistant(),
-      content: greetingResult.responseText,
+      content: result.responseText,
       targetJobFormFieldId: null,
       targetReviewSignalId: null,
       reviewPassed: null,
       createdAt: now,
     })
     await repositories.applicationRepository.saveChatMessage(greetingMsg)
+
+    // currentAgent を更新
+    const updatedSession = session.changeAgent(DomainAgentType.from(result.currentAgent))
+    await repositories.applicationRepository.saveChatSession(updatedSession)
 
     greeting = serializeChatMessage(greetingMsg)
   } catch (error) {

@@ -9,6 +9,7 @@
 export type GetChatSession200DataSessionType =
   (typeof GetChatSession200DataSessionType)[keyof typeof GetChatSession200DataSessionType]
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetChatSession200DataSessionType = {
   application: 'application',
   interview_feedback: 'interview_feedback',

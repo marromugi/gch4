@@ -3,6 +3,7 @@ import { ChatSessionId } from '../../valueObject/ChatSessionId/ChatSessionId'
 import { ApplicationId } from '../../valueObject/ApplicationId/ApplicationId'
 import { ChatSessionType } from '../../valueObject/ChatSessionType/ChatSessionType'
 import { ChatSessionStatus } from '../../valueObject/ChatSessionStatus/ChatSessionStatus'
+import { AgentType } from '../../valueObject/AgentType/AgentType'
 
 const createSession = (overrides: Partial<Parameters<typeof ChatSession.create>[0]> = {}) =>
   ChatSession.create({
@@ -22,6 +23,9 @@ const createSession = (overrides: Partial<Parameters<typeof ChatSession.create>[
     reviewFailStreak: 0,
     extractionFailStreak: 0,
     timeoutStreak: 0,
+    currentAgent: AgentType.greeter(),
+    plan: null,
+    planSchemaVersion: null,
     createdAt: new Date('2025-01-01'),
     updatedAt: new Date('2025-01-01'),
     ...overrides,
@@ -41,6 +45,22 @@ describe('ChatSession', () => {
       const session = createSession()
       const next = session.incrementTurnCount()
       expect(next.turnCount).toBe(1)
+    })
+  })
+
+  describe('changeAgent', () => {
+    it('エージェントを変更できる', () => {
+      const session = createSession()
+      expect(session.currentAgent.value).toBe('greeter')
+
+      const changed = session.changeAgent(AgentType.architect())
+      expect(changed.currentAgent.value).toBe('architect')
+    })
+
+    it('変更後に updatedAt が更新される', () => {
+      const session = createSession()
+      const changed = session.changeAgent(AgentType.architect())
+      expect(changed.updatedAt.getTime()).toBeGreaterThan(session.updatedAt.getTime())
     })
   })
 

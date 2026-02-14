@@ -35,6 +35,7 @@ import { ChatSessionType } from '../../../domain/valueObject/ChatSessionType/Cha
 import { ChatSessionStatus } from '../../../domain/valueObject/ChatSessionStatus/ChatSessionStatus'
 import { ChatMessageId } from '../../../domain/valueObject/ChatMessageId/ChatMessageId'
 import { ChatMessageRole } from '../../../domain/valueObject/ChatMessageRole/ChatMessageRole'
+import { AgentType } from '../../../domain/valueObject/AgentType/AgentType'
 
 describe('DrizzleApplicationRepository', () => {
   let db: Database
@@ -355,6 +356,9 @@ describe('DrizzleApplicationRepository', () => {
         reviewFailStreak: 0,
         extractionFailStreak: 0,
         timeoutStreak: 0,
+        currentAgent: AgentType.greeter(),
+        plan: null,
+        planSchemaVersion: null,
         createdAt: new Date(),
         updatedAt: new Date(),
       })
@@ -392,6 +396,9 @@ describe('DrizzleApplicationRepository', () => {
         reviewFailStreak: 0,
         extractionFailStreak: 0,
         timeoutStreak: 0,
+        currentAgent: AgentType.greeter(),
+        plan: null,
+        planSchemaVersion: null,
         createdAt: new Date(),
         updatedAt: new Date(),
       })

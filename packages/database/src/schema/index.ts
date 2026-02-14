@@ -38,16 +38,18 @@ export type {
 } from './policy'
 
 // Application
-export { application, chatSession, chatMessage, applicationTodo } from './application'
+export { application, chatSession, chatMessage, applicationTodo, toolCallLog } from './application'
 export type {
   Application,
   ChatSession,
   ChatMessage,
   ApplicationTodo,
+  ToolCallLog,
   NewApplication,
   NewChatSession,
   NewChatMessage,
   NewApplicationTodo,
+  NewToolCallLog,
 } from './application'
 
 // Extraction

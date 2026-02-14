@@ -6,7 +6,10 @@
  * OpenAPI spec version: 0.0.0
  */
 import { faker } from '@faker-js/faker'
+
 import { HttpResponse, delay, http } from 'msw'
+import type { RequestHandlerOptions } from 'msw'
+
 import type {
   CreateApplication201,
   GetApplication200,
@@ -18,7 +21,6 @@ import type {
   UpdateApplicationExtractedField200,
   UpdateApplicationStatus200,
 } from '.././models'
-import type { RequestHandlerOptions } from 'msw'
 
 export const getCreateApplicationResponseMock = (
   overrideResponse: Partial<CreateApplication201> = {}

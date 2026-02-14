@@ -1,6 +1,8 @@
-import { Button, TextArea, Typography } from '@ding/ui'
+import { Typography } from '@ding/ui'
+import { useEnterAction } from '@ding/ui/hooks'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChatBubble } from '../ChatBubble'
+import { ThinkingLoader } from '../ThinkingLoader'
 import { chatPanel } from './const'
 import type { ChatPanelProps } from './type'
 
@@ -20,17 +22,26 @@ export function ChatPanel({ messages, isSending, isComplete, onSendMessage }: Ch
     if (!trimmed || isSending) return
     onSendMessage(trimmed)
     setInput('')
+    if (textAreaRef.current) {
+      textAreaRef.current.style.height = 'auto'
+    }
   }, [input, isSending, onSendMessage])
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault()
-        handleSubmit()
-      }
-    },
-    [handleSubmit]
-  )
+  const { handlers } = useEnterAction({
+    mode: 'newline',
+    onSubmit: handleSubmit,
+  })
+
+  const adjustTextAreaHeight = useCallback(() => {
+    const textarea = textAreaRef.current
+    if (!textarea) return
+    textarea.style.height = 'auto'
+    textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`
+  }, [])
+
+  useEffect(() => {
+    adjustTextAreaHeight()
+  }, [input, adjustTextAreaHeight])
 
   return (
     <div className={styles.container()}>
@@ -38,7 +49,7 @@ export function ChatPanel({ messages, isSending, isComplete, onSendMessage }: Ch
         {messages.map((msg) => (
           <ChatBubble key={msg.id} content={msg.content} role={msg.role} />
         ))}
-        {isSending && <ChatBubble content="..." role="assistant" />}
+        {isSending && <ThinkingLoader />}
         <div ref={messagesEndRef} />
       </div>
 
@@ -50,25 +61,27 @@ export function ChatPanel({ messages, isSending, isComplete, onSendMessage }: Ch
         </div>
       ) : (
         <div className={styles.inputArea()}>
-          <div className={styles.inputRow()}>
-            <TextArea
+          <div className={styles.inputCard()}>
+            <textarea
               ref={textAreaRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
               placeholder="メッセージを入力..."
               rows={1}
-              resize="none"
               disabled={isSending}
+              className={styles.inputTextarea()}
+              {...handlers}
             />
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={handleSubmit}
-              disabled={!input.trim() || isSending}
-            >
-              送信
-            </Button>
+            <div className={styles.inputButtonContainer()}>
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={!input.trim() || isSending}
+                className={styles.inputButton()}
+              >
+                OK
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -1,6 +1,6 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
-import type { InferSelectModel, InferInsertModel } from 'drizzle-orm'
 import { application } from './application'
+import type { InferSelectModel, InferInsertModel } from 'drizzle-orm'
 
 /**
  * ConsentLog テーブル

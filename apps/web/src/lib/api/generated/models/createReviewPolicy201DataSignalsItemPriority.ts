@@ -9,6 +9,7 @@
 export type CreateReviewPolicy201DataSignalsItemPriority =
   (typeof CreateReviewPolicy201DataSignalsItemPriority)[keyof typeof CreateReviewPolicy201DataSignalsItemPriority]
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateReviewPolicy201DataSignalsItemPriority = {
   high: 'high',
   supporting: 'supporting',

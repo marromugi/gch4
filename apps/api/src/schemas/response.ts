@@ -214,6 +214,15 @@ export const chatSessionResponseSchema = z.object({
   bootstrapCompleted: z.boolean(),
   status: z.enum(['active', 'completed']),
   turnCount: z.number(),
+  currentAgent: z.enum([
+    'greeter',
+    'architect',
+    'interviewer',
+    'explorer',
+    'reviewer',
+    'quick_check',
+    'auditor',
+  ]),
   createdAt: z.string(),
   updatedAt: z.string(),
 })

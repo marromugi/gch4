@@ -9,6 +9,7 @@
 export type GetReviewPolicy200DataSignalsItemCategory =
   (typeof GetReviewPolicy200DataSignalsItemCategory)[keyof typeof GetReviewPolicy200DataSignalsItemCategory]
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetReviewPolicy200DataSignalsItemCategory = {
   must: 'must',
   ng: 'ng',

@@ -35,6 +35,7 @@ import { ChatSessionStatus } from '../../../domain/valueObject/ChatSessionStatus
 import { ChatMessageId } from '../../../domain/valueObject/ChatMessageId/ChatMessageId'
 import { ChatMessageRole } from '../../../domain/valueObject/ChatMessageRole/ChatMessageRole'
 import { ReviewPolicySignalId } from '../../../domain/valueObject/ReviewPolicySignalId/ReviewPolicySignalId'
+import { AgentType } from '../../../domain/valueObject/AgentType/AgentType'
 import type { IApplicationRepository } from '../../../domain/repository/IApplicationRepository/IApplicationRepository'
 
 export class DrizzleApplicationRepository implements IApplicationRepository {
@@ -321,6 +322,9 @@ export class DrizzleApplicationRepository implements IApplicationRepository {
           reviewFailStreak: session.reviewFailStreak,
           extractionFailStreak: session.extractionFailStreak,
           timeoutStreak: session.timeoutStreak,
+          currentAgent: session.currentAgent.value,
+          plan: session.plan,
+          planSchemaVersion: session.planSchemaVersion,
           createdAt: session.createdAt,
           updatedAt: session.updatedAt,
         })
@@ -337,6 +341,9 @@ export class DrizzleApplicationRepository implements IApplicationRepository {
             reviewFailStreak: session.reviewFailStreak,
             extractionFailStreak: session.extractionFailStreak,
             timeoutStreak: session.timeoutStreak,
+            currentAgent: session.currentAgent.value,
+            plan: session.plan,
+            planSchemaVersion: session.planSchemaVersion,
             updatedAt: session.updatedAt,
           },
         })
@@ -463,6 +470,9 @@ export class DrizzleApplicationRepository implements IApplicationRepository {
       reviewFailStreak: row.reviewFailStreak,
       extractionFailStreak: row.extractionFailStreak,
       timeoutStreak: row.timeoutStreak,
+      currentAgent: AgentType.from(row.currentAgent),
+      plan: row.plan,
+      planSchemaVersion: row.planSchemaVersion,
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
     })

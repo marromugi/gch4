@@ -13,6 +13,8 @@ export type Bindings = {
   GEMINI_API_KEY: string
   GEMINI_MODEL?: string
   AGENT_LOG_DIR?: string
+  /** Cloudflare KV namespace for session storage */
+  SESSIONS: KVNamespace
 }
 
 export type HonoEnv = {

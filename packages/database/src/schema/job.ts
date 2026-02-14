@@ -1,6 +1,6 @@
 import { sqliteTable, text, integer, uniqueIndex } from 'drizzle-orm/sqlite-core'
-import type { InferSelectModel, InferInsertModel } from 'drizzle-orm'
 import { user } from './auth'
+import type { InferSelectModel, InferInsertModel } from 'drizzle-orm'
 
 /**
  * Job テーブル

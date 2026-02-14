@@ -9,6 +9,7 @@
 export type MarkConsentChecked200DataStatus =
   (typeof MarkConsentChecked200DataStatus)[keyof typeof MarkConsentChecked200DataStatus]
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const MarkConsentChecked200DataStatus = {
   new: 'new',
   scheduling: 'scheduling',

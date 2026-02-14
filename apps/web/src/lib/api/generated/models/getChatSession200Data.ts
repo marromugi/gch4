@@ -5,8 +5,8 @@
  * Ding API Documentation
  * OpenAPI spec version: 0.0.0
  */
-import type { GetChatSession200DataMessagesItem } from './getChatSession200DataMessagesItem'
 import type { GetChatSession200DataSession } from './getChatSession200DataSession'
+import type { GetChatSession200DataMessagesItem } from './getChatSession200DataMessagesItem'
 import type { GetChatSession200DataTodosItem } from './getChatSession200DataTodosItem'
 
 export type GetChatSession200Data = {

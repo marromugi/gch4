@@ -1,5 +1,12 @@
-import { ApplicationAgent } from '@ding/agent'
-import { ApplicationId, ChatSessionId } from '@ding/domain/domain/valueObject'
+import { OrchestratorV2, ConsoleLogger } from '@ding/agent'
+import { ChatMessage } from '@ding/domain/domain/entity'
+import {
+  ApplicationId,
+  ChatSessionId,
+  ChatMessageId,
+  ChatMessageRole,
+  AgentType as DomainAgentType,
+} from '@ding/domain/domain/valueObject'
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 import {
   chatMessageResponseSchema,
@@ -11,8 +18,6 @@ import {
   serializeChatSession,
   serializeApplicationTodo,
 } from '../../../../../../../schemas/serializers'
-import { buildAgentContext } from './buildAgentContext'
-import { processAgentResult } from './processAgentResult'
 import type { HonoEnv } from '../../../../../../../types/hono'
 
 const route = createRoute({
@@ -43,7 +48,7 @@ const route = createRoute({
         'application/json': {
           schema: z.object({
             data: z.object({
-              message: chatMessageResponseSchema,
+              message: chatMessageResponseSchema.optional(),
               session: chatSessionResponseSchema,
               todos: z.array(applicationTodoResponseSchema),
               phase: z.enum(['bootstrap', 'questioning', 'fallback', 'wrapup']),
@@ -87,16 +92,9 @@ app.openapi(route, async (c) => {
   if (!appResult.success) {
     return c.json({ error: 'Application not found' }, 404)
   }
-  const application = appResult.value
+  const _application = appResult.value
 
-  // 2. Job 取得
-  const jobResult = await repositories.jobRepository.findById(application.jobId)
-  if (!jobResult.success) {
-    return c.json({ error: 'Job not found' }, 404)
-  }
-  const job = jobResult.value
-
-  // 3. セッション取得
+  // 2. セッション取得
   const sessionsResult =
     await repositories.applicationRepository.findChatSessionsByApplicationId(appId)
   if (!sessionsResult.success) {
@@ -107,75 +105,97 @@ app.openapi(route, async (c) => {
     return c.json({ error: 'Chat session not found' }, 404)
   }
 
-  // 4. 関連データ取得
-  const [
-    messagesResult,
-    todosResult,
-    formFieldsResult,
-    factDefsResult,
-    prohibitedResult,
-    extractedFieldsResult,
-  ] = await Promise.all([
-    repositories.applicationRepository.findChatMessagesBySessionId(sessId),
-    repositories.applicationRepository.findTodosByApplicationId(appId),
-    repositories.jobRepository.findFormFieldsByJobId(application.jobId),
-    repositories.jobRepository.findFactDefinitionsBySchemaVersionId(application.schemaVersionId),
-    repositories.jobRepository.findProhibitedTopicsBySchemaVersionId(application.schemaVersionId),
-    repositories.applicationRepository.findExtractedFieldsByApplicationId(appId),
-  ])
-
-  if (
-    !messagesResult.success ||
-    !todosResult.success ||
-    !formFieldsResult.success ||
-    !factDefsResult.success ||
-    !prohibitedResult.success ||
-    !extractedFieldsResult.success
-  ) {
-    return c.json({ error: 'Failed to load session data' }, 500)
+  // 3. Todos 取得
+  const todosResult = await repositories.applicationRepository.findTodosByApplicationId(appId)
+  if (!todosResult.success) {
+    return c.json({ error: 'Failed to load todos' }, 500)
   }
 
-  // 5. Agent コンテキスト構築
-  const agentContext = buildAgentContext({
-    application,
-    job,
-    session,
-    messages: messagesResult.value,
-    todos: todosResult.value,
-    formFields: formFieldsResult.value,
-    factDefinitions: factDefsResult.value,
-    prohibitedTopics: prohibitedResult.value,
+  // 4. OrchestratorV2 でメッセージを処理
+  const logger = new ConsoleLogger('[OrchestratorV2]')
+  const orchestrator = new OrchestratorV2({
+    kvStore: infrastructure.kvStore,
+    registry: infrastructure.agentRegistry,
+    provider: infrastructure.llmProvider,
+    logger,
   })
+  const result = await orchestrator.process(sessId.value, body.message)
 
-  // 6. Agent 実行
-  const agent = new ApplicationAgent(infrastructure.llmProvider, {
-    logDir: c.env.AGENT_LOG_DIR,
+  // 5. ユーザーメッセージを保存
+  const now = new Date()
+  const userMsg = ChatMessage.create({
+    id: ChatMessageId.fromString(crypto.randomUUID()),
+    chatSessionId: sessId,
+    role: ChatMessageRole.user(),
+    content: body.message,
+    targetJobFormFieldId: null,
+    targetReviewSignalId: null,
+    reviewPassed: null,
+    createdAt: now,
   })
-  const agentResult = await agent.executeTurn(agentContext, body.message)
+  await repositories.applicationRepository.saveChatMessage(userMsg)
 
-  // 7. 結果処理
-  const { assistantMessage, updatedSession, updatedTodos } = await processAgentResult({
-    result: agentResult,
-    session,
-    application,
-    todos: todosResult.value,
-    existingExtractedFields: extractedFieldsResult.value,
-    userMessage: body.message,
-    repositories,
-  })
+  // 6. アシスタントメッセージを保存（レスポンステキストがある場合のみ）
+  let assistantMsg: ChatMessage | null = null
+  if (result.responseText && result.responseText.trim().length > 0) {
+    assistantMsg = ChatMessage.create({
+      id: ChatMessageId.fromString(crypto.randomUUID()),
+      chatSessionId: sessId,
+      role: ChatMessageRole.assistant(),
+      content: result.responseText,
+      targetJobFormFieldId: null,
+      targetReviewSignalId: null,
+      reviewPassed: null,
+      createdAt: now,
+    })
+    await repositories.applicationRepository.saveChatMessage(assistantMsg)
+  }
+
+  // 7. セッションを更新（ターンカウント増加 + エージェント変更）
+  let updatedSession = session.incrementTurnCount()
+  updatedSession = updatedSession.changeAgent(DomainAgentType.from(result.currentAgent))
+  await repositories.applicationRepository.saveChatSession(updatedSession)
+
+  // 8. フェーズを決定
+  const phase = derivePhase(result.currentAgent, result.isComplete)
 
   return c.json(
     {
       data: {
-        message: serializeChatMessage(assistantMessage),
+        message: assistantMsg ? serializeChatMessage(assistantMsg) : undefined,
         session: serializeChatSession(updatedSession),
-        todos: updatedTodos.map(serializeApplicationTodo),
-        phase: agentResult.phase,
-        isComplete: agentResult.isComplete,
+        todos: todosResult.value.map(serializeApplicationTodo),
+        phase,
+        isComplete: result.isComplete,
       },
     },
     200
   )
 })
+
+/**
+ * エージェントタイプからフェーズを導出
+ */
+function derivePhase(
+  currentAgent: string,
+  isComplete: boolean
+): 'bootstrap' | 'questioning' | 'fallback' | 'wrapup' {
+  if (isComplete) {
+    return 'wrapup'
+  }
+  switch (currentAgent) {
+    case 'greeter':
+    case 'architect':
+      return 'bootstrap'
+    case 'interviewer':
+    case 'explorer':
+    case 'quick_check':
+    case 'reviewer':
+    case 'auditor':
+      return 'questioning'
+    default:
+      return 'questioning'
+  }
+}
 
 export default app

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   useGetApplication,
   useMarkExtractionReviewed,
@@ -9,11 +9,17 @@ import {
   useCreateChatSession,
   useGetChatSession,
   useSendChatMessage,
+  getChatSessionFormData,
 } from '@/lib/api/generated/chat/chat'
 import { useSaveConsentLog } from '@/lib/api/generated/consent-log/consent-log'
+import { useGetJobFormFields } from '@/lib/api/generated/job/job'
 import type { ApplicationMode, Phase, ChatMessage, TodoItem } from './type'
 
-export function useJobApplication(applicationId: string, mode: ApplicationMode = 'live') {
+export function useJobApplication(
+  applicationId: string,
+  mode: ApplicationMode = 'live',
+  jobId?: string
+) {
   const [phase, setPhase] = useState<Phase>('chat')
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [messages, setMessages] = useState<ChatMessage[]>([])
@@ -21,6 +27,7 @@ export function useJobApplication(applicationId: string, mode: ApplicationMode =
   const [isSending, setIsSending] = useState(false)
   const [isComplete, setIsComplete] = useState(false)
   const [isInitializing, setIsInitializing] = useState(false)
+  const [formData, setFormData] = useState<Record<string, string> | null>(null)
   const sessionCreatedRef = useRef(false)
 
   // Application 取得
@@ -50,6 +57,15 @@ export function useJobApplication(applicationId: string, mode: ApplicationMode =
   const { mutateAsync: markConsented } = useMarkConsentChecked()
   const { mutateAsync: submitApp } = useSubmitApplication()
   const { mutateAsync: saveConsent } = useSaveConsentLog()
+
+  // フォームフィールド取得（プレビューモード用）
+  const { data: formFieldsData } = useGetJobFormFields(jobId ?? '', {
+    query: { enabled: mode === 'preview' && !!jobId },
+  })
+  const formFieldLabels = useMemo(() => {
+    if (!formFieldsData?.data) return {}
+    return Object.fromEntries(formFieldsData.data.map((f) => [f.fieldId, f.label]))
+  }, [formFieldsData])
 
   // 初期化: セッション作成
   useEffect(() => {
@@ -100,6 +116,19 @@ export function useJobApplication(applicationId: string, mode: ApplicationMode =
     }
   }, [sessionData])
 
+  // isComplete 時に formData を取得
+  useEffect(() => {
+    if (isComplete && sessionId) {
+      getChatSessionFormData(applicationId, sessionId)
+        .then((res) => {
+          setFormData(res.data.collectedFields)
+        })
+        .catch((err) => {
+          console.error('Failed to fetch form data:', err)
+        })
+    }
+  }, [isComplete, sessionId, applicationId])
+
   // メッセージ送信
   const handleSendMessage = useCallback(
     async (content: string) => {
@@ -126,25 +155,15 @@ export function useJobApplication(applicationId: string, mode: ApplicationMode =
         })
 
         const data = res.data
-        // アシスタントメッセージを追加
-        setMessages((prev) => [
-          ...prev.filter((m) => m.id !== userMessage.id),
-          {
-            id: userMessage.id.replace('temp-', 'user-'),
-            chatSessionId: sessionId,
-            role: 'user' as const,
-            content,
-            targetJobFormFieldId: null,
-            reviewPassed: null,
-            createdAt: userMessage.createdAt,
-          },
-          data.message as ChatMessage,
-        ])
+        // アシスタントメッセージを追加（ユーザーメッセージはIDを維持してアニメーション再生を防ぐ）
+        setMessages((prev) => [...prev, data.message as ChatMessage])
         setTodos(data.todos as TodoItem[])
 
         if (data.isComplete) {
           setIsComplete(true)
-          setPhase('review')
+          if (mode !== 'preview') {
+            setPhase('review')
+          }
         }
       } finally {
         setIsSending(false)
@@ -203,6 +222,9 @@ export function useJobApplication(applicationId: string, mode: ApplicationMode =
     isComplete,
     isLoading: isLoadingApplication || isInitializing,
     error: applicationError,
+    formData,
+    formFieldLabels,
+    sessionId,
     handleSendMessage,
     handleReviewComplete,
     handleConsentComplete,

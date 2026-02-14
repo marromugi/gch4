@@ -6,7 +6,10 @@
  * OpenAPI spec version: 0.0.0
  */
 import { faker } from '@faker-js/faker'
+
 import { HttpResponse, delay, http } from 'msw'
+import type { RequestHandlerOptions } from 'msw'
+
 import type {
   ApproveJobSchemaVersion200,
   CloseJob200,
@@ -21,7 +24,6 @@ import type {
   SuggestFormFields200,
   UpdateJob200,
 } from '.././models'
-import type { RequestHandlerOptions } from 'msw'
 
 export const getCreateJobResponseMock = (
   overrideResponse: Partial<CreateJob201> = {}

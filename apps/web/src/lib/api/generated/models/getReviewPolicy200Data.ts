@@ -6,8 +6,8 @@
  * OpenAPI spec version: 0.0.0
  */
 import type { GetReviewPolicy200DataPolicy } from './getReviewPolicy200DataPolicy'
-import type { GetReviewPolicy200DataProhibitedTopicsItem } from './getReviewPolicy200DataProhibitedTopicsItem'
 import type { GetReviewPolicy200DataSignalsItem } from './getReviewPolicy200DataSignalsItem'
+import type { GetReviewPolicy200DataProhibitedTopicsItem } from './getReviewPolicy200DataProhibitedTopicsItem'
 
 /**
  * @nullable

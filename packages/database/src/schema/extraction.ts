@@ -1,7 +1,7 @@
 import { sqliteTable, text, integer, uniqueIndex } from 'drizzle-orm/sqlite-core'
-import type { InferSelectModel, InferInsertModel } from 'drizzle-orm'
-import { jobFormField } from './job'
 import { application } from './application'
+import { jobFormField } from './job'
+import type { InferSelectModel, InferInsertModel } from 'drizzle-orm'
 
 /**
  * ExtractedField テーブル

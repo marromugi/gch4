@@ -16,3 +16,7 @@ MEDIA_PROXY_BASE_URL = "http://localhost:8080/api/media/serve"
 # - GOOGLE_CLIENT_ID
 # - GOOGLE_CLIENT_SECRET
 # - DATABASE_AUTH_TOKEN (リモートTurso使用時)
+
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "e811eb9a14fa47e0867eb17973e0110b"
