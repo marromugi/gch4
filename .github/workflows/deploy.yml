@@ -37,6 +37,9 @@ jobs:
 
       - name: Build packages
         run: pnpm build
+        env:
+          VITE_API_URL: ${{ secrets.BETTER_AUTH_URL }}
+          VITE_APP_URL: ${{ secrets.CLIENT_URL }}
 
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
@@ -70,5 +73,5 @@ jobs:
           GEMINI_MODEL=${{ secrets.GEMINI_MODEL }}
           EOF
 
-          firebase deploy --only functions --project ${{ secrets.FIREBASE_PROJECT_ID }}
+          firebase deploy --only functions --project ${{ secrets.FIREBASE_PROJECT_ID }} --non-interactive --force
           rm -f $HOME/gcloud-key.json
