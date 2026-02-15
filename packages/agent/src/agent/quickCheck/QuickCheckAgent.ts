@@ -1,11 +1,17 @@
 import { BaseAgent } from '../base'
 import { QUICK_CHECK_SYSTEM_PROMPT, buildQuickCheckPrompt } from './prompts'
 import { quickCheckResultTool } from './tools'
-import type { State } from '../../orchestrator/types'
+import type { QuickCheckArgs } from './definition'
+import type { QuickCheckContext, QuickCheckTurnResult, QuickCheckResult } from './types'
 import type { Tool } from '../../tools'
 import type { BaseAgentDependencies } from '../base'
+import type {
+  AgentBaseInput,
+  AgentLanguageState,
+  ITypedAgent,
+  TypedTurnResult,
+} from '../typed/types'
 import type { AgentConfig } from '../types'
-import type { QuickCheckContext, QuickCheckTurnResult, QuickCheckResult } from './types'
 
 /**
  * QuickCheck エージェント
@@ -16,7 +22,10 @@ import type { QuickCheckContext, QuickCheckTurnResult, QuickCheckResult } from '
  * - 既回答の再質問
  * - トーン違反
  */
-export class QuickCheckAgent extends BaseAgent<QuickCheckContext, QuickCheckTurnResult> {
+export class QuickCheckAgent
+  extends BaseAgent<QuickCheckContext, QuickCheckTurnResult>
+  implements ITypedAgent<QuickCheckArgs, QuickCheckResult>
+{
   readonly type = 'quick_check' as const
   readonly tools: Tool[] = [quickCheckResultTool]
 
@@ -36,7 +45,7 @@ export class QuickCheckAgent extends BaseAgent<QuickCheckContext, QuickCheckTurn
   /**
    * 残タスクを取得（QuickCheck は result を返すまで完了しない）
    */
-  protected getRemainingTasks(_state: State): string[] {
+  protected getRemainingTasks(_state: AgentLanguageState): string[] {
     return ['Use the result tool to return your compliance check verdict']
   }
 
@@ -45,33 +54,38 @@ export class QuickCheckAgent extends BaseAgent<QuickCheckContext, QuickCheckTurn
     'result ツールを使用してコンプライアンスチェックの結果を返してください。passed（boolean）と必要に応じて issues（問題点の配列）を指定してください。'
 
   /**
-   * 1ターンの実行
+   * 型安全な実行メソッド（ITypedAgent インターフェース）
+   *
+   * @param args QuickCheckArgs - 型安全な引数
+   * @param base AgentBaseInput - 共通の基本入力
+   * @param _userMessage ユーザーメッセージ（未使用）
    */
-  async executeTurn(
-    context: QuickCheckContext,
+  async execute(
+    args: QuickCheckArgs,
+    base: AgentBaseInput,
     _userMessage: string
-  ): Promise<QuickCheckTurnResult> {
+  ): Promise<TypedTurnResult<QuickCheckResult>> {
     this.logger.info('Starting QuickCheck', {
-      fieldId: context.pendingQuestion.fieldId,
-      questionLength: context.pendingQuestion.content.length,
+      fieldId: args.fieldId,
+      questionLength: args.pendingQuestion.length,
     })
 
     // チェック用プロンプトを構築
     const checkPrompt = buildQuickCheckPrompt({
-      pendingQuestion: context.pendingQuestion.content,
-      fieldId: context.pendingQuestion.fieldId,
-      intent: context.pendingQuestion.intent,
-      prohibitedTopics: context.prohibitedTopics,
-      collectedFacts: context.collectedFacts,
+      pendingQuestion: args.pendingQuestion,
+      fieldId: args.fieldId,
+      intent: args.intent,
+      prohibitedTopics: args.prohibitedTopics,
+      collectedFacts: args.collectedFacts,
     })
 
     // メッセージを構築（ユーザーメッセージとしてチェック対象を送信）
-    const messages = [...context.chatHistory, { role: 'user' as const, content: checkPrompt }]
+    const messages = [...base.chatHistory, { role: 'user' as const, content: checkPrompt }]
 
     // リトライループ
     for (let attempt = 0; attempt < QuickCheckAgent.MAX_RETRIES; attempt++) {
       // LLM を呼び出してチェック
-      const response = await this.chatWithTools(messages, context.state)
+      const response = await this.chatWithTools(messages, base.state)
 
       // result ツールの呼び出しを探す
       const resultCall = response.toolCalls.find((tc) => tc.name === 'result')
@@ -92,7 +106,6 @@ export class QuickCheckAgent extends BaseAgent<QuickCheckContext, QuickCheckTurn
           responseText: response.text ?? '',
           toolCalls: [result],
           completion: { context: checkResult },
-          checkResult,
           usage: response.usage,
         }
       }
@@ -113,5 +126,37 @@ export class QuickCheckAgent extends BaseAgent<QuickCheckContext, QuickCheckTurn
     // 最大リトライ回数を超えた場合はエラー
     this.logger.error('QuickCheck exceeded max retries without calling result tool')
     throw new Error('QuickCheck agent must call the result tool')
+  }
+
+  /**
+   * 1ターンの実行（互換性のため残す）
+   * @deprecated execute メソッドを使用してください
+   */
+  async executeTurn(
+    context: QuickCheckContext,
+    userMessage: string
+  ): Promise<QuickCheckTurnResult> {
+    // execute メソッドに委譲
+    const result = await this.execute(
+      {
+        pendingQuestion: context.pendingQuestion.content,
+        fieldId: context.pendingQuestion.fieldId,
+        intent: context.pendingQuestion.intent,
+        prohibitedTopics: context.prohibitedTopics,
+        collectedFacts: context.collectedFacts,
+      },
+      {
+        sessionId: context.sessionId,
+        chatHistory: context.chatHistory,
+        state: context.state,
+      },
+      userMessage
+    )
+
+    // QuickCheckTurnResult 形式に変換
+    return {
+      ...result,
+      checkResult: result.completion?.context,
+    }
   }
 }

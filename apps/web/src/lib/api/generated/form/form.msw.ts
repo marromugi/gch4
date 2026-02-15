@@ -8,7 +8,6 @@
 import { faker } from '@faker-js/faker'
 import { HttpResponse, delay, http } from 'msw'
 import type {
-  ApproveFormSchemaVersion200,
   CloseForm200,
   CreateForm201,
   GetForm200,
@@ -19,6 +18,7 @@ import type {
   PublishForm200,
   SaveFormFields200,
   SuggestFormFields200,
+  SuggestFormTheme200,
   UpdateForm200,
 } from '.././models'
 import type { RequestHandlerOptions } from 'msw'
@@ -71,6 +71,7 @@ export const getListFormsResponseMock = (
     createdBy: faker.string.alpha({ length: { min: 10, max: 20 } }),
     createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
     updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    submissionCount: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
   })),
   ...overrideResponse,
 })
@@ -93,6 +94,17 @@ export const getSuggestFormFieldsResponseMock = (
         required: faker.datatype.boolean(),
       })
     ),
+  },
+  ...overrideResponse,
+})
+
+export const getSuggestFormThemeResponseMock = (
+  overrideResponse: Partial<SuggestFormTheme200> = {}
+): SuggestFormTheme200 => ({
+  data: {
+    title: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    purpose: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    completionMessage: faker.string.alpha({ length: { min: 10, max: 20 } }),
   },
   ...overrideResponse,
 })
@@ -268,26 +280,13 @@ export const getGetFormSchemaResponseMock = (
         faker.string.alpha({ length: { min: 10, max: 20 } }),
         null,
       ]),
+      boundaries: Array.from(
+        { length: faker.number.int({ min: 1, max: 10 }) },
+        (_, i) => i + 1
+      ).map(() => faker.string.alpha({ length: { min: 10, max: 20 } })),
       sortOrder: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
       createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
     })),
-  },
-  ...overrideResponse,
-})
-
-export const getApproveFormSchemaVersionResponseMock = (
-  overrideResponse: Partial<ApproveFormSchemaVersion200> = {}
-): ApproveFormSchemaVersion200 => ({
-  data: {
-    id: faker.string.alpha({ length: { min: 10, max: 20 } }),
-    formId: faker.string.alpha({ length: { min: 10, max: 20 } }),
-    version: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
-    status: faker.helpers.arrayElement(['draft', 'approved'] as const),
-    approvedAt: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
-    createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
   },
   ...overrideResponse,
 })
@@ -308,14 +307,6 @@ export const getListFormSubmissionsResponseMock = (
       null,
     ]),
     language: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
-    country: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
-    timezone: faker.helpers.arrayElement([
       faker.string.alpha({ length: { min: 10, max: 20 } }),
       null,
     ]),
@@ -427,6 +418,34 @@ export const getSuggestFormFieldsMockHandler = (
   )
 }
 
+export const getSuggestFormThemeMockHandler = (
+  overrideResponse?:
+    | SuggestFormTheme200
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0]
+      ) => Promise<SuggestFormTheme200> | SuggestFormTheme200),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    '*/api/forms/suggest-theme',
+    async (info) => {
+      await delay(1000)
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getSuggestFormThemeResponseMock()
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      )
+    },
+    options
+  )
+}
+
 export const getGetFormMockHandler = (
   overrideResponse?:
     | GetForm200
@@ -476,6 +495,25 @@ export const getUpdateFormMockHandler = (
         ),
         { status: 200, headers: { 'Content-Type': 'application/json' } }
       )
+    },
+    options
+  )
+}
+
+export const getDeleteFormMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions
+) => {
+  return http.delete(
+    '*/api/forms/:formId',
+    async (info) => {
+      await delay(1000)
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info)
+      }
+      return new HttpResponse(null, { status: 204 })
     },
     options
   )
@@ -621,34 +659,6 @@ export const getGetFormSchemaMockHandler = (
   )
 }
 
-export const getApproveFormSchemaVersionMockHandler = (
-  overrideResponse?:
-    | ApproveFormSchemaVersion200
-    | ((
-        info: Parameters<Parameters<typeof http.post>[1]>[0]
-      ) => Promise<ApproveFormSchemaVersion200> | ApproveFormSchemaVersion200),
-  options?: RequestHandlerOptions
-) => {
-  return http.post(
-    '*/api/forms/:formId/schema/approve',
-    async (info) => {
-      await delay(1000)
-
-      return new HttpResponse(
-        JSON.stringify(
-          overrideResponse !== undefined
-            ? typeof overrideResponse === 'function'
-              ? await overrideResponse(info)
-              : overrideResponse
-            : getApproveFormSchemaVersionResponseMock()
-        ),
-        { status: 200, headers: { 'Content-Type': 'application/json' } }
-      )
-    },
-    options
-  )
-}
-
 export const getListFormSubmissionsMockHandler = (
   overrideResponse?:
     | ListFormSubmissions200
@@ -680,13 +690,14 @@ export const getFormMock = () => [
   getCreateFormMockHandler(),
   getListFormsMockHandler(),
   getSuggestFormFieldsMockHandler(),
+  getSuggestFormThemeMockHandler(),
   getGetFormMockHandler(),
   getUpdateFormMockHandler(),
+  getDeleteFormMockHandler(),
   getPublishFormMockHandler(),
   getCloseFormMockHandler(),
   getGetFormFieldsMockHandler(),
   getSaveFormFieldsMockHandler(),
   getGetFormSchemaMockHandler(),
-  getApproveFormSchemaVersionMockHandler(),
   getListFormSubmissionsMockHandler(),
 ]

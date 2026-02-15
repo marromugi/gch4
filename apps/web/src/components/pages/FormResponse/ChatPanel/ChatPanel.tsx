@@ -1,12 +1,20 @@
 import { Typography } from '@ding/ui'
 import { useEnterAction } from '@ding/ui/hooks'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ChatBubble } from '../ChatBubble'
-import { ThinkingLoader } from '../ThinkingLoader'
+import { ChatBubble } from '@/components/common/ChatBubble'
+import { ThinkingLoader } from '@/components/common/ThinkingLoader'
+import { OptionsSelector } from '../OptionsSelector'
 import { chatPanel } from './const'
 import type { ChatPanelProps } from './type'
 
-export function ChatPanel({ messages, isSending, isComplete, onSendMessage }: ChatPanelProps) {
+export function ChatPanel({
+  messages,
+  isSending,
+  isComplete,
+  onSendMessage,
+  askOptions,
+  onOptionSubmit,
+}: ChatPanelProps) {
   const styles = chatPanel()
   const [input, setInput] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -58,6 +66,17 @@ export function ChatPanel({ messages, isSending, isComplete, onSendMessage }: Ch
           <Typography variant="description" size="sm">
             チャットが完了しました。内容を確認してください。
           </Typography>
+        </div>
+      ) : askOptions && onOptionSubmit ? (
+        <div className={styles.inputArea()}>
+          <div className={styles.inputCard()}>
+            <OptionsSelector
+              options={askOptions.options}
+              selectionType={askOptions.selectionType}
+              onSubmit={onOptionSubmit}
+              disabled={isSending}
+            />
+          </div>
         </div>
       ) : (
         <div className={styles.inputArea()}>

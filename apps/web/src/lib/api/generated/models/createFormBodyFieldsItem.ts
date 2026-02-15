@@ -5,6 +5,7 @@
  * Ding API Documentation
  * OpenAPI spec version: 0.0.0
  */
+import type { CreateFormBodyFieldsItemCriteriaItem } from './createFormBodyFieldsItemCriteriaItem'
 
 export type CreateFormBodyFieldsItem = {
   label: string
@@ -13,4 +14,6 @@ export type CreateFormBodyFieldsItem = {
   /** @nullable */
   intent?: string | null
   required?: boolean
+  criteria?: CreateFormBodyFieldsItemCriteriaItem[]
+  boundaries?: string[]
 }

@@ -1,5 +1,5 @@
 import type { HonoEnv } from '../types/hono'
-import type { Repositories, Services } from '../types/repositories'
+import type { Repositories } from '../types/repositories'
 import type { Database } from '@ding/database/client'
 import type { Context } from 'hono'
 
@@ -25,11 +25,4 @@ export function getRepository<K extends keyof Repositories>(
   name: K
 ): Repositories[K] {
   return c.get('di').repositories[name]
-}
-
-/**
- * コンテキストからサービスを取得するヘルパー関数
- */
-export function getServices(c: Context<HonoEnv>): Services {
-  return c.get('di').services
 }

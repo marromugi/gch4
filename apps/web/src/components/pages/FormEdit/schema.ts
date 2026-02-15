@@ -1,5 +1,17 @@
 import { z } from 'zod'
 
+const criteriaSchema = z.object({
+  id: z.string().optional(),
+  criteriaKey: z.string(),
+  criteria: z.string(),
+  doneCondition: z.string(),
+  questioningHints: z.string().nullable(),
+})
+
+const boundarySchema = z.object({
+  value: z.string(),
+})
+
 const formFieldSchema = z.object({
   id: z.string().optional(),
   fieldId: z.string().optional(),
@@ -7,6 +19,8 @@ const formFieldSchema = z.object({
   intent: z.string(),
   required: z.boolean(),
   sortOrder: z.number().optional(),
+  criteria: z.array(criteriaSchema).optional(),
+  boundaries: z.array(boundarySchema).optional(),
 })
 
 export const formEditFormSchema = z.object({

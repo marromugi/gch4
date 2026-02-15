@@ -13,24 +13,24 @@ import { MoreVert } from '@ding/ui/icon'
 import { Flex } from '@ding/ui/layout'
 import { useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
-import { usePublishFormMutation, useCloseFormMutation } from '../hook'
-import { StatusBadge } from '../StatusBadge'
+import { usePublishFormMutation, useCloseFormMutation, useDeleteFormMutation } from '../hook'
 import { formDetailHeader } from './const'
 import type { FormDetail } from '../type'
 
 interface FormDetailHeaderProps {
   form: FormDetail
-  isSchemaApproved: boolean
 }
 
-export function FormDetailHeader({ form, isSchemaApproved }: FormDetailHeaderProps) {
+export function FormDetailHeader({ form }: FormDetailHeaderProps) {
   const styles = formDetailHeader()
   const router = useRouter()
   const toast = useToast()
   const [showPublishModal, setShowPublishModal] = useState(false)
   const [showCloseModal, setShowCloseModal] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const { mutate: publishForm, isPending: isPublishing } = usePublishFormMutation(form.id)
   const { mutate: closeForm, isPending: isClosing } = useCloseFormMutation(form.id)
+  const { mutate: deleteForm, isPending: isDeleting } = useDeleteFormMutation()
 
   const handlePublish = () => {
     publishForm(
@@ -62,6 +62,19 @@ export function FormDetailHeader({ form, isSchemaApproved }: FormDetailHeaderPro
     )
   }
 
+  const handleDelete = () => {
+    deleteForm(form.id, {
+      onSuccess: () => {
+        setShowDeleteModal(false)
+        toast.success('フォームを削除しました')
+        router.navigate({ to: '/forms' })
+      },
+      onError: (error) => {
+        toast.error((error as unknown as Error).message || '削除に失敗しました')
+      },
+    })
+  }
+
   return (
     <div className={styles.container()}>
       <Typography
@@ -71,7 +84,7 @@ export function FormDetailHeader({ form, isSchemaApproved }: FormDetailHeaderPro
         className={styles.backLink()}
         onClick={() => router.navigate({ to: '/forms' })}
       >
-        ← フォーム一覧に戻る
+        フォーム一覧に戻る
       </Typography>
 
       <Flex justify="between" align="center" className={styles.titleRow()}>
@@ -79,7 +92,6 @@ export function FormDetailHeader({ form, isSchemaApproved }: FormDetailHeaderPro
           <Typography variant="body" size="xl" weight="bold">
             {form.title}
           </Typography>
-          <StatusBadge status={form.status} />
         </Flex>
 
         <Menu
@@ -98,20 +110,20 @@ export function FormDetailHeader({ form, isSchemaApproved }: FormDetailHeaderPro
                 params: { formId: form.id },
               })
             }
-            disabled={!isSchemaApproved}
           >
             チャットプレビュー
           </MenuItem>
           {form.status === 'draft' && (
-            <MenuItem onClick={() => setShowPublishModal(true)} disabled={!isSchemaApproved}>
-              フォームを公開
-            </MenuItem>
+            <MenuItem onClick={() => setShowPublishModal(true)}>フォームを公開</MenuItem>
           )}
           {form.status === 'published' && (
             <MenuItem onClick={() => setShowCloseModal(true)} destructive>
               フォームをクローズ
             </MenuItem>
           )}
+          <MenuItem onClick={() => setShowDeleteModal(true)} destructive>
+            フォームを削除
+          </MenuItem>
         </Menu>
       </Flex>
 
@@ -174,6 +186,38 @@ export function FormDetailHeader({ form, isSchemaApproved }: FormDetailHeaderPro
             </Button>
             <Button variant="primary" onClick={handleClose} disabled={isClosing}>
               {isClosing ? 'クローズ中...' : 'クローズする'}
+            </Button>
+          </Flex>
+        </ModalFooter>
+      </Modal>
+
+      <Modal
+        open={showDeleteModal}
+        onOpenChange={setShowDeleteModal}
+        title="フォームを削除"
+        size="sm"
+      >
+        <ModalHeader>
+          <Typography variant="body" size="lg" weight="semibold">
+            フォームを削除しますか？
+          </Typography>
+        </ModalHeader>
+        <ModalBody>
+          <Typography variant="description" size="sm">
+            削除するとフォームと全ての回答データが完全に削除されます。この操作は取り消せません。
+          </Typography>
+        </ModalBody>
+        <ModalFooter>
+          <Flex gap={2} justify="end">
+            <Button
+              variant="secondary"
+              onClick={() => setShowDeleteModal(false)}
+              disabled={isDeleting}
+            >
+              キャンセル
+            </Button>
+            <Button variant="primary" onClick={handleDelete} disabled={isDeleting}>
+              {isDeleting ? '削除中...' : '削除する'}
             </Button>
           </Flex>
         </ModalFooter>

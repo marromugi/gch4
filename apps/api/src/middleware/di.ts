@@ -1,11 +1,15 @@
-import { GeminiProvider, CloudflareKVStore, createDefaultRegistry } from '@ding/agent'
+import {
+  GeminiProvider,
+  CloudflareKVStore,
+  ConsoleLogger,
+  createDefaultRegistry,
+} from '@ding/agent'
 import { createDatabase } from '@ding/database'
 import {
   DrizzleFormRepository,
   DrizzleSubmissionRepository,
   DrizzleEventLogRepository,
   DrizzleToolCallLogRepository,
-  FallbackService,
 } from '@ding/domain'
 import type { HonoEnv } from '../types/hono'
 import type { MiddlewareHandler } from 'hono'
@@ -29,10 +33,6 @@ export const diMiddleware: MiddlewareHandler<HonoEnv> = async (c, next) => {
     toolCallLogRepository: new DrizzleToolCallLogRepository(db),
   }
 
-  const services = {
-    fallbackService: new FallbackService(),
-  }
-
   const infrastructure = {
     llmProvider: new GeminiProvider({
       apiKey: c.env.GEMINI_API_KEY,
@@ -40,12 +40,12 @@ export const diMiddleware: MiddlewareHandler<HonoEnv> = async (c, next) => {
     }),
     kvStore: new CloudflareKVStore(c.env.SESSIONS),
     agentRegistry: globalAgentRegistry,
+    logger: new ConsoleLogger('[API]'),
   }
 
   c.set('di', {
     db,
     repositories,
-    services,
     infrastructure,
   })
 

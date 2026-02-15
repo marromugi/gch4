@@ -17,10 +17,6 @@ export type UpdateSubmissionStatus200Data = {
   respondentEmail: string | null
   /** @nullable */
   language: string | null
-  /** @nullable */
-  country: string | null
-  /** @nullable */
-  timezone: string | null
   status: UpdateSubmissionStatus200DataStatus
   /** @nullable */
   reviewCompletedAt: string | null

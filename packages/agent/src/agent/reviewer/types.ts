@@ -1,4 +1,4 @@
-import type { QuestionType } from '../architect/schemas'
+import type { QuestionType } from '../../store/types'
 import type { BaseAgentContext, AgentTurnResult } from '../types'
 
 /**

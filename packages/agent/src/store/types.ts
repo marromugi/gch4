@@ -1,9 +1,59 @@
-import type { QuestionType } from '../agent/architect/schemas'
+import { z } from 'zod'
 import type { AgentType } from '../agent/types'
 import type { LLMMessage as ProviderLLMMessage } from '../provider/types'
 
 // Re-export LLMMessage for backward compatibility
 export type LLMMessage = ProviderLLMMessage
+
+// ============================================
+// QuestionType（元 architect/schemas.ts から移動）
+// ============================================
+
+/**
+ * 質問タイプ
+ * - basic: 考える余地がない基本情報（氏名、メール、電話番号など）
+ * - abstract: 深掘りが必要な質問（志望動機、価値観など）
+ */
+export const QuestionTypeSchema = z.enum(['basic', 'abstract'])
+
+export type QuestionType = z.infer<typeof QuestionTypeSchema>
+
+// ============================================
+// Branded Types
+// ============================================
+
+/** FieldId のブランドシンボル */
+declare const fieldIdBrand: unique symbol
+
+/**
+ * フォームフィールドID（Branded Type）
+ *
+ * 生の string と区別するため、toFieldId() を通して生成する必要がある。
+ * これにより、collectedFields への不正なキー追加をコンパイル時に検出できる。
+ */
+export type FieldId = string & { readonly [fieldIdBrand]: never }
+
+/**
+ * 文字列を FieldId に変換
+ *
+ * @param id - フィールドID文字列
+ * @returns FieldId 型の値
+ * @throws 空文字列の場合
+ */
+export function toFieldId(id: string): FieldId {
+  if (!id || id.trim() === '') {
+    throw new Error('Invalid fieldId: empty string')
+  }
+  return id as FieldId
+}
+
+/**
+ * 収集されたフィールド値のマップ
+ *
+ * キーは FieldId 型に制限されているため、toFieldId() を通さない
+ * 生の string をキーとして使用するとコンパイルエラーになる。
+ */
+export type CollectedFields = Record<FieldId, string>
 
 /**
  * ツール実行結果メッセージ
@@ -103,24 +153,20 @@ export interface AuditorResultType {
  * エージェントタイプから引数型へのマッピング
  */
 export interface AgentArgsMap {
-  greeter: Record<string, never>
-  architect: Record<string, never>
-  interviewer: Record<string, never>
   quick_check: QuickCheckArgsType
   reviewer: ReviewerArgsType
   auditor: AuditorArgsType
+  form_designer: { purpose: string }
 }
 
 /**
  * エージェントタイプから結果型へのマッピング
  */
 export interface AgentResultMap {
-  greeter: { language?: string; country?: string; timezone?: string }
-  architect: { plan?: unknown }
-  interviewer: Record<string, never>
   quick_check: QuickCheckResultType
   reviewer: ReviewerResultType
   auditor: AuditorResultType
+  form_designer: { fields: unknown[] }
 }
 
 /**
@@ -162,21 +208,6 @@ export type SubSessionCompletionPayload =
       result: AuditorResultType
       stackEntry: AgentStackEntry<'auditor'>
     }
-  | {
-      agentType: 'greeter'
-      result: AgentResultMap['greeter']
-      stackEntry: AgentStackEntry<'greeter'>
-    }
-  | {
-      agentType: 'architect'
-      result: AgentResultMap['architect']
-      stackEntry: AgentStackEntry<'architect'>
-    }
-  | {
-      agentType: 'interviewer'
-      result: AgentResultMap['interviewer']
-      stackEntry: AgentStackEntry<'interviewer'>
-    }
 
 /**
  * フォームフィールド情報
@@ -203,7 +234,7 @@ export interface FactDefinition {
   /** ID */
   id: string
   /** 紐づくFormFieldのID */
-  jobFormFieldId: string
+  formFieldId: string
   /** Factのキー */
   factKey: string
   /** 収集すべき事実 */
@@ -212,6 +243,8 @@ export interface FactDefinition {
   doneCriteria: string
   /** 質問時のヒント */
   questioningHints: string | null
+  /** 聞いてはいけないこと */
+  boundaries: string[] | null
 }
 
 /**
@@ -222,6 +255,8 @@ export interface SessionForm {
   fields: FormField[]
   /** ファクト定義一覧 */
   facts: FactDefinition[]
+  /** 完了時メッセージ */
+  completionMessage?: string | null
 }
 
 /**
@@ -266,8 +301,10 @@ export interface MainSessionState {
   /** ブートストラップ情報 */
   bootstrap: {
     language?: string
-    country?: string
-    timezone?: string
+    /** 言語確認済みフラグ（ブラウザ言語から設定された場合に使用） */
+    languageConfirmed?: boolean
+    /** 言語入力待ちフラグ（「他の言語で話す」選択後に true） */
+    waitingForLanguageInput?: boolean
   }
 
   /** フォーム情報 */
@@ -280,7 +317,7 @@ export interface MainSessionState {
   currentFieldIndex: number
 
   /** 収集済みフィールド値（fieldId -> value） */
-  collectedFields: Record<string, string>
+  collectedFields: CollectedFields
 
   /** QuickCheck の結果（現在のフィールド用） */
   quickCheckResult?: QuickCheckResultState
@@ -302,79 +339,4 @@ export interface MainSessionState {
 
   /** 更新日時 */
   updatedAt: number
-}
-
-/**
- * サブセッションのステータス
- */
-export type SubSessionStatus = 'active' | 'waiting_user' | 'completed'
-
-/**
- * サブセッションの状態
- *
- * KV に保存されるサブセッションのデータ構造。
- * 独自のメッセージ履歴を持ち、完了時に result のみ親に返す。
- */
-export interface SubSessionState {
-  /** サブセッションを実行しているエージェント */
-  agent: AgentType
-
-  /** サブセッション開始時の引数 */
-  args: Record<string, unknown>
-
-  /** サブセッション内のメッセージ履歴（親には伝播しない、ツール結果を含む） */
-  messages: SubSessionMessage[]
-
-  /** ステータス */
-  status: SubSessionStatus
-
-  /** サブセッションの結果（完了時のみ） */
-  result?: unknown
-
-  /** 作成日時 */
-  createdAt: number
-
-  /** 更新日時 */
-  updatedAt: number
-}
-
-/** TTL: 24時間（秒） */
-export const SESSION_TTL = 24 * 60 * 60
-
-/**
- * メインセッションを初期化
- */
-export function createInitialMainSession(sessionId: string, form: SessionForm): MainSessionState {
-  const now = Date.now()
-  return {
-    sessionId,
-    agentStack: [],
-    messages: [],
-    subSessionResults: {},
-    bootstrap: {},
-    form,
-    currentFieldIndex: 0,
-    collectedFields: {},
-    followUpCount: 0,
-    createdAt: now,
-    updatedAt: now,
-  }
-}
-
-/**
- * サブセッションを初期化
- */
-export function createInitialSubSession(
-  agent: AgentType,
-  args: Record<string, unknown>
-): SubSessionState {
-  const now = Date.now()
-  return {
-    agent,
-    args,
-    messages: [],
-    status: 'active',
-    createdAt: now,
-    updatedAt: now,
-  }
 }

@@ -1,4 +1,4 @@
-import type { AgentDefinition, AgentFactoryDeps } from './types'
+import type { AgentDefinition, AgentFactoryDeps, AgentTypeMap, TypedAgentType } from './types'
 import type { AgentType } from '../agent/types'
 import type { z } from 'zod'
 
@@ -103,6 +103,27 @@ export class AgentRegistry {
   createAgent(type: AgentType, deps: AgentFactoryDeps) {
     const definition = this.getOrThrow(type)
     return definition.createAgent(deps)
+  }
+
+  /**
+   * 型付きエージェントインスタンスを作成
+   *
+   * TypedAgentType（quick_check, reviewer, auditor）に対して、
+   * 型安全な ITypedAgent を返す。
+   *
+   * @example
+   * const agent = registry.createTypedAgent('quick_check', deps)
+   * // agent は ITypedAgent<QuickCheckArgs, QuickCheckResult> 型
+   * await agent.execute(args, base, '') // args の型チェックが効く
+   */
+  createTypedAgent<T extends TypedAgentType>(
+    type: T,
+    deps: AgentFactoryDeps
+  ): AgentTypeMap[T]['agent'] {
+    const definition = this.getOrThrow(type)
+    // 各エージェントは IAgent と ITypedAgent の両方を実装しているため、
+    // unknown を経由してキャストする。AgentTypeMap の定義で型安全性を担保。
+    return definition.createAgent(deps) as unknown as AgentTypeMap[T]['agent']
   }
 
   /**

@@ -1,6 +1,5 @@
 import { ChatSession } from './ChatSession'
 import { ChatSessionId } from '../../valueObject/ChatSessionId/ChatSessionId'
-import { ApplicationId } from '../../valueObject/ApplicationId/ApplicationId'
 import { ChatSessionType } from '../../valueObject/ChatSessionType/ChatSessionType'
 import { ChatSessionStatus } from '../../valueObject/ChatSessionStatus/ChatSessionStatus'
 import { AgentType } from '../../valueObject/AgentType/AgentType'
@@ -8,10 +7,9 @@ import { AgentType } from '../../valueObject/AgentType/AgentType'
 const createSession = (overrides: Partial<Parameters<typeof ChatSession.create>[0]> = {}) =>
   ChatSession.create({
     id: ChatSessionId.fromString('cs-1'),
-    applicationId: ApplicationId.fromString('app-1'),
-    jobId: null,
-    policyVersionId: null,
-    type: ChatSessionType.application(),
+    submissionId: null,
+    formId: null,
+    type: ChatSessionType.formResponse(),
     conductorId: null,
     bootstrapCompleted: false,
     status: ChatSessionStatus.active(),

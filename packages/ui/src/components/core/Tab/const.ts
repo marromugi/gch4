@@ -2,7 +2,7 @@ import { tv } from 'tailwind-variants'
 
 export const tab = tv({
   slots: {
-    root: ['relative', 'inline-flex', 'items-center', 'bg-neutral-100', 'dark:bg-neutral-800'],
+    root: ['relative', 'inline-flex', 'items-center', 'bg-neutral-200', 'dark:bg-neutral-900'],
     trigger: [
       'relative',
       'z-10',

@@ -2,9 +2,10 @@
 export { type IKVStore, type KVSetOptions, KVKeys } from './IKVStore'
 
 // 実装
-export { CloudflareKVStore } from './CloudflareKVStore'
-export type { CloudflareKVNamespace } from './CloudflareKVStore'
 export { InMemoryKVStore } from './InMemoryKVStore'
+export { CloudflareKVStore, type CloudflareKVNamespace } from './CloudflareKVStore'
+export { FirestoreKVStore } from './FirestoreKVStore'
+export type { FirestoreKVConfig } from './FirestoreKVStore'
 
 // 型定義
 export {
@@ -12,14 +13,13 @@ export {
   type ToolResultMessage,
   type SubSessionMessage,
   isToolResultMessage,
-  type AgentStackEntry,
   type MainSessionState,
-  type SubSessionState,
-  type SubSessionStatus,
   type SessionForm,
   type FormField,
   type FactDefinition,
-  SESSION_TTL,
-  createInitialMainSession,
-  createInitialSubSession,
+  type CollectedFields,
+  type FieldId,
+  toFieldId,
+  type QuestionType,
+  QuestionTypeSchema,
 } from './types'

@@ -1,4 +1,4 @@
-import { FormId, UserId } from '@ding/domain/domain/valueObject'
+import { UpdateFormUsecase } from '@ding/domain/presentation/usecase'
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 import { formResponseSchema } from '../../../schemas/response'
 import { serializeForm } from '../../../schemas/serializers'
@@ -85,36 +85,32 @@ app.openapi(route, async (c) => {
     return c.json({ error: 'Unauthorized' }, 401)
   }
 
-  const formResult = await repositories.formRepository.findById(FormId.fromString(formId))
-  if (!formResult.success) {
-    return c.json({ error: 'Form not found' }, 404)
+  const usecase = new UpdateFormUsecase({
+    formRepository: repositories.formRepository,
+  })
+
+  const result = await usecase.execute({
+    formId,
+    userId: user.id,
+    title: body.title,
+    description: body.description,
+    purpose: body.purpose,
+    completionMessage: body.completionMessage,
+  })
+
+  if (!result.success) {
+    const error = result.error
+    switch (error.type) {
+      case 'not_found_error':
+        return c.json({ error: 'Form not found' }, 404)
+      case 'forbidden_error':
+        return c.json({ error: 'Forbidden' }, 403)
+      case 'repository_error':
+        return c.json({ error: 'Failed to save form' }, 500)
+    }
   }
 
-  if (!formResult.value.createdBy.equals(UserId.fromString(user.id))) {
-    return c.json({ error: 'Forbidden' }, 403)
-  }
-
-  let form = formResult.value
-
-  if (body.title !== undefined) {
-    form = form.updateTitle(body.title)
-  }
-  if (body.description !== undefined) {
-    form = form.updateDescription(body.description)
-  }
-  if (body.purpose !== undefined) {
-    form = form.updatePurpose(body.purpose)
-  }
-  if (body.completionMessage !== undefined) {
-    form = form.updateCompletionMessage(body.completionMessage)
-  }
-
-  const saveResult = await repositories.formRepository.save(form)
-  if (!saveResult.success) {
-    return c.json({ error: 'Failed to save form' }, 500)
-  }
-
-  return c.json({ data: serializeForm(form) }, 200)
+  return c.json({ data: serializeForm(result.value) }, 200)
 })
 
 export default app

@@ -7,7 +7,9 @@
   "scripts": {
     "dev": "wrangler dev --port 8080",
     "build": "tsup",
+    "build:functions": "tsup --config tsup.functions.config.ts",
     "deploy": "wrangler deploy",
+    "deploy:firebase": "firebase deploy --only functions",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit",
@@ -20,6 +22,8 @@
     "@hono/swagger-ui": "^0.5.3",
     "@hono/zod-openapi": "^1.2.0",
     "better-auth": "^1.4.17",
+    "firebase-admin": "^13.0.0",
+    "firebase-functions": "^6.3.0",
     "hono": "^4.6.0",
     "zod": "^4.3.6"
   },

@@ -10,7 +10,7 @@ export const textArea = tv({
     // 角丸
     'rounded-xl',
     // ライトモード - 通常状態
-    'bg-neutral-50',
+    'bg-white',
     'border',
     'border-neutral-200',
     'text-neutral-900',

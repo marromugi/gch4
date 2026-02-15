@@ -5,35 +5,11 @@ export { AgentRegistry } from './AgentRegistry'
 export type { AgentDefinition, AgentState, AgentFactoryDeps } from './types'
 
 // 各エージェントの definition
-export { greeterDefinition } from '../agent/greeter/definition'
-export { architectDefinition } from '../agent/architect/definition'
-export { interviewerDefinition } from '../agent/interviewer/definition'
 export { quickCheckDefinition } from '../agent/quickCheck/definition'
 export { reviewerDefinition } from '../agent/reviewer/definition'
 export { auditorDefinition } from '../agent/auditor/definition'
 
 // args/result スキーマのエクスポート
-export {
-  greeterArgsSchema,
-  greeterResultSchema,
-  type GreeterArgs,
-  type GreeterResult,
-} from '../agent/greeter/definition'
-
-export {
-  architectArgsSchema,
-  architectResultSchema,
-  type ArchitectArgs,
-  type ArchitectResult,
-} from '../agent/architect/definition'
-
-export {
-  interviewerArgsSchema,
-  interviewerResultSchema,
-  type InterviewerArgs,
-  type InterviewerResult,
-} from '../agent/interviewer/definition'
-
 export {
   quickCheckArgsSchema,
   quickCheckResultSchema,
@@ -55,10 +31,7 @@ export {
   type AuditorResult,
 } from '../agent/auditor/definition'
 
-import { architectDefinition } from '../agent/architect/definition'
 import { auditorDefinition } from '../agent/auditor/definition'
-import { greeterDefinition } from '../agent/greeter/definition'
-import { interviewerDefinition } from '../agent/interviewer/definition'
 import { quickCheckDefinition } from '../agent/quickCheck/definition'
 import { reviewerDefinition } from '../agent/reviewer/definition'
 import { AgentRegistry } from './AgentRegistry'
@@ -71,9 +44,6 @@ import { AgentRegistry } from './AgentRegistry'
 export function createDefaultRegistry(): AgentRegistry {
   const registry = new AgentRegistry()
 
-  registry.register(greeterDefinition)
-  registry.register(architectDefinition)
-  registry.register(interviewerDefinition)
   registry.register(quickCheckDefinition)
   registry.register(reviewerDefinition)
   registry.register(auditorDefinition)

@@ -8,7 +8,7 @@ import { formCreateFormSchema, stepBasicInfoSchema, stepFormFieldsSchema } from 
 import { StepBasicInfo } from './StepBasicInfo'
 import { StepFormFields } from './StepFormFields'
 import type { StepValue } from './hook'
-import type { FormCreatePageProps, FormCreateFormValues } from './type'
+import type { FormCreateFormValues, FormCreatePageProps } from './type'
 import type { z } from 'zod'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -57,15 +57,17 @@ export function FormCreatePage({ className }: FormCreatePageProps) {
     goTo(value as StepValue)
   }
 
-  const handleSubmit = form.handleSubmit((data) => {
+  const handleSubmit = form.handleSubmit((data: FormCreateFormValues) => {
     createForm({
       title: data.title,
       purpose: data.purpose || null,
       completionMessage: data.completionMessage || null,
-      formFields: data.formFields.map((f) => ({
+      fields: data.formFields.map((f) => ({
         label: f.label,
         intent: f.intent || '',
         required: f.required,
+        criteria: f.criteria,
+        boundaries: f.boundaries?.map((b) => b.value),
       })),
     })
   })

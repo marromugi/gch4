@@ -5,7 +5,6 @@ import { logger } from 'hono/logger'
 import { diMiddleware } from './middleware/di'
 import { sessionMiddleware } from './middleware/session'
 import { authRoutes } from './routes/auth'
-import { consentLogRoutes } from './routes/consent-logs'
 import { eventLogRoutes } from './routes/event-logs'
 import { formRoutes } from './routes/forms'
 import GetHealth from './routes/health/get'
@@ -14,6 +13,7 @@ import GetHealthReady from './routes/health/ready/get'
 import GetMe from './routes/me/get'
 import { submissionRoutes } from './routes/submissions'
 import { userRoutes } from './routes/users'
+import { v3Routes } from './routes/v3'
 import type { HonoEnv } from './types/hono'
 
 const app = new OpenAPIHono<HonoEnv>()
@@ -49,8 +49,10 @@ app.route('/me', GetMe)
 app.route('/api/forms', formRoutes)
 app.route('/api/users', userRoutes)
 app.route('/api/submissions', submissionRoutes)
-app.route('/api/consent-logs', consentLogRoutes)
 app.route('/api/event-logs', eventLogRoutes)
+
+// V3 API Routes (OrchestratorV3)
+app.route('/api/v3', v3Routes)
 
 // OpenAPI documentation
 app.doc('/openapi.json', {

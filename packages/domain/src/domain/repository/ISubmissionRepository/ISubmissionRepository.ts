@@ -18,6 +18,7 @@ export interface ISubmissionRepository {
     formId: FormId,
     status: SubmissionStatus
   ): Promise<Result<Submission[], Error>>
+  countByFormIds(formIds: FormId[]): Promise<Result<Map<string, number>, Error>>
   save(submission: Submission): Promise<Result<void, Error>>
   delete(id: SubmissionId): Promise<Result<void, Error>>
 

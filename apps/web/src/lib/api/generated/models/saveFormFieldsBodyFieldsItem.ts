@@ -5,6 +5,7 @@
  * Ding API Documentation
  * OpenAPI spec version: 0.0.0
  */
+import type { SaveFormFieldsBodyFieldsItemCriteriaItem } from './saveFormFieldsBodyFieldsItemCriteriaItem'
 
 export type SaveFormFieldsBodyFieldsItem = {
   id?: string
@@ -14,4 +15,6 @@ export type SaveFormFieldsBodyFieldsItem = {
   /** @nullable */
   intent?: string | null
   required?: boolean
+  criteria?: SaveFormFieldsBodyFieldsItemCriteriaItem[]
+  boundaries?: string[]
 }

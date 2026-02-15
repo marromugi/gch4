@@ -31,4 +31,7 @@ export interface IFormRepository {
     schemaVersionId: FormSchemaVersionId
   ): Promise<Result<FieldCompletionCriteria[], Error>>
   saveCompletionCriteria(criteria: FieldCompletionCriteria[]): Promise<Result<void, Error>>
+  deleteCompletionCriteriaBySchemaVersionId(
+    schemaVersionId: FormSchemaVersionId
+  ): Promise<Result<void, Error>>
 }

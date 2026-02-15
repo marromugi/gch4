@@ -1,13 +1,13 @@
 import { ConsentLog } from './ConsentLog'
 import { ConsentLogId } from '../../valueObject/ConsentLogId/ConsentLogId'
-import { ApplicationId } from '../../valueObject/ApplicationId/ApplicationId'
+import { SubmissionId } from '../../valueObject/SubmissionId/SubmissionId'
 import { ConsentType } from '../../valueObject/ConsentType/ConsentType'
 
 describe('ConsentLog', () => {
   it('有効なプロパティで作成できる', () => {
     const log = ConsentLog.create({
       id: ConsentLogId.fromString('cl-1'),
-      applicationId: ApplicationId.fromString('app-1'),
+      submissionId: SubmissionId.fromString('sub-1'),
       consentType: ConsentType.dataUsage(),
       consented: true,
       ipAddress: '127.0.0.1',
@@ -21,7 +21,7 @@ describe('ConsentLog', () => {
   it('equalsが正しく動作する', () => {
     const log1 = ConsentLog.create({
       id: ConsentLogId.fromString('cl-1'),
-      applicationId: ApplicationId.fromString('app-1'),
+      submissionId: SubmissionId.fromString('sub-1'),
       consentType: ConsentType.dataUsage(),
       consented: true,
       ipAddress: null,
@@ -30,7 +30,7 @@ describe('ConsentLog', () => {
     })
     const log2 = ConsentLog.create({
       id: ConsentLogId.fromString('cl-1'),
-      applicationId: ApplicationId.fromString('app-1'),
+      submissionId: SubmissionId.fromString('sub-1'),
       consentType: ConsentType.privacyPolicy(),
       consented: false,
       ipAddress: null,

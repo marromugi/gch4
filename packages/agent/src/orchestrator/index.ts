@@ -1,14 +1,24 @@
-// OrchestratorV2 - KV-based session management
-export { OrchestratorV2 } from './OrchestratorV2'
-export type { OrchestratorV2Deps } from './OrchestratorV2'
+// OrchestratorV3 - LLM agent-based orchestrator
+export { OrchestratorV3 } from './OrchestratorV3'
+export type { OrchestratorV3Deps, StartOptions } from './OrchestratorV3'
 export type {
-  ProcessResultV2,
-  OrchestratorV2Config,
-  SubSessionStartInfo,
-  SubSessionCompleteInfo,
-  SessionEventType,
-  SessionEvent,
-} from './types.v2'
+  OrchestratorV3SessionState,
+  OrchestratorStage,
+  ProcessResultV3,
+  OrchestratorV3Config,
+  Plan,
+  PlanField,
+} from './v3/types'
+export { createInitialV3Session, V3_SESSION_TTL } from './v3/types'
 
-// Legacy types (kept for backward compatibility during migration)
-export type { AgentStackEntry, ToolCallLogInput } from './types'
+// DesignSessionOrchestrator - FormDesigner 専用
+export {
+  DesignSessionOrchestrator,
+  DesignSessionKVKeys,
+  DESIGN_SESSION_TTL,
+} from './DesignSessionOrchestrator'
+export type {
+  DesignSessionOrchestratorDeps,
+  DesignSessionResult,
+  DesignSessionStorage,
+} from './DesignSessionOrchestrator'

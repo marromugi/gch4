@@ -14,6 +14,8 @@ export interface FieldCompletionCriteriaProps {
   doneCondition: string
   /** 質問ヒント */
   questioningHints: string | null
+  /** 聞いてはいけないこと（禁止事項） */
+  boundaries: string[] | null
   sortOrder: number
   createdAt: Date
 }
@@ -51,6 +53,10 @@ export class FieldCompletionCriteria implements Entity<FieldCompletionCriteriaId
 
   get questioningHints(): string | null {
     return this.props.questioningHints
+  }
+
+  get boundaries(): string[] | null {
+    return this.props.boundaries
   }
 
   get sortOrder(): number {

@@ -3,10 +3,10 @@ import { LLMProviderError } from '../../provider'
 import { toolToLLMDefinition, executeTool } from '../../tools'
 import { AgentError } from '../errors'
 import type { ILogger } from '../../logger'
-import type { State } from '../../orchestrator/types'
 import type { ILLMProvider, LLMMessage, LLMToolDefinition, TokenUsage } from '../../provider'
 import type { IKVStore } from '../../store/IKVStore'
 import type { Tool } from '../../tools'
+import type { AgentLanguageState } from '../typed/types'
 import type {
   AgentConfig,
   AgentTurnResult,
@@ -72,7 +72,7 @@ export interface AgentLoopResult {
   /** ユーザーの応答を待っているか */
   awaitingUserResponse: boolean
   /** 更新後の状態 */
-  state: State
+  state: AgentLanguageState
   /** トークン使用量 */
   usage?: TokenUsage
 }
@@ -184,7 +184,7 @@ export abstract class BaseAgent<
    * システムプロンプトを構築
    * state.language が設定されていれば、その言語で会話する指示とトーン指示を追加
    */
-  protected buildSystemPrompt(state?: State): string {
+  protected buildSystemPrompt(state?: AgentLanguageState): string {
     let prompt = this.config.systemPrompt
 
     if (state?.language) {
@@ -199,7 +199,7 @@ export abstract class BaseAgent<
   /**
    * ツール付きチャットを実行
    */
-  protected async chatWithTools(messages: LLMMessage[], state?: State) {
+  protected async chatWithTools(messages: LLMMessage[], state?: AgentLanguageState) {
     this.logger.debug('Calling LLM with tools', {
       agent: this.type,
       messageCount: messages.length,
@@ -238,7 +238,7 @@ export abstract class BaseAgent<
   /**
    * 通常チャットを実行
    */
-  protected async chat(messages: LLMMessage[], state?: State) {
+  protected async chat(messages: LLMMessage[], state?: AgentLanguageState) {
     try {
       return await this.provider.chat(messages, {
         systemPrompt: this.buildSystemPrompt(state),
@@ -260,12 +260,16 @@ export abstract class BaseAgent<
   /**
    * 現在の state から残タスクを取得（サブクラスで実装）
    */
-  protected abstract getRemainingTasks(state: State): string[]
+  protected abstract getRemainingTasks(state: AgentLanguageState): string[]
 
   /**
    * ツール結果から state を更新（サブクラスでオーバーライド可能）
    */
-  protected updateStateFromToolResult(state: State, _toolName: string, _result: unknown): State {
+  protected updateStateFromToolResult(
+    state: AgentLanguageState,
+    _toolName: string,
+    _result: unknown
+  ): AgentLanguageState {
     return state
   }
 
@@ -275,7 +279,7 @@ export abstract class BaseAgent<
    */
   protected async runAgentLoop(
     initialMessages: LLMMessage[],
-    state: State
+    state: AgentLanguageState
   ): Promise<AgentLoopResult> {
     this.logger.info('Starting agent loop', {
       agent: this.type,

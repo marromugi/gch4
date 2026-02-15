@@ -14,7 +14,6 @@ import type {
   MarkReviewCompleted200,
   SaveCollectedField201,
   SubmitSubmission200,
-  TriggerManualFallback200,
   UpdateCollectedField200,
   UpdateSubmissionStatus200,
 } from '.././models'
@@ -36,14 +35,6 @@ export const getCreateSubmissionResponseMock = (
       null,
     ]),
     language: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
-    country: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
-    timezone: faker.helpers.arrayElement([
       faker.string.alpha({ length: { min: 10, max: 20 } }),
       null,
     ]),
@@ -90,14 +81,6 @@ export const getGetSubmissionResponseMock = (
       faker.string.alpha({ length: { min: 10, max: 20 } }),
       null,
     ]),
-    country: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
-    timezone: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
     status: faker.helpers.arrayElement([
       'new',
       'in_progress',
@@ -141,14 +124,6 @@ export const getUpdateSubmissionStatusResponseMock = (
       faker.string.alpha({ length: { min: 10, max: 20 } }),
       null,
     ]),
-    country: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
-    timezone: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
     status: faker.helpers.arrayElement([
       'new',
       'in_progress',
@@ -189,14 +164,6 @@ export const getSubmitSubmissionResponseMock = (
       null,
     ]),
     language: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
-    country: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
-    timezone: faker.helpers.arrayElement([
       faker.string.alpha({ length: { min: 10, max: 20 } }),
       null,
     ]),
@@ -256,57 +223,6 @@ export const getUpdateCollectedFieldResponseMock = (
   ...overrideResponse,
 })
 
-export const getTriggerManualFallbackResponseMock = (
-  overrideResponse: Partial<TriggerManualFallback200> = {}
-): TriggerManualFallback200 => ({
-  data: {
-    id: faker.string.alpha({ length: { min: 10, max: 20 } }),
-    formId: faker.string.alpha({ length: { min: 10, max: 20 } }),
-    schemaVersionId: faker.string.alpha({ length: { min: 10, max: 20 } }),
-    respondentName: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
-    respondentEmail: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
-    language: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
-    country: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
-    timezone: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
-    status: faker.helpers.arrayElement([
-      'new',
-      'in_progress',
-      'review_completed',
-      'submitted',
-    ] as const),
-    reviewCompletedAt: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
-    consentCheckedAt: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
-    submittedAt: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
-    createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
-    updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
-  },
-  ...overrideResponse,
-})
-
 export const getMarkReviewCompletedResponseMock = (
   overrideResponse: Partial<MarkReviewCompleted200> = {}
 ): MarkReviewCompleted200 => ({
@@ -323,14 +239,6 @@ export const getMarkReviewCompletedResponseMock = (
       null,
     ]),
     language: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
-    country: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
-    timezone: faker.helpers.arrayElement([
       faker.string.alpha({ length: { min: 10, max: 20 } }),
       null,
     ]),
@@ -374,14 +282,6 @@ export const getMarkConsentCheckedResponseMock = (
       null,
     ]),
     language: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
-    country: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      null,
-    ]),
-    timezone: faker.helpers.arrayElement([
       faker.string.alpha({ length: { min: 10, max: 20 } }),
       null,
     ]),
@@ -577,34 +477,6 @@ export const getUpdateCollectedFieldMockHandler = (
   )
 }
 
-export const getTriggerManualFallbackMockHandler = (
-  overrideResponse?:
-    | TriggerManualFallback200
-    | ((
-        info: Parameters<Parameters<typeof http.post>[1]>[0]
-      ) => Promise<TriggerManualFallback200> | TriggerManualFallback200),
-  options?: RequestHandlerOptions
-) => {
-  return http.post(
-    '*/api/submissions/:submissionId/manual-fallback',
-    async (info) => {
-      await delay(1000)
-
-      return new HttpResponse(
-        JSON.stringify(
-          overrideResponse !== undefined
-            ? typeof overrideResponse === 'function'
-              ? await overrideResponse(info)
-              : overrideResponse
-            : getTriggerManualFallbackResponseMock()
-        ),
-        { status: 200, headers: { 'Content-Type': 'application/json' } }
-      )
-    },
-    options
-  )
-}
-
 export const getMarkReviewCompletedMockHandler = (
   overrideResponse?:
     | MarkReviewCompleted200
@@ -667,7 +539,6 @@ export const getSubmissionMock = () => [
   getSubmitSubmissionMockHandler(),
   getSaveCollectedFieldMockHandler(),
   getUpdateCollectedFieldMockHandler(),
-  getTriggerManualFallbackMockHandler(),
   getMarkReviewCompletedMockHandler(),
   getMarkConsentCheckedMockHandler(),
 ]

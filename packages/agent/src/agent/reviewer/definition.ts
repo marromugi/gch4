@@ -1,9 +1,8 @@
 import { z } from 'zod'
+import { QuestionTypeSchema } from '../../store/types'
 import { REVIEWER_SYSTEM_PROMPT, buildReviewPrompt } from './prompts'
 import { ReviewerAgent } from './ReviewerAgent'
-import { QuestionTypeSchema } from '../architect/schemas'
 import type { AgentDefinition } from '../../registry/types'
-import type { Plan } from '../architect/schemas'
 
 /**
  * Reviewer の引数スキーマ
@@ -70,31 +69,4 @@ Use the 'review' tool to return your verdict.`,
   }),
 
   createAgent: (deps) => new ReviewerAgent(deps),
-
-  isSubtaskable: true,
-
-  initArgs: (mainSession, _context) => {
-    const plan = mainSession.plan as Plan | undefined
-    const field = plan?.fields[mainSession.currentFieldIndex]
-
-    if (!field) {
-      throw new Error('Cannot start reviewer without current field')
-    }
-
-    // 最後のユーザーメッセージを取得
-    const userMessages = mainSession.messages.filter((m) => m.role === 'user')
-    const lastUserMessage = userMessages[userMessages.length - 1]
-    const userAnswer = lastUserMessage?.content ?? ''
-
-    return {
-      fieldId: field.fieldId,
-      label: field.label,
-      intent: field.intent,
-      required: field.required,
-      requiredFacts: field.requiredFacts,
-      userAnswer,
-      questionType: field.questionType,
-      followUpCount: mainSession.followUpCount ?? 0,
-    }
-  },
 }

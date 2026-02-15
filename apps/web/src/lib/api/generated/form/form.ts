@@ -8,12 +8,10 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { customFetch } from '../../fetcher'
 import type {
-  ApproveFormSchemaVersion200,
-  ApproveFormSchemaVersion400,
-  ApproveFormSchemaVersion404,
-  ApproveFormSchemaVersion500,
   CloseForm200,
   CloseForm400,
+  CloseForm401,
+  CloseForm403,
   CloseForm404,
   CloseForm500,
   CreateForm201,
@@ -21,16 +19,25 @@ import type {
   CreateForm401,
   CreateForm500,
   CreateFormBody,
+  DeleteForm401,
+  DeleteForm403,
+  DeleteForm404,
+  DeleteForm500,
   GetForm200,
+  GetForm403,
   GetForm404,
   GetForm500,
   GetFormFields200,
+  GetFormFields403,
   GetFormFields404,
   GetFormFields500,
   GetFormSchema200,
+  GetFormSchema403,
   GetFormSchema404,
   GetFormSchema500,
   ListFormSubmissions200,
+  ListFormSubmissions401,
+  ListFormSubmissions403,
   ListFormSubmissions404,
   ListFormSubmissions500,
   ListForms200,
@@ -38,9 +45,13 @@ import type {
   ListForms500,
   PublishForm200,
   PublishForm400,
+  PublishForm401,
+  PublishForm403,
   PublishForm404,
   PublishForm500,
   SaveFormFields200,
+  SaveFormFields401,
+  SaveFormFields403,
   SaveFormFields404,
   SaveFormFields500,
   SaveFormFieldsBody,
@@ -48,7 +59,13 @@ import type {
   SuggestFormFields401,
   SuggestFormFields500,
   SuggestFormFieldsBody,
+  SuggestFormTheme200,
+  SuggestFormTheme401,
+  SuggestFormTheme500,
+  SuggestFormThemeBody,
   UpdateForm200,
+  UpdateForm401,
+  UpdateForm403,
   UpdateForm404,
   UpdateForm500,
   UpdateFormBody,
@@ -356,6 +373,95 @@ export const useSuggestFormFields = <
   return useMutation(mutationOptions, queryClient)
 }
 /**
+ * @summary Suggest a demo form theme with title and completion message
+ */
+export const suggestFormTheme = (
+  suggestFormThemeBody: SuggestFormThemeBody,
+  options?: SecondParameter<typeof customFetch>,
+  signal?: AbortSignal
+) => {
+  return customFetch<SuggestFormTheme200>(
+    {
+      url: `API_BASE_URL/api/forms/suggest-theme`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: suggestFormThemeBody,
+      signal,
+    },
+    options
+  )
+}
+
+export const getSuggestFormThemeMutationOptions = <
+  TError = SuggestFormTheme401 | SuggestFormTheme500,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof suggestFormTheme>>,
+    TError,
+    { data: SuggestFormThemeBody },
+    TContext
+  >
+  request?: SecondParameter<typeof customFetch>
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof suggestFormTheme>>,
+  TError,
+  { data: SuggestFormThemeBody },
+  TContext
+> => {
+  const mutationKey = ['suggestFormTheme']
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined }
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof suggestFormTheme>>,
+    { data: SuggestFormThemeBody }
+  > = (props) => {
+    const { data } = props ?? {}
+
+    return suggestFormTheme(data, requestOptions)
+  }
+
+  return { mutationFn, ...mutationOptions }
+}
+
+export type SuggestFormThemeMutationResult = NonNullable<
+  Awaited<ReturnType<typeof suggestFormTheme>>
+>
+export type SuggestFormThemeMutationBody = SuggestFormThemeBody
+export type SuggestFormThemeMutationError = SuggestFormTheme401 | SuggestFormTheme500
+
+/**
+ * @summary Suggest a demo form theme with title and completion message
+ */
+export const useSuggestFormTheme = <
+  TError = SuggestFormTheme401 | SuggestFormTheme500,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof suggestFormTheme>>,
+      TError,
+      { data: SuggestFormThemeBody },
+      TContext
+    >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient
+): UseMutationResult<
+  Awaited<ReturnType<typeof suggestFormTheme>>,
+  TError,
+  { data: SuggestFormThemeBody },
+  TContext
+> => {
+  const mutationOptions = getSuggestFormThemeMutationOptions(options)
+
+  return useMutation(mutationOptions, queryClient)
+}
+/**
  * @summary Get a form by ID
  */
 export const getForm = (
@@ -375,7 +481,7 @@ export const getGetFormQueryKey = (formId?: string) => {
 
 export const getGetFormQueryOptions = <
   TData = Awaited<ReturnType<typeof getForm>>,
-  TError = GetForm404 | GetForm500,
+  TError = GetForm403 | GetForm404 | GetForm500,
 >(
   formId: string,
   options?: {
@@ -398,11 +504,11 @@ export const getGetFormQueryOptions = <
 }
 
 export type GetFormQueryResult = NonNullable<Awaited<ReturnType<typeof getForm>>>
-export type GetFormQueryError = GetForm404 | GetForm500
+export type GetFormQueryError = GetForm403 | GetForm404 | GetForm500
 
 export function useGetForm<
   TData = Awaited<ReturnType<typeof getForm>>,
-  TError = GetForm404 | GetForm500,
+  TError = GetForm403 | GetForm404 | GetForm500,
 >(
   formId: string,
   options: {
@@ -421,7 +527,7 @@ export function useGetForm<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetForm<
   TData = Awaited<ReturnType<typeof getForm>>,
-  TError = GetForm404 | GetForm500,
+  TError = GetForm403 | GetForm404 | GetForm500,
 >(
   formId: string,
   options?: {
@@ -440,7 +546,7 @@ export function useGetForm<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetForm<
   TData = Awaited<ReturnType<typeof getForm>>,
-  TError = GetForm404 | GetForm500,
+  TError = GetForm403 | GetForm404 | GetForm500,
 >(
   formId: string,
   options?: {
@@ -455,7 +561,7 @@ export function useGetForm<
 
 export function useGetForm<
   TData = Awaited<ReturnType<typeof getForm>>,
-  TError = GetForm404 | GetForm500,
+  TError = GetForm403 | GetForm404 | GetForm500,
 >(
   formId: string,
   options?: {
@@ -495,7 +601,7 @@ export const updateForm = (
 }
 
 export const getUpdateFormMutationOptions = <
-  TError = UpdateForm404 | UpdateForm500,
+  TError = UpdateForm401 | UpdateForm403 | UpdateForm404 | UpdateForm500,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -532,12 +638,15 @@ export const getUpdateFormMutationOptions = <
 
 export type UpdateFormMutationResult = NonNullable<Awaited<ReturnType<typeof updateForm>>>
 export type UpdateFormMutationBody = UpdateFormBody
-export type UpdateFormMutationError = UpdateForm404 | UpdateForm500
+export type UpdateFormMutationError = UpdateForm401 | UpdateForm403 | UpdateForm404 | UpdateForm500
 
 /**
  * @summary Update a form
  */
-export const useUpdateForm = <TError = UpdateForm404 | UpdateForm500, TContext = unknown>(
+export const useUpdateForm = <
+  TError = UpdateForm401 | UpdateForm403 | UpdateForm404 | UpdateForm500,
+  TContext = unknown,
+>(
   options?: {
     mutation?: UseMutationOptions<
       Awaited<ReturnType<typeof updateForm>>,
@@ -559,6 +668,79 @@ export const useUpdateForm = <TError = UpdateForm404 | UpdateForm500, TContext =
   return useMutation(mutationOptions, queryClient)
 }
 /**
+ * @summary Delete a form
+ */
+export const deleteForm = (formId: string, options?: SecondParameter<typeof customFetch>) => {
+  return customFetch<void>({ url: `API_BASE_URL/api/forms/${formId}`, method: 'DELETE' }, options)
+}
+
+export const getDeleteFormMutationOptions = <
+  TError = DeleteForm401 | DeleteForm403 | DeleteForm404 | DeleteForm500,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteForm>>,
+    TError,
+    { formId: string },
+    TContext
+  >
+  request?: SecondParameter<typeof customFetch>
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteForm>>,
+  TError,
+  { formId: string },
+  TContext
+> => {
+  const mutationKey = ['deleteForm']
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined }
+
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteForm>>, { formId: string }> = (
+    props
+  ) => {
+    const { formId } = props ?? {}
+
+    return deleteForm(formId, requestOptions)
+  }
+
+  return { mutationFn, ...mutationOptions }
+}
+
+export type DeleteFormMutationResult = NonNullable<Awaited<ReturnType<typeof deleteForm>>>
+
+export type DeleteFormMutationError = DeleteForm401 | DeleteForm403 | DeleteForm404 | DeleteForm500
+
+/**
+ * @summary Delete a form
+ */
+export const useDeleteForm = <
+  TError = DeleteForm401 | DeleteForm403 | DeleteForm404 | DeleteForm500,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof deleteForm>>,
+      TError,
+      { formId: string },
+      TContext
+    >
+    request?: SecondParameter<typeof customFetch>
+  },
+  queryClient?: QueryClient
+): UseMutationResult<
+  Awaited<ReturnType<typeof deleteForm>>,
+  TError,
+  { formId: string },
+  TContext
+> => {
+  const mutationOptions = getDeleteFormMutationOptions(options)
+
+  return useMutation(mutationOptions, queryClient)
+}
+/**
  * @summary Publish a form
  */
 export const publishForm = (
@@ -573,7 +755,7 @@ export const publishForm = (
 }
 
 export const getPublishFormMutationOptions = <
-  TError = PublishForm400 | PublishForm404 | PublishForm500,
+  TError = PublishForm400 | PublishForm401 | PublishForm403 | PublishForm404 | PublishForm500,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -610,13 +792,18 @@ export const getPublishFormMutationOptions = <
 
 export type PublishFormMutationResult = NonNullable<Awaited<ReturnType<typeof publishForm>>>
 
-export type PublishFormMutationError = PublishForm400 | PublishForm404 | PublishForm500
+export type PublishFormMutationError =
+  | PublishForm400
+  | PublishForm401
+  | PublishForm403
+  | PublishForm404
+  | PublishForm500
 
 /**
  * @summary Publish a form
  */
 export const usePublishForm = <
-  TError = PublishForm400 | PublishForm404 | PublishForm500,
+  TError = PublishForm400 | PublishForm401 | PublishForm403 | PublishForm404 | PublishForm500,
   TContext = unknown,
 >(
   options?: {
@@ -654,7 +841,7 @@ export const closeForm = (
 }
 
 export const getCloseFormMutationOptions = <
-  TError = CloseForm400 | CloseForm404 | CloseForm500,
+  TError = CloseForm400 | CloseForm401 | CloseForm403 | CloseForm404 | CloseForm500,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -690,13 +877,18 @@ export const getCloseFormMutationOptions = <
 
 export type CloseFormMutationResult = NonNullable<Awaited<ReturnType<typeof closeForm>>>
 
-export type CloseFormMutationError = CloseForm400 | CloseForm404 | CloseForm500
+export type CloseFormMutationError =
+  | CloseForm400
+  | CloseForm401
+  | CloseForm403
+  | CloseForm404
+  | CloseForm500
 
 /**
  * @summary Close a form
  */
 export const useCloseForm = <
-  TError = CloseForm400 | CloseForm404 | CloseForm500,
+  TError = CloseForm400 | CloseForm401 | CloseForm403 | CloseForm404 | CloseForm500,
   TContext = unknown,
 >(
   options?: {
@@ -739,7 +931,7 @@ export const getGetFormFieldsQueryKey = (formId?: string) => {
 
 export const getGetFormFieldsQueryOptions = <
   TData = Awaited<ReturnType<typeof getFormFields>>,
-  TError = GetFormFields404 | GetFormFields500,
+  TError = GetFormFields403 | GetFormFields404 | GetFormFields500,
 >(
   formId: string,
   options?: {
@@ -762,11 +954,11 @@ export const getGetFormFieldsQueryOptions = <
 }
 
 export type GetFormFieldsQueryResult = NonNullable<Awaited<ReturnType<typeof getFormFields>>>
-export type GetFormFieldsQueryError = GetFormFields404 | GetFormFields500
+export type GetFormFieldsQueryError = GetFormFields403 | GetFormFields404 | GetFormFields500
 
 export function useGetFormFields<
   TData = Awaited<ReturnType<typeof getFormFields>>,
-  TError = GetFormFields404 | GetFormFields500,
+  TError = GetFormFields403 | GetFormFields404 | GetFormFields500,
 >(
   formId: string,
   options: {
@@ -785,7 +977,7 @@ export function useGetFormFields<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetFormFields<
   TData = Awaited<ReturnType<typeof getFormFields>>,
-  TError = GetFormFields404 | GetFormFields500,
+  TError = GetFormFields403 | GetFormFields404 | GetFormFields500,
 >(
   formId: string,
   options?: {
@@ -804,7 +996,7 @@ export function useGetFormFields<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetFormFields<
   TData = Awaited<ReturnType<typeof getFormFields>>,
-  TError = GetFormFields404 | GetFormFields500,
+  TError = GetFormFields403 | GetFormFields404 | GetFormFields500,
 >(
   formId: string,
   options?: {
@@ -819,7 +1011,7 @@ export function useGetFormFields<
 
 export function useGetFormFields<
   TData = Awaited<ReturnType<typeof getFormFields>>,
-  TError = GetFormFields404 | GetFormFields500,
+  TError = GetFormFields403 | GetFormFields404 | GetFormFields500,
 >(
   formId: string,
   options?: {
@@ -859,7 +1051,7 @@ export const saveFormFields = (
 }
 
 export const getSaveFormFieldsMutationOptions = <
-  TError = SaveFormFields404 | SaveFormFields500,
+  TError = SaveFormFields401 | SaveFormFields403 | SaveFormFields404 | SaveFormFields500,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -896,13 +1088,17 @@ export const getSaveFormFieldsMutationOptions = <
 
 export type SaveFormFieldsMutationResult = NonNullable<Awaited<ReturnType<typeof saveFormFields>>>
 export type SaveFormFieldsMutationBody = SaveFormFieldsBody
-export type SaveFormFieldsMutationError = SaveFormFields404 | SaveFormFields500
+export type SaveFormFieldsMutationError =
+  | SaveFormFields401
+  | SaveFormFields403
+  | SaveFormFields404
+  | SaveFormFields500
 
 /**
  * @summary Save form fields
  */
 export const useSaveFormFields = <
-  TError = SaveFormFields404 | SaveFormFields500,
+  TError = SaveFormFields401 | SaveFormFields403 | SaveFormFields404 | SaveFormFields500,
   TContext = unknown,
 >(
   options?: {
@@ -945,7 +1141,7 @@ export const getGetFormSchemaQueryKey = (formId?: string) => {
 
 export const getGetFormSchemaQueryOptions = <
   TData = Awaited<ReturnType<typeof getFormSchema>>,
-  TError = GetFormSchema404 | GetFormSchema500,
+  TError = GetFormSchema403 | GetFormSchema404 | GetFormSchema500,
 >(
   formId: string,
   options?: {
@@ -968,11 +1164,11 @@ export const getGetFormSchemaQueryOptions = <
 }
 
 export type GetFormSchemaQueryResult = NonNullable<Awaited<ReturnType<typeof getFormSchema>>>
-export type GetFormSchemaQueryError = GetFormSchema404 | GetFormSchema500
+export type GetFormSchemaQueryError = GetFormSchema403 | GetFormSchema404 | GetFormSchema500
 
 export function useGetFormSchema<
   TData = Awaited<ReturnType<typeof getFormSchema>>,
-  TError = GetFormSchema404 | GetFormSchema500,
+  TError = GetFormSchema403 | GetFormSchema404 | GetFormSchema500,
 >(
   formId: string,
   options: {
@@ -991,7 +1187,7 @@ export function useGetFormSchema<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetFormSchema<
   TData = Awaited<ReturnType<typeof getFormSchema>>,
-  TError = GetFormSchema404 | GetFormSchema500,
+  TError = GetFormSchema403 | GetFormSchema404 | GetFormSchema500,
 >(
   formId: string,
   options?: {
@@ -1010,7 +1206,7 @@ export function useGetFormSchema<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetFormSchema<
   TData = Awaited<ReturnType<typeof getFormSchema>>,
-  TError = GetFormSchema404 | GetFormSchema500,
+  TError = GetFormSchema403 | GetFormSchema404 | GetFormSchema500,
 >(
   formId: string,
   options?: {
@@ -1025,7 +1221,7 @@ export function useGetFormSchema<
 
 export function useGetFormSchema<
   TData = Awaited<ReturnType<typeof getFormSchema>>,
-  TError = GetFormSchema404 | GetFormSchema500,
+  TError = GetFormSchema403 | GetFormSchema404 | GetFormSchema500,
 >(
   formId: string,
   options?: {
@@ -1046,92 +1242,6 @@ export function useGetFormSchema<
 }
 
 /**
- * @summary Approve form schema version
- */
-export const approveFormSchemaVersion = (
-  formId: string,
-  options?: SecondParameter<typeof customFetch>,
-  signal?: AbortSignal
-) => {
-  return customFetch<ApproveFormSchemaVersion200>(
-    { url: `API_BASE_URL/api/forms/${formId}/schema/approve`, method: 'POST', signal },
-    options
-  )
-}
-
-export const getApproveFormSchemaVersionMutationOptions = <
-  TError = ApproveFormSchemaVersion400 | ApproveFormSchemaVersion404 | ApproveFormSchemaVersion500,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof approveFormSchemaVersion>>,
-    TError,
-    { formId: string },
-    TContext
-  >
-  request?: SecondParameter<typeof customFetch>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof approveFormSchemaVersion>>,
-  TError,
-  { formId: string },
-  TContext
-> => {
-  const mutationKey = ['approveFormSchemaVersion']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof approveFormSchemaVersion>>,
-    { formId: string }
-  > = (props) => {
-    const { formId } = props ?? {}
-
-    return approveFormSchemaVersion(formId, requestOptions)
-  }
-
-  return { mutationFn, ...mutationOptions }
-}
-
-export type ApproveFormSchemaVersionMutationResult = NonNullable<
-  Awaited<ReturnType<typeof approveFormSchemaVersion>>
->
-
-export type ApproveFormSchemaVersionMutationError =
-  | ApproveFormSchemaVersion400
-  | ApproveFormSchemaVersion404
-  | ApproveFormSchemaVersion500
-
-/**
- * @summary Approve form schema version
- */
-export const useApproveFormSchemaVersion = <
-  TError = ApproveFormSchemaVersion400 | ApproveFormSchemaVersion404 | ApproveFormSchemaVersion500,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof approveFormSchemaVersion>>,
-      TError,
-      { formId: string },
-      TContext
-    >
-    request?: SecondParameter<typeof customFetch>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof approveFormSchemaVersion>>,
-  TError,
-  { formId: string },
-  TContext
-> => {
-  const mutationOptions = getApproveFormSchemaVersionMutationOptions(options)
-
-  return useMutation(mutationOptions, queryClient)
-}
-/**
  * @summary List submissions for a form
  */
 export const listFormSubmissions = (
@@ -1151,7 +1261,11 @@ export const getListFormSubmissionsQueryKey = (formId?: string) => {
 
 export const getListFormSubmissionsQueryOptions = <
   TData = Awaited<ReturnType<typeof listFormSubmissions>>,
-  TError = ListFormSubmissions404 | ListFormSubmissions500,
+  TError =
+    | ListFormSubmissions401
+    | ListFormSubmissions403
+    | ListFormSubmissions404
+    | ListFormSubmissions500,
 >(
   formId: string,
   options?: {
@@ -1176,11 +1290,19 @@ export const getListFormSubmissionsQueryOptions = <
 export type ListFormSubmissionsQueryResult = NonNullable<
   Awaited<ReturnType<typeof listFormSubmissions>>
 >
-export type ListFormSubmissionsQueryError = ListFormSubmissions404 | ListFormSubmissions500
+export type ListFormSubmissionsQueryError =
+  | ListFormSubmissions401
+  | ListFormSubmissions403
+  | ListFormSubmissions404
+  | ListFormSubmissions500
 
 export function useListFormSubmissions<
   TData = Awaited<ReturnType<typeof listFormSubmissions>>,
-  TError = ListFormSubmissions404 | ListFormSubmissions500,
+  TError =
+    | ListFormSubmissions401
+    | ListFormSubmissions403
+    | ListFormSubmissions404
+    | ListFormSubmissions500,
 >(
   formId: string,
   options: {
@@ -1201,7 +1323,11 @@ export function useListFormSubmissions<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useListFormSubmissions<
   TData = Awaited<ReturnType<typeof listFormSubmissions>>,
-  TError = ListFormSubmissions404 | ListFormSubmissions500,
+  TError =
+    | ListFormSubmissions401
+    | ListFormSubmissions403
+    | ListFormSubmissions404
+    | ListFormSubmissions500,
 >(
   formId: string,
   options?: {
@@ -1222,7 +1348,11 @@ export function useListFormSubmissions<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useListFormSubmissions<
   TData = Awaited<ReturnType<typeof listFormSubmissions>>,
-  TError = ListFormSubmissions404 | ListFormSubmissions500,
+  TError =
+    | ListFormSubmissions401
+    | ListFormSubmissions403
+    | ListFormSubmissions404
+    | ListFormSubmissions500,
 >(
   formId: string,
   options?: {
@@ -1237,7 +1367,11 @@ export function useListFormSubmissions<
 
 export function useListFormSubmissions<
   TData = Awaited<ReturnType<typeof listFormSubmissions>>,
-  TError = ListFormSubmissions404 | ListFormSubmissions500,
+  TError =
+    | ListFormSubmissions401
+    | ListFormSubmissions403
+    | ListFormSubmissions404
+    | ListFormSubmissions500,
 >(
   formId: string,
   options?: {

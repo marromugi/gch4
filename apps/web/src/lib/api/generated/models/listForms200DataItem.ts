@@ -20,4 +20,5 @@ export type ListForms200DataItem = {
   createdBy: string
   createdAt: string
   updatedAt: string
+  submissionCount: number
 }

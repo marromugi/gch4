@@ -4,16 +4,16 @@ export const box = tv({
   base: '',
   variants: {
     background: {
-      background: ['bg-gray-50', 'dark:bg-gray-950'],
-      surface: ['bg-white', 'dark:bg-gray-900'],
-      muted: ['bg-gray-100', 'dark:bg-gray-800'],
-      subtle: ['bg-gray-200', 'dark:bg-gray-700'],
+      background: ['bg-neutral-50', 'dark:bg-neutral-800'],
+      surface: ['bg-white', 'dark:bg-neutral-900'],
+      muted: ['bg-neutral-100', 'dark:bg-neutral-950'],
+      subtle: ['bg-neutral-200', 'dark:bg-neutral-1000'],
     },
     border: {
-      background: ['border border-gray-100', 'dark:border-gray-900'],
-      surface: ['border border-gray-50', 'dark:border-gray-800'],
-      muted: ['border border-gray-200', 'dark:border-gray-700'],
-      subtle: ['border border-gray-300', 'dark:border-gray-600'],
+      background: ['border border-neutral-100', 'dark:border-neutral-900'],
+      surface: ['border border-neutral-50', 'dark:border-neutral-800'],
+      muted: ['border border-neutral-200', 'dark:border-neutral-700'],
+      subtle: ['border border-neutral-300', 'dark:border-neutral-600'],
     },
     elevation: {
       low: 'shadow-sm',

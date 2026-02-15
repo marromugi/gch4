@@ -1,4 +1,4 @@
-import { FormId, FormStatus, UserId } from '@ding/domain/domain/valueObject'
+import { GetFormUsecase } from '@ding/domain/presentation/usecase'
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 import { formResponseSchema } from '../../../schemas/response'
 import { serializeForm } from '../../../schemas/serializers'
@@ -60,21 +60,28 @@ app.openapi(route, async (c) => {
   const user = c.get('user')
   const { formId } = c.req.valid('param')
 
-  const result = await repositories.formRepository.findById(FormId.fromString(formId))
+  const usecase = new GetFormUsecase({
+    formRepository: repositories.formRepository,
+  })
+
+  const result = await usecase.execute({
+    formId,
+    userId: user?.id ?? null,
+  })
 
   if (!result.success) {
-    return c.json({ error: 'Form not found' }, 404)
+    const error = result.error
+    switch (error.type) {
+      case 'not_found_error':
+        return c.json({ error: 'Form not found' }, 404)
+      case 'forbidden_error':
+        return c.json({ error: 'Forbidden' }, 403)
+      case 'repository_error':
+        return c.json({ error: 'Internal server error' }, 500)
+    }
   }
 
-  const form = result.value
-  const isOwner = user && form.createdBy.equals(UserId.fromString(user.id))
-  const isPublished = form.status.equals(FormStatus.published())
-
-  if (!isOwner && !isPublished) {
-    return c.json({ error: 'Forbidden' }, 403)
-  }
-
-  return c.json({ data: serializeForm(form) }, 200)
+  return c.json({ data: serializeForm(result.value) }, 200)
 })
 
 export default app

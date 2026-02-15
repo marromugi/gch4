@@ -11,8 +11,6 @@ export interface SubmissionProps {
   respondentName: string | null
   respondentEmail: string | null
   language: string | null
-  country: string | null
-  timezone: string | null
   status: SubmissionStatus
   reviewCompletedAt: Date | null
   consentCheckedAt: Date | null
@@ -51,14 +49,6 @@ export class Submission implements TimestampedEntity<SubmissionId> {
     return this.props.language
   }
 
-  get country(): string | null {
-    return this.props.country
-  }
-
-  get timezone(): string | null {
-    return this.props.timezone
-  }
-
   get status(): SubmissionStatus {
     return this.props.status
   }
@@ -94,12 +84,10 @@ export class Submission implements TimestampedEntity<SubmissionId> {
   /**
    * セッションブートストラップ情報を設定する
    */
-  setBootstrapInfo(language: string, country: string, timezone: string): Submission {
+  setBootstrapInfo(language: string): Submission {
     return new Submission({
       ...this.props,
       language,
-      country,
-      timezone,
       updatedAt: new Date(),
     })
   }

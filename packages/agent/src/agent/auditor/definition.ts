@@ -2,7 +2,6 @@ import { z } from 'zod'
 import { AuditorAgent } from './AuditorAgent'
 import { AUDITOR_SYSTEM_PROMPT, buildAuditPrompt } from './prompts'
 import type { AgentDefinition } from '../../registry/types'
-import type { Plan } from '../architect/schemas'
 
 /**
  * Auditor の引数スキーマ
@@ -67,27 +66,4 @@ Use the 'result' tool to return your verdict.`,
   }),
 
   createAgent: (deps) => new AuditorAgent(deps),
-
-  isSubtaskable: true,
-
-  initArgs: (mainSession) => {
-    const plan = mainSession.plan as Plan | undefined
-
-    // collectedFields を構築（fieldId -> { fieldId, label, value }）
-    const collectedFields = Object.entries(mainSession.collectedFields).map(([fieldId, value]) => {
-      // plan から label を取得
-      const field = plan?.fields.find((f) => f.fieldId === fieldId)
-      return {
-        fieldId,
-        label: field?.label ?? fieldId,
-        value,
-      }
-    })
-
-    return {
-      collectedFields,
-      conversationLength: mainSession.messages.length,
-      prohibitedTopics: [], // TODO: 必要に応じて plan や form から取得
-    }
-  },
 }

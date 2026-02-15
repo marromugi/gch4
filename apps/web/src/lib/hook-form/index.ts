@@ -35,5 +35,12 @@ export function useZodForm<TFieldValues extends FieldValues>({
 }
 
 // react-hook-form の re-export（必要なものだけ）
-export { FormProvider, Controller, useFormContext, useWatch } from 'react-hook-form'
-export type { UseFormReturn, FieldErrors, Control, ControllerRenderProps } from 'react-hook-form'
+export { FormProvider, Controller, useFormContext, useWatch, useFieldArray } from 'react-hook-form'
+export type {
+  UseFormReturn,
+  FieldErrors,
+  Control,
+  ControllerRenderProps,
+  FieldArrayWithId,
+  FieldValues,
+} from 'react-hook-form'

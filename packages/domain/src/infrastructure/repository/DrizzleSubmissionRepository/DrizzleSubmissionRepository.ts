@@ -1,4 +1,4 @@
-import { eq, and } from 'drizzle-orm'
+import { eq, and, inArray, sql } from 'drizzle-orm'
 import type { Database } from '@ding/database/client'
 import {
   submission,
@@ -82,6 +82,35 @@ export class DrizzleSubmissionRepository implements ISubmissionRepository {
     }
   }
 
+  async countByFormIds(formIds: FormId[]): Promise<Result<Map<string, number>, Error>> {
+    try {
+      if (formIds.length === 0) {
+        return Result.ok(new Map())
+      }
+      const rows = await this.db
+        .select({
+          formId: submission.formId,
+          count: sql<number>`count(*)`.mapWith(Number),
+        })
+        .from(submission)
+        .where(
+          inArray(
+            submission.formId,
+            formIds.map((id) => id.value)
+          )
+        )
+        .groupBy(submission.formId)
+
+      const countMap = new Map<string, number>()
+      for (const row of rows) {
+        countMap.set(row.formId, row.count)
+      }
+      return Result.ok(countMap)
+    } catch (error) {
+      return Result.err(error instanceof Error ? error : new Error(String(error)))
+    }
+  }
+
   async save(entity: Submission): Promise<Result<void, Error>> {
     try {
       await this.db
@@ -93,8 +122,6 @@ export class DrizzleSubmissionRepository implements ISubmissionRepository {
           respondentName: entity.respondentName,
           respondentEmail: entity.respondentEmail,
           language: entity.language,
-          country: entity.country,
-          timezone: entity.timezone,
           status: entity.status.value,
           reviewCompletedAt: entity.reviewCompletedAt,
           consentCheckedAt: entity.consentCheckedAt,
@@ -108,8 +135,6 @@ export class DrizzleSubmissionRepository implements ISubmissionRepository {
             respondentName: entity.respondentName,
             respondentEmail: entity.respondentEmail,
             language: entity.language,
-            country: entity.country,
-            timezone: entity.timezone,
             status: entity.status.value,
             reviewCompletedAt: entity.reviewCompletedAt,
             consentCheckedAt: entity.consentCheckedAt,
@@ -423,8 +448,6 @@ export class DrizzleSubmissionRepository implements ISubmissionRepository {
       respondentName: row.respondentName,
       respondentEmail: row.respondentEmail,
       language: row.language,
-      country: row.country,
-      timezone: row.timezone,
       status: SubmissionStatus.from(row.status),
       reviewCompletedAt: row.reviewCompletedAt,
       consentCheckedAt: row.consentCheckedAt,

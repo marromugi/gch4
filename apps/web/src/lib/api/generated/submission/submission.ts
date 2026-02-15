@@ -32,9 +32,6 @@ import type {
   SubmitSubmission400,
   SubmitSubmission404,
   SubmitSubmission500,
-  TriggerManualFallback200,
-  TriggerManualFallback404,
-  TriggerManualFallback500,
   UpdateCollectedField200,
   UpdateCollectedField404,
   UpdateCollectedField500,
@@ -627,89 +624,6 @@ export const useUpdateCollectedField = <
   TContext
 > => {
   const mutationOptions = getUpdateCollectedFieldMutationOptions(options)
-
-  return useMutation(mutationOptions, queryClient)
-}
-/**
- * @summary Trigger manual fallback for a submission
- */
-export const triggerManualFallback = (
-  submissionId: string,
-  options?: SecondParameter<typeof customFetch>,
-  signal?: AbortSignal
-) => {
-  return customFetch<TriggerManualFallback200>(
-    { url: `API_BASE_URL/api/submissions/${submissionId}/manual-fallback`, method: 'POST', signal },
-    options
-  )
-}
-
-export const getTriggerManualFallbackMutationOptions = <
-  TError = TriggerManualFallback404 | TriggerManualFallback500,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof triggerManualFallback>>,
-    TError,
-    { submissionId: string },
-    TContext
-  >
-  request?: SecondParameter<typeof customFetch>
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof triggerManualFallback>>,
-  TError,
-  { submissionId: string },
-  TContext
-> => {
-  const mutationKey = ['triggerManualFallback']
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof triggerManualFallback>>,
-    { submissionId: string }
-  > = (props) => {
-    const { submissionId } = props ?? {}
-
-    return triggerManualFallback(submissionId, requestOptions)
-  }
-
-  return { mutationFn, ...mutationOptions }
-}
-
-export type TriggerManualFallbackMutationResult = NonNullable<
-  Awaited<ReturnType<typeof triggerManualFallback>>
->
-
-export type TriggerManualFallbackMutationError = TriggerManualFallback404 | TriggerManualFallback500
-
-/**
- * @summary Trigger manual fallback for a submission
- */
-export const useTriggerManualFallback = <
-  TError = TriggerManualFallback404 | TriggerManualFallback500,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof triggerManualFallback>>,
-      TError,
-      { submissionId: string },
-      TContext
-    >
-    request?: SecondParameter<typeof customFetch>
-  },
-  queryClient?: QueryClient
-): UseMutationResult<
-  Awaited<ReturnType<typeof triggerManualFallback>>,
-  TError,
-  { submissionId: string },
-  TContext
-> => {
-  const mutationOptions = getTriggerManualFallbackMutationOptions(options)
 
   return useMutation(mutationOptions, queryClient)
 }

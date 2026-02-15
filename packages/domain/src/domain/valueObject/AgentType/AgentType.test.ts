@@ -8,13 +8,10 @@ describe('AgentType', () => {
       expect(agentType.value).toBe('greeter')
     })
 
-    it.each(['greeter', 'architect', 'interviewer', 'reviewer', 'quick_check', 'auditor'])(
-      '%s を作成できる',
-      (value) => {
-        const agentType = AgentType.from(value)
-        expect(agentType.value).toBe(value)
-      }
-    )
+    it.each(['greeter', 'architect', 'interviewer', 'reviewer'])('%s を作成できる', (value) => {
+      const agentType = AgentType.from(value)
+      expect(agentType.value).toBe(value)
+    })
 
     it('無効な文字列でエラーを投げる', () => {
       expect(() => AgentType.from('invalid')).toThrow('Invalid AgentType: invalid')
@@ -41,14 +38,6 @@ describe('AgentType', () => {
     it('reviewer() は reviewer を返す', () => {
       expect(AgentType.reviewer().value).toBe('reviewer')
     })
-
-    it('quickCheck() は quick_check を返す', () => {
-      expect(AgentType.quickCheck().value).toBe('quick_check')
-    })
-
-    it('auditor() は auditor を返す', () => {
-      expect(AgentType.auditor().value).toBe('auditor')
-    })
   })
 
   describe('isXxx メソッド', () => {
@@ -71,16 +60,6 @@ describe('AgentType', () => {
       expect(AgentType.reviewer().isReviewer()).toBe(true)
       expect(AgentType.greeter().isReviewer()).toBe(false)
     })
-
-    it('isQuickCheck() は quick_check の場合 true', () => {
-      expect(AgentType.quickCheck().isQuickCheck()).toBe(true)
-      expect(AgentType.greeter().isQuickCheck()).toBe(false)
-    })
-
-    it('isAuditor() は auditor の場合 true', () => {
-      expect(AgentType.auditor().isAuditor()).toBe(true)
-      expect(AgentType.greeter().isAuditor()).toBe(false)
-    })
   })
 
   describe('equals', () => {
@@ -100,7 +79,7 @@ describe('AgentType', () => {
   describe('toString', () => {
     it('値を文字列として返す', () => {
       expect(AgentType.greeter().toString()).toBe('greeter')
-      expect(AgentType.quickCheck().toString()).toBe('quick_check')
+      expect(AgentType.reviewer().toString()).toBe('reviewer')
     })
   })
 })

@@ -22,8 +22,6 @@ export const submission = sqliteTable(
     /** 回答者メール（オプション） */
     respondentEmail: text('respondent_email'),
     language: text('language'),
-    country: text('country'),
-    timezone: text('timezone'),
     status: text('status').notNull().default('in_progress'),
     /** レビュー完了日時 */
     reviewCompletedAt: integer('review_completed_at', { mode: 'timestamp' }),

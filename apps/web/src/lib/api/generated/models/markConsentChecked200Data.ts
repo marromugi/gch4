@@ -17,10 +17,6 @@ export type MarkConsentChecked200Data = {
   respondentEmail: string | null
   /** @nullable */
   language: string | null
-  /** @nullable */
-  country: string | null
-  /** @nullable */
-  timezone: string | null
   status: MarkConsentChecked200DataStatus
   /** @nullable */
   reviewCompletedAt: string | null

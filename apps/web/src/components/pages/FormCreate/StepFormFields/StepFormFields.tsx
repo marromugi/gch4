@@ -1,17 +1,20 @@
 import { Button, Typography } from '@ding/ui'
 import { AddFill } from '@ding/ui/icon'
 import { Flex } from '@ding/ui/layout'
-import { useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useFieldArray } from 'react-hook-form'
+import { FormFieldItemRow } from '@/components/common/FormFieldItem'
 import { useFormContext } from '@/lib/hook-form'
+import { DesignChatPanel, SlidePanel } from '../DesignChat'
 import { stepFormFields } from './const'
-import { FormFieldItemRow } from './FormFieldItem'
 import { useFormFieldsSuggest } from './hooks'
+import type { GeneratedField } from '../DesignChat'
 import type { FormCreateFormValues } from '../type'
 
 export function StepFormFields() {
   const styles = stepFormFields()
   const { control, formState, watch } = useFormContext<FormCreateFormValues>()
+  const [isDesignChatOpen, setIsDesignChatOpen] = useState(false)
 
   const { fields, append, remove, replace } = useFieldArray({
     control,
@@ -27,6 +30,25 @@ export function StepFormFields() {
     if (!title || isLoading) return
     suggest(title, purpose)
   }
+
+  const handleOpenDesignChat = useCallback(() => {
+    setIsDesignChatOpen(true)
+  }, [])
+
+  const handleDesignComplete = useCallback(
+    (generatedFields: GeneratedField[]) => {
+      const formFieldItems = generatedFields.map((field) => ({
+        label: field.label,
+        intent: field.intent ?? '',
+        required: field.required,
+        criteria: field.criteria,
+        boundaries: field.boundaries?.map((b) => ({ value: b })),
+      }))
+      replace(formFieldItems)
+      setIsDesignChatOpen(false)
+    },
+    [replace]
+  )
 
   useEffect(() => {
     if (suggestedFields) {
@@ -55,16 +77,36 @@ export function StepFormFields() {
             </Typography>
           )}
         </Flex>
-        <Button
-          type="button"
-          variant="primary"
-          size="sm"
-          onClick={handleSuggest}
-          disabled={!title || isLoading}
-        >
-          {isLoading ? '生成中...' : 'AIで生成'}
-        </Button>
+        <Flex gap={2}>
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            onClick={handleOpenDesignChat}
+            disabled={!purpose}
+          >
+            相談する
+          </Button>
+          <Button
+            type="button"
+            variant="primary"
+            size="sm"
+            onClick={handleSuggest}
+            disabled={!title || isLoading}
+          >
+            {isLoading ? '生成中...' : 'AIで生成'}
+          </Button>
+        </Flex>
       </Flex>
+
+      <SlidePanel
+        open={isDesignChatOpen}
+        onOpenChange={setIsDesignChatOpen}
+        title="項目をつくる"
+        closeOnOverlayClick={false}
+      >
+        {purpose && <DesignChatPanel purpose={purpose} onComplete={handleDesignComplete} />}
+      </SlidePanel>
 
       <div className={styles.fieldList()}>
         {fields.map((field, index) => (
@@ -72,6 +114,7 @@ export function StepFormFields() {
             key={field.id}
             index={index}
             control={control}
+            fieldArrayName="formFields"
             onRemove={() => remove(index)}
             canRemove={fields.length > 1}
           />

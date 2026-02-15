@@ -1,14 +1,32 @@
-import { FormFieldWrapper, TextArea, TextField } from '@ding/ui'
+import { Button, FormFieldWrapper, TextArea, TextField } from '@ding/ui'
+import { Flex } from '@ding/ui/layout'
+import { useEffect } from 'react'
 import { Controller, useFormContext } from '@/lib/hook-form'
 import { stepBasicInfo } from './const'
+import { useThemeSuggest } from './hooks'
 import type { FormCreateFormValues } from '../type'
 
 export function StepBasicInfo() {
   const styles = stepBasicInfo()
-  const { control } = useFormContext<FormCreateFormValues>()
+  const { control, setValue } = useFormContext<FormCreateFormValues>()
+  const { suggest, theme, isLoading } = useThemeSuggest()
+
+  useEffect(() => {
+    if (theme) {
+      setValue('title', theme.title)
+      setValue('purpose', theme.purpose)
+      setValue('completionMessage', theme.completionMessage)
+    }
+  }, [theme, setValue])
 
   return (
     <div className={styles.container()}>
+      <Flex justify="end">
+        <Button type="button" variant="secondary" size="sm" onClick={suggest} disabled={isLoading}>
+          {isLoading ? '生成中...' : 'デモ用テーマを生成'}
+        </Button>
+      </Flex>
+
       <Controller
         control={control}
         name="title"

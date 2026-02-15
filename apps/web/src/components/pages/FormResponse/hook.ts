@@ -1,11 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
-  useGetSubmission,
-  useMarkReviewCompleted,
-  useMarkConsentChecked,
-  useSubmitSubmission,
-} from '@/lib/api/generated/submission/submission'
-import {
   useCreateChatSession,
   useGetChatSession,
   useSendChatMessage,
@@ -13,6 +7,12 @@ import {
 } from '@/lib/api/generated/chat/chat'
 import { useSaveConsentLog } from '@/lib/api/generated/consent-log/consent-log'
 import { useGetFormFields } from '@/lib/api/generated/form/form'
+import {
+  useGetSubmission,
+  useMarkReviewCompleted,
+  useMarkConsentChecked,
+  useSubmitSubmission,
+} from '@/lib/api/generated/submission/submission'
 import type { ResponseMode, Phase, ChatMessage, TodoItem } from './type'
 import type { GetChatSessionFormData200DataCollectedFields } from '@/lib/api/generated/models'
 

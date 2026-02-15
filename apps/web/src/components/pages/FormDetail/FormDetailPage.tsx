@@ -4,10 +4,9 @@ import { useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
 import { formDetailPage } from './const'
 import { FormDetailHeader } from './FormDetailHeader'
-import { useFormDetail, useFormFields, useFormSchema } from './hook'
+import { useFormDetail, useFormSubmissions } from './hook'
 import { TabBasicInfo } from './TabBasicInfo'
 import { TabFormFields } from './TabFormFields'
-import { TabSchema } from './TabSchema'
 import { TabSubmissions } from './TabSubmissions'
 import type { FormDetailPageProps } from './type'
 import type { TabItem } from '@ding/ui'
@@ -15,13 +14,11 @@ import type { TabItem } from '@ding/ui'
 const DRAFT_TABS: TabItem[] = [
   { value: 'basic', label: '基本情報' },
   { value: 'form-fields', label: 'フォーム項目' },
-  { value: 'schema', label: 'スキーマ定義' },
 ]
 
 const ACTIVE_TABS: TabItem[] = [
   { value: 'basic', label: '基本情報' },
   { value: 'form-fields', label: 'フォーム項目' },
-  { value: 'schema', label: 'スキーマ定義' },
   { value: 'submissions', label: '回答一覧' },
 ]
 
@@ -34,10 +31,7 @@ export function FormDetailPage({ formId, className }: FormDetailPageProps) {
   const isDraft = form?.status === 'draft'
   const isPublishedOrClosed = form?.status === 'published' || form?.status === 'closed'
 
-  const { data: formFields = [] } = useFormFields(formId, !!form)
-  const { data: schemaData } = useFormSchema(formId, !!form)
-
-  const isSchemaApproved = schemaData?.schemaVersion?.status === 'approved'
+  const { data: submissions = [] } = useFormSubmissions(formId, !!form)
 
   const tabs = isPublishedOrClosed ? ACTIVE_TABS : DRAFT_TABS
 
@@ -73,7 +67,7 @@ export function FormDetailPage({ formId, className }: FormDetailPageProps) {
   return (
     <Box className={cn(styles.container(), className)}>
       <div className={styles.header()}>
-        <FormDetailHeader form={form} isSchemaApproved={isSchemaApproved} />
+        <FormDetailHeader form={form} />
       </div>
 
       <div className={styles.tabWrapper()}>
@@ -81,11 +75,10 @@ export function FormDetailPage({ formId, className }: FormDetailPageProps) {
       </div>
 
       <div className={styles.tabContent()}>
-        {activeTab === 'basic' && <TabBasicInfo form={form} isDraft={isDraft} />}
-        {activeTab === 'form-fields' && <TabFormFields formId={formId} isDraft={isDraft} />}
-        {activeTab === 'schema' && (
-          <TabSchema formId={formId} isDraft={isDraft} formFields={formFields} />
+        {activeTab === 'basic' && (
+          <TabBasicInfo form={form} isDraft={isDraft} submissionCount={submissions.length} />
         )}
+        {activeTab === 'form-fields' && <TabFormFields formId={formId} isDraft={isDraft} />}
         {activeTab === 'submissions' && isPublishedOrClosed && <TabSubmissions formId={formId} />}
       </div>
     </Box>

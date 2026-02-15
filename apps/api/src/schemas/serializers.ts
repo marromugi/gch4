@@ -26,6 +26,13 @@ export function serializeForm(form: Form) {
   }
 }
 
+export function serializeFormWithCount(form: Form, submissionCount: number) {
+  return {
+    ...serializeForm(form),
+    submissionCount,
+  }
+}
+
 export function serializeSubmission(submission: Submission) {
   return {
     id: submission.id.value,
@@ -34,8 +41,6 @@ export function serializeSubmission(submission: Submission) {
     respondentName: submission.respondentName,
     respondentEmail: submission.respondentEmail,
     language: submission.language,
-    country: submission.country,
-    timezone: submission.timezone,
     status: submission.status.value,
     reviewCompletedAt: submission.reviewCompletedAt?.toISOString() ?? null,
     consentCheckedAt: submission.consentCheckedAt?.toISOString() ?? null,
@@ -80,6 +85,7 @@ export function serializeFieldCompletionCriteria(criteria: FieldCompletionCriter
     fact: criteria.criteria,
     doneCriteria: criteria.doneCondition,
     questioningHints: criteria.questioningHints,
+    boundaries: criteria.boundaries,
     sortOrder: criteria.sortOrder,
     createdAt: criteria.createdAt.toISOString(),
   }

@@ -3,7 +3,7 @@ import { tv } from 'tailwind-variants'
 export const formDetailHeader = tv({
   slots: {
     container: [],
-    titleRow: ['mb-2'],
+    titleRow: ['mb-2 mt-4'],
     backLink: [
       'text-sm',
       'text-neutral-500',

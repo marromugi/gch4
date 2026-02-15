@@ -2,7 +2,6 @@ import { z } from 'zod'
 import { QUICK_CHECK_SYSTEM_PROMPT, buildQuickCheckPrompt } from './prompts'
 import { QuickCheckAgent } from './QuickCheckAgent'
 import type { AgentDefinition } from '../../registry/types'
-import type { Plan } from '../architect/schemas'
 
 /**
  * QuickCheck の引数スキーマ
@@ -60,22 +59,4 @@ Use the 'result' tool to return your verdict.`,
   }),
 
   createAgent: (deps) => new QuickCheckAgent(deps),
-
-  isSubtaskable: true,
-
-  initArgs: (mainSession, context) => {
-    const plan = mainSession.plan as Plan | undefined
-    const field = plan?.fields[mainSession.currentFieldIndex]
-
-    if (!field) {
-      throw new Error('Cannot start quick_check without current field')
-    }
-
-    return {
-      pendingQuestion: context ?? '',
-      fieldId: field.fieldId,
-      intent: field.intent,
-      prohibitedTopics: plan?.prohibitedTopics,
-    }
-  },
 }

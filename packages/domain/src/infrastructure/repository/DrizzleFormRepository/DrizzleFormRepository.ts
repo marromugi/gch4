@@ -247,6 +247,7 @@ export class DrizzleFormRepository implements IFormRepository {
   async saveCompletionCriteria(criteria: FieldCompletionCriteria[]): Promise<Result<void, Error>> {
     try {
       for (const c of criteria) {
+        const boundariesJson = c.boundaries ? JSON.stringify(c.boundaries) : null
         await this.db
           .insert(fieldCompletionCriteria)
           .values({
@@ -257,6 +258,7 @@ export class DrizzleFormRepository implements IFormRepository {
             criteria: c.criteria,
             doneCondition: c.doneCondition,
             questioningHints: c.questioningHints,
+            boundaries: boundariesJson,
             sortOrder: c.sortOrder,
             createdAt: c.createdAt,
           })
@@ -266,10 +268,24 @@ export class DrizzleFormRepository implements IFormRepository {
               criteria: c.criteria,
               doneCondition: c.doneCondition,
               questioningHints: c.questioningHints,
+              boundaries: boundariesJson,
               sortOrder: c.sortOrder,
             },
           })
       }
+      return Result.ok(undefined)
+    } catch (error) {
+      return Result.err(error instanceof Error ? error : new Error(String(error)))
+    }
+  }
+
+  async deleteCompletionCriteriaBySchemaVersionId(
+    schemaVersionId: FormSchemaVersionId
+  ): Promise<Result<void, Error>> {
+    try {
+      await this.db
+        .delete(fieldCompletionCriteria)
+        .where(eq(fieldCompletionCriteria.schemaVersionId, schemaVersionId.value))
       return Result.ok(undefined)
     } catch (error) {
       return Result.err(error instanceof Error ? error : new Error(String(error)))
@@ -321,6 +337,14 @@ export class DrizzleFormRepository implements IFormRepository {
   private toFieldCompletionCriteriaEntity(
     row: typeof fieldCompletionCriteria.$inferSelect
   ): FieldCompletionCriteria {
+    let boundaries: string[] | null = null
+    if (row.boundaries) {
+      try {
+        boundaries = JSON.parse(row.boundaries) as string[]
+      } catch {
+        boundaries = null
+      }
+    }
     return FieldCompletionCriteria.reconstruct({
       id: FieldCompletionCriteriaId.fromString(row.id),
       schemaVersionId: FormSchemaVersionId.fromString(row.schemaVersionId),
@@ -329,6 +353,7 @@ export class DrizzleFormRepository implements IFormRepository {
       criteria: row.criteria,
       doneCondition: row.doneCondition,
       questioningHints: row.questioningHints ?? null,
+      boundaries,
       sortOrder: row.sortOrder,
       createdAt: row.createdAt,
     })

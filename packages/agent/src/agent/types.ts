@@ -1,17 +1,10 @@
-import type { State } from '../orchestrator/types'
 import type { LLMMessage, TokenUsage } from '../provider'
 import type { Tool } from '../tools'
 
 /**
  * エージェント種別
  */
-export type AgentType =
-  | 'greeter'
-  | 'architect'
-  | 'interviewer'
-  | 'reviewer'
-  | 'quick_check'
-  | 'auditor'
+export type AgentType = 'reviewer' | 'quick_check' | 'auditor' | 'form_designer'
 
 /**
  * エージェント設定
@@ -66,8 +59,6 @@ export interface AgentTurnResult {
   awaitingUserResponse?: boolean
   /** トークン使用量 */
   usage?: TokenUsage
-  /** 更新された状態（ask 一時停止時など、途中の状態を保持するため） */
-  updatedState?: Partial<State>
 }
 
 /**
@@ -80,8 +71,8 @@ export interface BaseAgentContext {
   sessionId: string
   /** 会話履歴 */
   chatHistory: LLMMessage[]
-  /** ワークフロー状態 */
-  state?: State
+  /** 言語設定（オプション） */
+  state?: { language?: string }
 }
 
 /**

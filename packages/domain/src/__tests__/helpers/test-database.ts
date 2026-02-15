@@ -2,25 +2,21 @@ import { createDatabase, type Database } from '@ding/database/client'
 import {
   user,
   eventLog,
-  interviewFeedback,
   chatMessage,
-  applicationTodo,
-  extractedField,
   consentLog,
   chatSession,
-  application,
-  fieldFactDefinition,
-  prohibitedTopic,
-  jobSchemaVersion,
-  reviewProhibitedTopic,
-  reviewPolicySignal,
-  reviewPolicyVersion,
-  jobFormField,
-  job,
   privacyRequest,
   session,
   account,
   verification,
+  submission,
+  submissionTask,
+  toolCallLog,
+  collectedField,
+  form,
+  formField,
+  formSchemaVersion,
+  fieldCompletionCriteria,
 } from '@ding/database/schema'
 
 const TEST_DATABASE_URL = 'http://127.0.0.1:8082'
@@ -37,22 +33,18 @@ export function createTestDatabase(): Database {
  */
 export async function cleanDatabase(db: Database): Promise<void> {
   await db.delete(eventLog)
-  await db.delete(interviewFeedback)
   await db.delete(chatMessage)
-  await db.delete(applicationTodo)
-  await db.delete(extractedField)
   await db.delete(consentLog)
   await db.delete(chatSession)
   await db.delete(privacyRequest)
-  await db.delete(application)
-  await db.delete(fieldFactDefinition)
-  await db.delete(prohibitedTopic)
-  await db.delete(jobSchemaVersion)
-  await db.delete(reviewProhibitedTopic)
-  await db.delete(reviewPolicySignal)
-  await db.delete(reviewPolicyVersion)
-  await db.delete(jobFormField)
-  await db.delete(job)
+  await db.delete(toolCallLog)
+  await db.delete(submissionTask)
+  await db.delete(collectedField)
+  await db.delete(submission)
+  await db.delete(fieldCompletionCriteria)
+  await db.delete(formField)
+  await db.delete(formSchemaVersion)
+  await db.delete(form)
   await db.delete(session)
   await db.delete(account)
   await db.delete(verification)

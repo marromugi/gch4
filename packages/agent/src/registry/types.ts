@@ -1,8 +1,43 @@
+import type { AuditorArgs, AuditorResult } from '../agent/auditor/definition'
+import type { QuickCheckArgs, QuickCheckResult } from '../agent/quickCheck/definition'
+import type { ReviewerArgs, ReviewerResult } from '../agent/reviewer/definition'
+import type { ITypedAgent } from '../agent/typed/types'
 import type { AgentType, IAgent } from '../agent/types'
 import type { ILogger } from '../logger'
 import type { ILLMProvider } from '../provider'
 import type { LLMMessage, MainSessionState } from '../store/types'
 import type { z } from 'zod'
+
+// 各エージェントの型をインポート（循環参照を避けるため、型のみインポート）
+
+/**
+ * エージェント種別と型の対応マップ
+ *
+ * AgentType をキーにして、各エージェントの Args, Result, Agent 型を取得できる。
+ * これにより createTypedAgent の戻り値型を正確に推論可能。
+ */
+export interface AgentTypeMap {
+  quick_check: {
+    args: QuickCheckArgs
+    result: QuickCheckResult
+    agent: ITypedAgent<QuickCheckArgs, QuickCheckResult>
+  }
+  reviewer: {
+    args: ReviewerArgs
+    result: ReviewerResult
+    agent: ITypedAgent<ReviewerArgs, ReviewerResult>
+  }
+  auditor: {
+    args: AuditorArgs
+    result: AuditorResult
+    agent: ITypedAgent<AuditorArgs, AuditorResult>
+  }
+}
+
+/**
+ * 型付きエージェントをサポートするエージェント種別
+ */
+export type TypedAgentType = keyof AgentTypeMap
 
 /**
  * エージェント状態（buildSystemPrompt / buildInitialMessage に渡す）
@@ -10,10 +45,6 @@ import type { z } from 'zod'
 export interface AgentState {
   /** 言語コード */
   language?: string
-  /** 国コード */
-  country?: string
-  /** タイムゾーン */
-  timezone?: string
   /** インタビュープラン */
   plan?: unknown
   /** 現在のフィールドインデックス */
@@ -88,15 +119,14 @@ export interface AgentDefinition<
   createAgent: (deps: AgentFactoryDeps) => IAgent
 
   /**
-   * サブエージェントとして呼び出し可能か
-   * true の場合、subtask ツールで呼び出せる。
+   * サブエージェントとして呼び出し可能か（V2専用、オプショナル）
+   * @deprecated V3では使用されない
    */
-  isSubtaskable: boolean
+  isSubtaskable?: boolean
 
   /**
-   * サブセッション開始時に引数を初期化
-   * subtask ツールの context と mainSession から、エージェント固有の引数を構築する。
-   * 未定義の場合、subtask の引数がそのまま使われる。
+   * サブセッション開始時に引数を初期化（V2専用、オプショナル）
+   * @deprecated V3では使用されない
    */
   initArgs?: (mainSession: MainSessionState, context?: string) => z.infer<TArgsSchema>
 }

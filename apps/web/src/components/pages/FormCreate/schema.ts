@@ -6,10 +6,23 @@ export const stepBasicInfoSchema = z.object({
   completionMessage: z.string().nullable(),
 })
 
+const criteriaSchema = z.object({
+  criteriaKey: z.string(),
+  criteria: z.string(),
+  doneCondition: z.string(),
+  questioningHints: z.string().nullable(),
+})
+
+const boundarySchema = z.object({
+  value: z.string(),
+})
+
 const formFieldSchema = z.object({
   label: z.string().min(1, 'ラベルは必須です'),
   intent: z.string(),
   required: z.boolean(),
+  criteria: z.array(criteriaSchema).optional(),
+  boundaries: z.array(boundarySchema).optional(),
 })
 
 export const stepFormFieldsSchema = z.object({

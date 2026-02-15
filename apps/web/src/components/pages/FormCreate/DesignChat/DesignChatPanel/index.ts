@@ -1,0 +1,1 @@
+export { DesignChatPanel } from './DesignChatPanel'

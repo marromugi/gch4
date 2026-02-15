@@ -12,6 +12,7 @@ import type {
   GetMe401,
   ListFormsByUser200,
   ListFormsByUser401,
+  ListFormsByUser403,
   ListFormsByUser500,
 } from '.././models'
 import type {
@@ -143,7 +144,7 @@ export const getListFormsByUserQueryKey = (userId?: string) => {
 
 export const getListFormsByUserQueryOptions = <
   TData = Awaited<ReturnType<typeof listFormsByUser>>,
-  TError = ListFormsByUser401 | ListFormsByUser500,
+  TError = ListFormsByUser401 | ListFormsByUser403 | ListFormsByUser500,
 >(
   userId: string,
   options?: {
@@ -166,11 +167,11 @@ export const getListFormsByUserQueryOptions = <
 }
 
 export type ListFormsByUserQueryResult = NonNullable<Awaited<ReturnType<typeof listFormsByUser>>>
-export type ListFormsByUserQueryError = ListFormsByUser401 | ListFormsByUser500
+export type ListFormsByUserQueryError = ListFormsByUser401 | ListFormsByUser403 | ListFormsByUser500
 
 export function useListFormsByUser<
   TData = Awaited<ReturnType<typeof listFormsByUser>>,
-  TError = ListFormsByUser401 | ListFormsByUser500,
+  TError = ListFormsByUser401 | ListFormsByUser403 | ListFormsByUser500,
 >(
   userId: string,
   options: {
@@ -189,7 +190,7 @@ export function useListFormsByUser<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useListFormsByUser<
   TData = Awaited<ReturnType<typeof listFormsByUser>>,
-  TError = ListFormsByUser401 | ListFormsByUser500,
+  TError = ListFormsByUser401 | ListFormsByUser403 | ListFormsByUser500,
 >(
   userId: string,
   options?: {
@@ -208,7 +209,7 @@ export function useListFormsByUser<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useListFormsByUser<
   TData = Awaited<ReturnType<typeof listFormsByUser>>,
-  TError = ListFormsByUser401 | ListFormsByUser500,
+  TError = ListFormsByUser401 | ListFormsByUser403 | ListFormsByUser500,
 >(
   userId: string,
   options?: {
@@ -223,7 +224,7 @@ export function useListFormsByUser<
 
 export function useListFormsByUser<
   TData = Awaited<ReturnType<typeof listFormsByUser>>,
-  TError = ListFormsByUser401 | ListFormsByUser500,
+  TError = ListFormsByUser401 | ListFormsByUser403 | ListFormsByUser500,
 >(
   userId: string,
   options?: {

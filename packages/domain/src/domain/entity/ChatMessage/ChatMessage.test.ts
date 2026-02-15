@@ -10,8 +10,7 @@ describe('ChatMessage', () => {
       chatSessionId: ChatSessionId.fromString('cs-1'),
       role: ChatMessageRole.user(),
       content: 'こんにちは',
-      targetJobFormFieldId: null,
-      targetReviewSignalId: null,
+      targetFormFieldId: null,
       reviewPassed: null,
       createdAt: new Date('2025-01-01'),
     })
@@ -26,8 +25,7 @@ describe('ChatMessage', () => {
         chatSessionId: ChatSessionId.fromString('cs-1'),
         role: ChatMessageRole.assistant(),
         content: '',
-        targetJobFormFieldId: null,
-        targetReviewSignalId: null,
+        targetFormFieldId: null,
         reviewPassed: null,
         createdAt: new Date('2025-01-01'),
       })

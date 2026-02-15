@@ -106,7 +106,15 @@
       "Bash(pnpm -F @ding/api typecheck:*)",
       "Bash(pnpm --filter @ding/web generate:client:*)",
       "Bash(pnpm -F @ding/database build:*)",
-      "Bash(pnpm exec tsc:*)"
+      "Bash(pnpm exec tsc:*)",
+      "Bash(head:*)",
+      "Bash(pnpm --filter web exec tsc:*)",
+      "Bash(pnpm --filter @ding/web orval:*)",
+      "Bash(pnpm -F @ding/web typecheck:*)",
+      "Bash(pnpm -F @ding/domain typecheck:*)",
+      "Bash(pnpm --filter @ding/api tsc:*)",
+      "Bash(pnpm --filter @ding/web lint:*)",
+      "Bash(pnpm --filter @ding/api generate:client:*)"
     ],
     "deny": ["Bash(npm:*)", "Bash(yarn:*)", "Bash(bun:*)", "Bash(rm -rf:*)", "Bash(sudo :*)"]
   },

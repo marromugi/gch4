@@ -4,7 +4,7 @@ describe('EventType', () => {
   describe('from', () => {
     it('有効な値から作成できる', () => {
       expect(EventType.from('chat_started').value).toBe('chat_started')
-      expect(EventType.from('application_submitted').value).toBe('application_submitted')
+      expect(EventType.from('submission_submitted').value).toBe('submission_submitted')
       expect(EventType.from('manual_fallback_triggered').value).toBe('manual_fallback_triggered')
     })
 
@@ -18,8 +18,8 @@ describe('EventType', () => {
       expect(EventType.chatStarted().value).toBe('chat_started')
     })
 
-    it('applicationSubmitted()で作成できる', () => {
-      expect(EventType.applicationSubmitted().value).toBe('application_submitted')
+    it('submissionSubmitted()で作成できる', () => {
+      expect(EventType.submissionSubmitted().value).toBe('submission_submitted')
     })
   })
 
@@ -29,7 +29,7 @@ describe('EventType', () => {
     })
 
     it('異なる値はequalでない', () => {
-      expect(EventType.chatStarted().equals(EventType.applicationSubmitted())).toBe(false)
+      expect(EventType.chatStarted().equals(EventType.submissionSubmitted())).toBe(false)
     })
   })
 })

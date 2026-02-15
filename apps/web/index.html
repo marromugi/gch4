@@ -8,9 +8,11 @@
       ;(function () {
         const stored = localStorage.getItem('ding-theme')
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-        const theme =
-          stored === 'dark' || stored === 'light' ? stored : prefersDark ? 'dark' : 'light'
-        if (theme === 'dark') document.documentElement.classList.add('dark')
+        let theme = stored
+        if (theme === 'system' || !theme) {
+          theme = prefersDark ? 'dark' : 'light'
+        }
+        document.documentElement.classList.add(theme)
       })()
     </script>
   </head>

@@ -97,8 +97,6 @@ app.openapi(route, async (c) => {
     respondentName: null,
     respondentEmail: null,
     language: null,
-    country: null,
-    timezone: null,
     status: SubmissionStatus.new(),
     reviewCompletedAt: null,
     consentCheckedAt: null,

@@ -3,9 +3,9 @@ import { tv } from 'tailwind-variants'
 export const formDetailPage = tv({
   slots: {
     container: ['min-h-dvh', 'p-6', 'max-w-3xl', 'mx-auto'],
-    header: ['mb-6'],
+    header: ['my-6'],
     title: ['text-3xl', 'font-bold', 'text-neutral-900', 'dark:text-neutral-50'],
-    tabWrapper: ['mb-6'],
+    tabWrapper: ['mb-10'],
     tabContent: ['mt-6'],
     loadingState: ['flex', 'items-center', 'justify-center', 'py-16'],
     spinner: [

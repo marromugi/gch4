@@ -89,6 +89,8 @@ export const fieldCompletionCriteria = sqliteTable(
     doneCondition: text('done_condition').notNull(),
     /** 質問ヒント */
     questioningHints: text('questioning_hints'),
+    /** 聞いてはいけないこと（JSON配列） */
+    boundaries: text('boundaries'),
     sortOrder: integer('sort_order').notNull().default(0),
     createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
   },

@@ -1,4 +1,4 @@
-import { FormId, UserId } from '@ding/domain/domain/valueObject'
+import { PublishFormUsecase } from '@ding/domain/presentation/usecase'
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 import { formResponseSchema } from '../../../../schemas/response'
 import { serializeForm } from '../../../../schemas/serializers'
@@ -80,27 +80,30 @@ app.openapi(route, async (c) => {
     return c.json({ error: 'Unauthorized' }, 401)
   }
 
-  const formResult = await repositories.formRepository.findById(FormId.fromString(formId))
-  if (!formResult.success) {
-    return c.json({ error: 'Form not found' }, 404)
-  }
+  const usecase = new PublishFormUsecase({
+    formRepository: repositories.formRepository,
+  })
 
-  if (!formResult.value.createdBy.equals(UserId.fromString(user.id))) {
-    return c.json({ error: 'Forbidden' }, 403)
-  }
+  const result = await usecase.execute({
+    formId,
+    userId: user.id,
+  })
 
-  try {
-    const form = formResult.value.publish()
-
-    const saveResult = await repositories.formRepository.save(form)
-    if (!saveResult.success) {
-      return c.json({ error: 'Failed to save form' }, 500)
+  if (!result.success) {
+    const error = result.error
+    switch (error.type) {
+      case 'not_found_error':
+        return c.json({ error: 'Form not found' }, 404)
+      case 'forbidden_error':
+        return c.json({ error: 'Forbidden' }, 403)
+      case 'business_error':
+        return c.json({ error: error.message }, 400)
+      case 'repository_error':
+        return c.json({ error: 'Failed to save form' }, 500)
     }
-
-    return c.json({ data: serializeForm(form) }, 200)
-  } catch (e) {
-    return c.json({ error: e instanceof Error ? e.message : 'Validation error' }, 400)
   }
+
+  return c.json({ data: serializeForm(result.value) }, 200)
 })
 
 export default app

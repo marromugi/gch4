@@ -1,4 +1,9 @@
-import { Form, FormField, FormSchemaVersion } from '@ding/domain/domain/entity'
+import {
+  Form,
+  FormField,
+  FormSchemaVersion,
+  FieldCompletionCriteria,
+} from '@ding/domain/domain/entity'
 import {
   FormId,
   FormFieldId,
@@ -6,11 +11,28 @@ import {
   FormStatus,
   FormSchemaVersionStatus,
   UserId,
+  FieldCompletionCriteriaId,
 } from '@ding/domain/domain/valueObject'
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
 import { formResponseSchema } from '../../schemas/response'
 import { serializeForm } from '../../schemas/serializers'
 import type { HonoEnv } from '../../types/hono'
+
+const criteriaInputSchema = z.object({
+  criteriaKey: z.string(),
+  criteria: z.string(),
+  doneCondition: z.string(),
+  questioningHints: z.string().nullable().optional(),
+})
+
+const fieldInputSchema = z.object({
+  label: z.string(),
+  description: z.string().nullable().optional(),
+  intent: z.string().nullable().optional(),
+  required: z.boolean().optional(),
+  criteria: z.array(criteriaInputSchema).optional(),
+  boundaries: z.array(z.string()).optional(),
+})
 
 const route = createRoute({
   method: 'post',
@@ -27,16 +49,7 @@ const route = createRoute({
             description: z.string().nullable().optional(),
             purpose: z.string().nullable().optional(),
             completionMessage: z.string().nullable().optional(),
-            fields: z
-              .array(
-                z.object({
-                  label: z.string(),
-                  description: z.string().nullable().optional(),
-                  intent: z.string().nullable().optional(),
-                  required: z.boolean().optional(),
-                })
-              )
-              .optional(),
+            fields: z.array(fieldInputSchema).optional(),
           }),
         },
       },
@@ -107,32 +120,59 @@ app.openapi(route, async (c) => {
     updatedAt: now,
   })
 
-  // Create FormFields
-  const fields = (body.fields ?? []).map((f, index) => {
-    const fieldId = FormFieldId.fromString(crypto.randomUUID())
-    return FormField.create({
-      id: fieldId,
-      formId,
-      fieldId: `field_${index + 1}`,
-      label: f.label,
-      description: f.description ?? null,
-      intent: f.intent ?? null,
-      required: f.required ?? false,
-      sortOrder: index,
-      createdAt: now,
-      updatedAt: now,
-    })
-  })
-
-  // Create FormSchemaVersion (draft)
+  // Create FormSchemaVersion (auto-approved)
+  const schemaVersionId = FormSchemaVersionId.fromString(crypto.randomUUID())
   const schemaVersion = FormSchemaVersion.create({
-    id: FormSchemaVersionId.fromString(crypto.randomUUID()),
+    id: schemaVersionId,
     formId,
     version: 1,
-    status: FormSchemaVersionStatus.draft(),
-    approvedAt: null,
+    status: FormSchemaVersionStatus.approved(),
+    approvedAt: now,
     createdAt: now,
   })
+
+  // Create FormFields and FieldCompletionCriteria
+  const fields: FormField[] = []
+  const completionCriteria: FieldCompletionCriteria[] = []
+
+  for (const [index, f] of (body.fields ?? []).entries()) {
+    const fieldId = FormFieldId.fromString(crypto.randomUUID())
+
+    fields.push(
+      FormField.create({
+        id: fieldId,
+        formId,
+        fieldId: `field_${index + 1}`,
+        label: f.label,
+        description: f.description ?? null,
+        intent: f.intent ?? null,
+        required: f.required ?? false,
+        sortOrder: index,
+        createdAt: now,
+        updatedAt: now,
+      })
+    )
+
+    // Create FieldCompletionCriteria if criteria is provided
+    if (f.criteria && f.criteria.length > 0) {
+      for (const c of f.criteria) {
+        completionCriteria.push(
+          FieldCompletionCriteria.create({
+            id: FieldCompletionCriteriaId.fromString(crypto.randomUUID()),
+            schemaVersionId,
+            formFieldId: fieldId,
+            criteriaKey: c.criteriaKey,
+            criteria: c.criteria,
+            doneCondition: c.doneCondition,
+            questioningHints: c.questioningHints ?? null,
+            boundaries: f.boundaries ?? null,
+            sortOrder: index,
+            createdAt: now,
+          })
+        )
+      }
+    }
+  }
 
   // Save
   const saveFormResult = await repositories.formRepository.save(form)
@@ -150,6 +190,14 @@ app.openapi(route, async (c) => {
   const saveSchemaResult = await repositories.formRepository.saveSchemaVersion(schemaVersion)
   if (!saveSchemaResult.success) {
     return c.json({ error: 'Failed to save schema version' }, 500)
+  }
+
+  if (completionCriteria.length > 0) {
+    const saveCriteriaResult =
+      await repositories.formRepository.saveCompletionCriteria(completionCriteria)
+    if (!saveCriteriaResult.success) {
+      return c.json({ error: 'Failed to save completion criteria' }, 500)
+    }
   }
 
   return c.json({ data: serializeForm(form) }, 201)

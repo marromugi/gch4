@@ -17,10 +17,6 @@ export type ListFormSubmissions200DataItem = {
   respondentEmail: string | null
   /** @nullable */
   language: string | null
-  /** @nullable */
-  country: string | null
-  /** @nullable */
-  timezone: string | null
   status: ListFormSubmissions200DataItemStatus
   /** @nullable */
   reviewCompletedAt: string | null

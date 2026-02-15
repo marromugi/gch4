@@ -15,6 +15,8 @@ export type GetFormSchema200DataCompletionCriteriaItem = {
   doneCriteria: string
   /** @nullable */
   questioningHints: string | null
+  /** @nullable */
+  boundaries: string[] | null
   sortOrder: number
   createdAt: string
 }

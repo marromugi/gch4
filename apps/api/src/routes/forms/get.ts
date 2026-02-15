@@ -1,7 +1,7 @@
-import { UserId } from '@ding/domain/domain/valueObject'
+import { ListFormsByUserUsecase } from '@ding/domain/presentation/usecase'
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi'
-import { formResponseSchema } from '../../schemas/response'
-import { serializeForm } from '../../schemas/serializers'
+import { formWithCountResponseSchema } from '../../schemas/response'
+import { serializeFormWithCount } from '../../schemas/serializers'
 import type { HonoEnv } from '../../types/hono'
 
 const route = createRoute({
@@ -16,7 +16,7 @@ const route = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            data: z.array(formResponseSchema),
+            data: z.array(formWithCountResponseSchema),
           }),
         },
       },
@@ -50,13 +50,23 @@ app.openapi(route, async (c) => {
 
   const { repositories } = c.get('di')
 
-  const result = await repositories.formRepository.findByUserId(UserId.fromString(user.id))
+  const usecase = new ListFormsByUserUsecase({
+    formRepository: repositories.formRepository,
+    submissionRepository: repositories.submissionRepository,
+  })
+
+  const result = await usecase.execute({ userId: user.id })
 
   if (!result.success) {
     return c.json({ error: result.error.message }, 500)
   }
 
-  return c.json({ data: result.value.map(serializeForm) }, 200)
+  return c.json(
+    {
+      data: result.value.map((item) => serializeFormWithCount(item.form, item.submissionCount)),
+    },
+    200
+  )
 })
 
 export default app

@@ -12,6 +12,7 @@ import {
 import { Flex } from '@ding/ui/layout'
 import { cn } from '@ding/ui/lib'
 import { useRouter } from '@tanstack/react-router'
+import { FormStatusBadge } from '../../common/FormStatusBadge'
 import { formListPage } from './const'
 import { useForms } from './hook'
 import type { FormListPageProps } from './type'
@@ -56,6 +57,7 @@ export function FormListPage({ className }: FormListPageProps) {
             <TableHeader>
               <TableRow>
                 <TableHead>フォーム名</TableHead>
+                <TableHead>ステータス</TableHead>
                 <TableHead className="text-right">回答数</TableHead>
               </TableRow>
             </TableHeader>
@@ -69,7 +71,10 @@ export function FormListPage({ className }: FormListPageProps) {
                   }
                 >
                   <TableCell className="font-medium">{form.title}</TableCell>
-                  <TableCell className="text-right">-</TableCell>
+                  <TableCell>
+                    <FormStatusBadge status={form.status} />
+                  </TableCell>
+                  <TableCell className="text-right">{form.submissionCount}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

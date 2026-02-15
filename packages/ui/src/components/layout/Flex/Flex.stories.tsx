@@ -1,4 +1,4 @@
-import Flex from './Flex'
+import { Flex } from './Flex'
 import type { Meta, StoryObj } from '@storybook/react'
 
 const meta: Meta<typeof Flex> = {

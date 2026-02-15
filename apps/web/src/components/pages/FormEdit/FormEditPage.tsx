@@ -4,10 +4,10 @@ import { Flex } from '@ding/ui/layout'
 import { useNavigate } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import { useFieldArray } from 'react-hook-form'
+import { FormFieldItemRow } from '@/components/common/FormFieldItem'
 import { Controller, useZodForm } from '@/lib/hook-form'
 import { useFormFieldsSuggest } from '../FormCreate/StepFormFields/hooks'
 import { formEditPage } from './const'
-import { FormFieldItemRow } from './FormFieldItem'
 import { useFormEditData, useUpdateFormEditMutation } from './hook'
 import { formEditFormSchema } from './schema'
 import type { FormEditFormValues, FormEditPageProps } from './type'
@@ -234,8 +234,14 @@ function FormEditForm({
                 key={field.id}
                 index={index}
                 control={form.control}
+                fieldArrayName="formFields"
                 onRemove={() => remove(index)}
                 canRemove={fields.length > 1}
+                placeholders={{
+                  label: '例: 志望動機',
+                  intent: '例: 応募者のモチベーションを確認する',
+                  intentDescription: 'この質問で何を知りたいか',
+                }}
               />
             ))}
           </div>

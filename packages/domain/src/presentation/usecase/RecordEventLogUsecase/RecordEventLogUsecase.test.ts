@@ -24,15 +24,15 @@ describe('RecordEventLogUsecase', () => {
       const result = await usecase.execute({
         eventLogId: 'el-1',
         eventType: 'chat_started',
-        applicationId: 'app-1',
-        jobId: 'job-1',
+        submissionId: 'sub-1',
+        formId: 'form-1',
       })
 
       expect(Result.isOk(result)).toBe(true)
       if (Result.isOk(result)) {
         expect(result.value.eventType.value).toBe('chat_started')
-        expect(result.value.applicationId?.value).toBe('app-1')
-        expect(result.value.jobId?.value).toBe('job-1')
+        expect(result.value.submissionId?.value).toBe('sub-1')
+        expect(result.value.formId?.value).toBe('form-1')
       }
     })
 
@@ -42,15 +42,14 @@ describe('RecordEventLogUsecase', () => {
 
       const result = await usecase.execute({
         eventLogId: 'el-2',
-        eventType: 'application_submitted',
+        eventType: 'submission_submitted',
       })
 
       expect(Result.isOk(result)).toBe(true)
       if (Result.isOk(result)) {
-        expect(result.value.applicationId).toBeNull()
-        expect(result.value.jobId).toBeNull()
+        expect(result.value.submissionId).toBeNull()
+        expect(result.value.formId).toBeNull()
         expect(result.value.chatSessionId).toBeNull()
-        expect(result.value.policyVersionId).toBeNull()
         expect(result.value.metadata).toBeNull()
       }
     })

@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet, useRouter } from '@tanstack/react-router'
 import { useEffect } from 'react'
+import { Sidebar } from '@/components/layout/Sidebar'
 import { useAuth } from '@/lib/auth'
 
 export const Route = createFileRoute('/_auth')({
@@ -31,5 +32,12 @@ function AuthLayoutRoute() {
     return null
   }
 
-  return <Outlet />
+  return (
+    <div className="flex min-h-dvh">
+      <Sidebar />
+      <main className="flex-1 overflow-auto">
+        <Outlet />
+      </main>
+    </div>
+  )
 }

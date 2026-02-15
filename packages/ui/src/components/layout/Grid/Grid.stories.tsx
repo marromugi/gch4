@@ -1,4 +1,4 @@
-import Grid from './Grid'
+import { Grid } from './Grid'
 import type { Meta, StoryObj } from '@storybook/react'
 
 const meta: Meta<typeof Grid> = {

@@ -1,3 +1,10 @@
 @import '@ding/ui/styles/base.css';
 @source '../../../packages/ui/src/**/*.{tsx,ts}';
-@source '../../../packages/app/src/**/*.{tsx,ts}';
+
+body {
+  @apply bg-neutral-100;
+}
+
+.dark body {
+  @apply bg-neutral-800;
+}

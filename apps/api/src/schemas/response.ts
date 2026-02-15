@@ -15,6 +15,10 @@ export const formResponseSchema = z.object({
   updatedAt: z.string(),
 })
 
+export const formWithCountResponseSchema = formResponseSchema.extend({
+  submissionCount: z.number(),
+})
+
 // ============================================================
 // Submission
 // ============================================================
@@ -25,8 +29,6 @@ export const submissionResponseSchema = z.object({
   respondentName: z.string().nullable(),
   respondentEmail: z.string().nullable(),
   language: z.string().nullable(),
-  country: z.string().nullable(),
-  timezone: z.string().nullable(),
   status: z.enum(['new', 'in_progress', 'review_completed', 'submitted']),
   reviewCompletedAt: z.string().nullable(),
   consentCheckedAt: z.string().nullable(),
@@ -73,6 +75,7 @@ export const fieldCompletionCriteriaResponseSchema = z.object({
   fact: z.string(),
   doneCriteria: z.string(),
   questioningHints: z.string().nullable(),
+  boundaries: z.array(z.string()).nullable(),
   sortOrder: z.number(),
   createdAt: z.string(),
 })

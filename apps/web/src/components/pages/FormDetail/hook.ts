@@ -1,4 +1,5 @@
-import { useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { API_BASE_URL } from '@/lib/api/fetcher'
 import {
   useGetForm,
   useGetFormFields,
@@ -8,7 +9,6 @@ import {
   usePublishForm,
   useCloseForm,
   useSaveFormFields,
-  useApproveFormSchemaVersion,
   getGetFormQueryKey,
   getGetFormFieldsQueryKey,
   getGetFormSchemaQueryKey,
@@ -107,14 +107,25 @@ export function useSaveFormFieldsMutation(formId: string) {
   })
 }
 
-export function useApproveSchemaVersionMutation(formId: string) {
+export function useDeleteFormMutation() {
   const queryClient = useQueryClient()
 
-  return useApproveFormSchemaVersion({
-    mutation: {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: getGetFormSchemaQueryKey(formId) })
-      },
+  return useMutation({
+    mutationFn: async (formId: string) => {
+      const response = await fetch(`${API_BASE_URL}/api/forms/${formId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      })
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}))
+        throw new Error((error as { error?: string }).error ?? `HTTP Error: ${response.status}`)
+      }
+
+      return null
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: getListFormsQueryKey() })
     },
   })
 }
