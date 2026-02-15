@@ -53,7 +53,7 @@ export function createAuth(env: AuthEnv) {
       defaultCookieAttributes: {
         secure: true,
         httpOnly: true,
-        sameSite: 'none', // クロスサイト（Web と Cloud Run が異なるドメイン）
+        sameSite: 'none', // クロスサイト（Web と Cloud Run が異なるドメイン） TODO: カスタムドメインを割り当てたら 'lax' に変更する
       },
     },
 
