@@ -53,7 +53,7 @@ export function createAuth(env: AuthEnv) {
       defaultCookieAttributes: {
         secure: true,
         httpOnly: true,
-        sameSite: 'lax',
+        sameSite: 'none', // OAuth リダイレクトでクロスサイト cookie を許可
       },
     },
 
