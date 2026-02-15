@@ -22,6 +22,7 @@
     "db:down": "docker compose down",
     "db:logs": "docker compose logs -f db",
     "db:push": "DATABASE_URL=http://127.0.0.1:8081 pnpm --filter @ding/database db:push",
+    "db:push:remote": "pnpm --filter @ding/database db:push",
     "db:studio": "DATABASE_URL=http://127.0.0.1:8081 pnpm --filter @ding/database db:studio",
     "db:clean": "docker compose down && rm -rf data/libsql data/libsql-test && docker compose up -d && pnpm db:push",
     "db:reset": "docker compose stop db && rm -rf data/libsql && docker compose up -d db && sleep 2 && pnpm db:push",

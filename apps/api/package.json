@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "main": "dist/worker.js",
+  "main": "dist/functions.js",
   "scripts": {
     "dev": "wrangler dev --port 8080",
     "build": "tsup",
