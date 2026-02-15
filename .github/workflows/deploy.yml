@@ -72,8 +72,6 @@ jobs:
           GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
           GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL=${{ secrets.GEMINI_MODEL }}
-          GCLOUD_PROJECT=${{ secrets.FIREBASE_PROJECT_ID }}
-          FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }}
           EOF
           # 先頭スペースを削除
           sed -i 's/^[[:space:]]*//' apps/api/.env.${{ secrets.FIREBASE_PROJECT_ID }}

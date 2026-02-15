@@ -8,10 +8,7 @@ type ApiClientProviderProps = {
   showDevtools?: boolean
 }
 
-export function ApiClientProvider({
-  children,
-  showDevtools = import.meta.env.DEV,
-}: ApiClientProviderProps) {
+export function ApiClientProvider({ children, showDevtools = false }: ApiClientProviderProps) {
   const [queryClient] = useState(() => createQueryClient())
 
   return (
