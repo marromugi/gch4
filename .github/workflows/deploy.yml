@@ -41,16 +41,6 @@ jobs:
           VITE_API_URL: ${{ secrets.BETTER_AUTH_URL }}
           VITE_APP_URL: ${{ secrets.CLIENT_URL }}
 
-      - name: Deploy to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          channelId: live
-          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
-        env:
-          FIREBASE_CLI_EXPERIMENTS: webframeworks
-
       - name: Build Cloud Functions
         run: pnpm --filter @ding/api build:functions
 
@@ -75,3 +65,13 @@ jobs:
 
           firebase deploy --only functions --project ${{ secrets.FIREBASE_PROJECT_ID }} --non-interactive --force
           rm -f $HOME/gcloud-key.json
+
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          channelId: live
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
+        env:
+          FIREBASE_CLI_EXPERIMENTS: webframeworks
