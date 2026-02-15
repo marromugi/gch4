@@ -20,7 +20,7 @@
     "@hono/zod-openapi": "^1.2.0",
     "@libsql/client": "^0.14.0",
     "better-auth": "^1.4.17",
-    "drizzle-orm": "^0.38.0",
+    "drizzle-orm": "^0.41.0",
     "firebase-admin": "^13.0.0",
     "firebase-functions": "^6.3.0",
     "hono": "^4.6.0",
