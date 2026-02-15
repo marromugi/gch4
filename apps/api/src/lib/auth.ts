@@ -48,14 +48,12 @@ export function createAuth(env: AuthEnv) {
     },
 
     advanced: {
-      // Firebase Hosting は __session cookie のみを Cloud Functions に転送する
-      // https://www.frontendeng.dev/blog/36-firebase-cookies-sessions
-      cookiePrefix: '__session',
+      cookiePrefix: 'ding',
       useSecureCookies: true,
       defaultCookieAttributes: {
         secure: true,
         httpOnly: true,
-        sameSite: 'lax',
+        sameSite: 'none', // クロスサイト（Web と Cloud Run が異なるドメイン）
       },
     },
 
