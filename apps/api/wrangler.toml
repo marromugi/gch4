@@ -8,14 +8,6 @@ compatibility_flags = ["nodejs_compat"]
 DATABASE_URL = "http://127.0.0.1:8081"
 CLIENT_URL = "http://localhost:3000"
 BETTER_AUTH_URL = "http://localhost:8080"
-MEDIA_SIGNER_SECRET = "dev-media-signer-secret-key-change-in-production"
-MEDIA_PROXY_BASE_URL = "http://localhost:8080/api/media/serve"
-
-# 本番環境のシークレットは `wrangler secret put` で設定:
-# - BETTER_AUTH_SECRET
-# - GOOGLE_CLIENT_ID
-# - GOOGLE_CLIENT_SECRET
-# - DATABASE_AUTH_TOKEN (リモートTurso使用時)
 
 [[kv_namespaces]]
 binding = "SESSIONS"

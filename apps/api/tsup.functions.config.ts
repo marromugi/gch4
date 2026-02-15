@@ -9,5 +9,7 @@ export default defineConfig(
     // Cloud Functions は CommonJS を使用
     // firebase-functions はバンドルしない
     external: ['firebase-functions', 'firebase-admin'],
+    // ワークスペースパッケージはバンドルする
+    noExternal: [/^@ding\//],
   })
 )

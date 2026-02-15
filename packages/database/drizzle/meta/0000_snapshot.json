@@ -105,12 +105,8 @@
           "name": "account_user_id_user_id_fk",
           "tableFrom": "account",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -178,12 +174,8 @@
           "name": "chat_message_chat_session_id_chat_session_id_fk",
           "tableFrom": "chat_message",
           "tableTo": "chat_session",
-          "columnsFrom": [
-            "chat_session_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["chat_session_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -191,12 +183,8 @@
           "name": "chat_message_target_form_field_id_form_field_id_fk",
           "tableFrom": "chat_message",
           "tableTo": "form_field",
-          "columnsFrom": [
-            "target_form_field_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["target_form_field_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -362,12 +350,8 @@
           "name": "chat_session_submission_id_submission_id_fk",
           "tableFrom": "chat_session",
           "tableTo": "submission",
-          "columnsFrom": [
-            "submission_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["submission_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -375,12 +359,8 @@
           "name": "chat_session_form_id_form_id_fk",
           "tableFrom": "chat_session",
           "tableTo": "form",
-          "columnsFrom": [
-            "form_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["form_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -388,12 +368,8 @@
           "name": "chat_session_conductor_id_user_id_fk",
           "tableFrom": "chat_session",
           "tableTo": "user",
-          "columnsFrom": [
-            "conductor_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["conductor_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -467,10 +443,7 @@
       "indexes": {
         "collected_field_submission_field_idx": {
           "name": "collected_field_submission_field_idx",
-          "columns": [
-            "submission_id",
-            "form_field_id"
-          ],
+          "columns": ["submission_id", "form_field_id"],
           "isUnique": true
         }
       },
@@ -479,12 +452,8 @@
           "name": "collected_field_submission_id_submission_id_fk",
           "tableFrom": "collected_field",
           "tableTo": "submission",
-          "columnsFrom": [
-            "submission_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["submission_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -492,12 +461,8 @@
           "name": "collected_field_form_field_id_form_field_id_fk",
           "tableFrom": "collected_field",
           "tableTo": "form_field",
-          "columnsFrom": [
-            "form_field_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["form_field_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -565,12 +530,8 @@
           "name": "consent_log_submission_id_submission_id_fk",
           "tableFrom": "consent_log",
           "tableTo": "submission",
-          "columnsFrom": [
-            "submission_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["submission_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -638,12 +599,8 @@
           "name": "event_log_form_id_form_id_fk",
           "tableFrom": "event_log",
           "tableTo": "form",
-          "columnsFrom": [
-            "form_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["form_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -651,12 +608,8 @@
           "name": "event_log_submission_id_submission_id_fk",
           "tableFrom": "event_log",
           "tableTo": "submission",
-          "columnsFrom": [
-            "submission_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["submission_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -664,12 +617,8 @@
           "name": "event_log_chat_session_id_chat_session_id_fk",
           "tableFrom": "event_log",
           "tableTo": "chat_session",
-          "columnsFrom": [
-            "chat_session_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["chat_session_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -756,11 +705,7 @@
       "indexes": {
         "field_completion_criteria_version_field_key_idx": {
           "name": "field_completion_criteria_version_field_key_idx",
-          "columns": [
-            "schema_version_id",
-            "form_field_id",
-            "criteria_key"
-          ],
+          "columns": ["schema_version_id", "form_field_id", "criteria_key"],
           "isUnique": true
         }
       },
@@ -769,12 +714,8 @@
           "name": "field_completion_criteria_schema_version_id_form_schema_version_id_fk",
           "tableFrom": "field_completion_criteria",
           "tableTo": "form_schema_version",
-          "columnsFrom": [
-            "schema_version_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["schema_version_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -782,12 +723,8 @@
           "name": "field_completion_criteria_form_field_id_form_field_id_fk",
           "tableFrom": "field_completion_criteria",
           "tableTo": "form_field",
-          "columnsFrom": [
-            "form_field_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["form_field_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -870,12 +807,8 @@
           "name": "form_created_by_user_id_fk",
           "tableFrom": "form",
           "tableTo": "user",
-          "columnsFrom": [
-            "created_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -963,10 +896,7 @@
       "indexes": {
         "form_field_form_id_field_id_idx": {
           "name": "form_field_form_id_field_id_idx",
-          "columns": [
-            "form_id",
-            "field_id"
-          ],
+          "columns": ["form_id", "field_id"],
           "isUnique": true
         }
       },
@@ -975,12 +905,8 @@
           "name": "form_field_form_id_form_id_fk",
           "tableFrom": "form_field",
           "tableTo": "form",
-          "columnsFrom": [
-            "form_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["form_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1039,10 +965,7 @@
       "indexes": {
         "form_schema_version_form_id_version_idx": {
           "name": "form_schema_version_form_id_version_idx",
-          "columns": [
-            "form_id",
-            "version"
-          ],
+          "columns": ["form_id", "version"],
           "isUnique": true
         }
       },
@@ -1051,12 +974,8 @@
           "name": "form_schema_version_form_id_form_id_fk",
           "tableFrom": "form_schema_version",
           "tableTo": "form",
-          "columnsFrom": [
-            "form_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["form_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1125,12 +1044,8 @@
           "name": "privacy_request_submission_id_submission_id_fk",
           "tableFrom": "privacy_request",
           "tableTo": "submission",
-          "columnsFrom": [
-            "submission_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["submission_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1202,9 +1117,7 @@
       "indexes": {
         "session_token_unique": {
           "name": "session_token_unique",
-          "columns": [
-            "token"
-          ],
+          "columns": ["token"],
           "isUnique": true
         }
       },
@@ -1213,12 +1126,8 @@
           "name": "session_user_id_user_id_fk",
           "tableFrom": "session",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1319,11 +1228,7 @@
       "indexes": {
         "submission_form_status_created_idx": {
           "name": "submission_form_status_created_idx",
-          "columns": [
-            "form_id",
-            "status",
-            "created_at"
-          ],
+          "columns": ["form_id", "status", "created_at"],
           "isUnique": false
         }
       },
@@ -1332,12 +1237,8 @@
           "name": "submission_form_id_form_id_fk",
           "tableFrom": "submission",
           "tableTo": "form",
-          "columnsFrom": [
-            "form_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["form_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1345,12 +1246,8 @@
           "name": "submission_schema_version_id_form_schema_version_id_fk",
           "tableFrom": "submission",
           "tableTo": "form_schema_version",
-          "columnsFrom": [
-            "schema_version_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["schema_version_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1448,12 +1345,8 @@
           "name": "submission_task_submission_id_submission_id_fk",
           "tableFrom": "submission_task",
           "tableTo": "submission",
-          "columnsFrom": [
-            "submission_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["submission_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1461,12 +1354,8 @@
           "name": "submission_task_field_completion_criteria_id_field_completion_criteria_id_fk",
           "tableFrom": "submission_task",
           "tableTo": "field_completion_criteria",
-          "columnsFrom": [
-            "field_completion_criteria_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["field_completion_criteria_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1474,12 +1363,8 @@
           "name": "submission_task_form_field_id_form_field_id_fk",
           "tableFrom": "submission_task",
           "tableTo": "form_field",
-          "columnsFrom": [
-            "form_field_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["form_field_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1551,10 +1436,7 @@
       "indexes": {
         "tool_call_log_session_sequence_idx": {
           "name": "tool_call_log_session_sequence_idx",
-          "columns": [
-            "session_id",
-            "sequence"
-          ],
+          "columns": ["session_id", "sequence"],
           "isUnique": false
         }
       },
@@ -1563,12 +1445,8 @@
           "name": "tool_call_log_session_id_chat_session_id_fk",
           "tableFrom": "tool_call_log",
           "tableTo": "chat_session",
-          "columnsFrom": [
-            "session_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["session_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1641,9 +1519,7 @@
       "indexes": {
         "user_email_unique": {
           "name": "user_email_unique",
-          "columns": [
-            "email"
-          ],
+          "columns": ["email"],
           "isUnique": true
         }
       },
