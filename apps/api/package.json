@@ -16,9 +16,6 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@ding/agent": "workspace:*",
-    "@ding/database": "workspace:*",
-    "@ding/domain": "workspace:*",
     "@hono/swagger-ui": "^0.5.3",
     "@hono/zod-openapi": "^1.2.0",
     "better-auth": "^1.4.17",
@@ -29,7 +26,10 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260128.0",
+    "@ding/agent": "workspace:*",
     "@ding/config": "workspace:*",
+    "@ding/database": "workspace:*",
+    "@ding/domain": "workspace:*",
     "@types/node": "^22.10.0",
     "tsup": "^8.5.1",
     "tsx": "^4.19.0",
