@@ -7,8 +7,9 @@ export default defineConfig(
     outDir: 'dist',
     format: ['cjs'],
     // Cloud Functions は CommonJS を使用
-    // firebase-functions はバンドルしない
-    external: ['firebase-functions', 'firebase-admin'],
+    // firebase-functions, firebase-admin はバンドルしない
+    // @libsql/client, drizzle-orm はネイティブ依存があるためバンドルしない
+    external: ['firebase-functions', 'firebase-admin', '@libsql/client', 'drizzle-orm'],
     // ワークスペースパッケージはバンドルする
     noExternal: [/^@ding\//],
   })

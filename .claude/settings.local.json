@@ -114,7 +114,8 @@
       "Bash(pnpm -F @ding/domain typecheck:*)",
       "Bash(pnpm --filter @ding/api tsc:*)",
       "Bash(pnpm --filter @ding/web lint:*)",
-      "Bash(pnpm --filter @ding/api generate:client:*)"
+      "Bash(pnpm --filter @ding/api generate:client:*)",
+      "Bash(pnpm --filter @ding/api build:functions:*)"
     ],
     "deny": ["Bash(npm:*)", "Bash(yarn:*)", "Bash(bun:*)", "Bash(rm -rf:*)", "Bash(sudo :*)"]
   },

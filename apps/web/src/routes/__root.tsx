@@ -20,9 +20,7 @@ function RootComponent() {
   return (
     <ToastProvider>
       <Outlet />
-      <Suspense>
-        <TanStackRouterDevtools />
-      </Suspense>
+      <Suspense>{/* <TanStackRouterDevtools /> */}</Suspense>
     </ToastProvider>
   )
 }
