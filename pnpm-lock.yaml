@@ -71,15 +71,6 @@ importers:
 
   apps/api:
     dependencies:
-      '@ding/agent':
-        specifier: workspace:*
-        version: link:../../packages/agent
-      '@ding/database':
-        specifier: workspace:*
-        version: link:../../packages/database
-      '@ding/domain':
-        specifier: workspace:*
-        version: link:../../packages/domain
       '@hono/swagger-ui':
         specifier: ^0.5.3
         version: 0.5.3(hono@4.11.5)
@@ -105,9 +96,18 @@ importers:
       '@cloudflare/workers-types':
         specifier: ^4.20260128.0
         version: 4.20260128.0
+      '@ding/agent':
+        specifier: workspace:*
+        version: link:../../packages/agent
       '@ding/config':
         specifier: workspace:*
         version: link:../../packages/config
+      '@ding/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      '@ding/domain':
+        specifier: workspace:*
+        version: link:../../packages/domain
       '@types/node':
         specifier: ^22.10.0
         version: 22.19.7
