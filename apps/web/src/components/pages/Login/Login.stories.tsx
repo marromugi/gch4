@@ -2,7 +2,7 @@ import { MockAuthProvider } from '@/lib/auth'
 import { LoginPage } from './Login'
 import type { Meta, StoryObj } from '@storybook/react'
 
-const meta = {
+const meta: Meta<typeof LoginPage> = {
   title: 'Pages/LoginPage',
   component: LoginPage,
   parameters: {
@@ -15,7 +15,7 @@ const meta = {
       </MockAuthProvider>
     ),
   ],
-} satisfies Meta<typeof LoginPage>
+}
 
 export default meta
 type Story = StoryObj<typeof meta>

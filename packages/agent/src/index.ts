@@ -99,6 +99,8 @@ export type { IKVStore, KVSetOptions } from './store'
 export { KVKeys, InMemoryKVStore, CloudflareKVStore, FirestoreKVStore } from './store'
 export type { CloudflareKVNamespace } from './store'
 export type { FirestoreKVConfig } from './store'
+export { createKVStore, parseKVStoreType } from './store'
+export type { KVStoreType, KVStoreFactoryConfig } from './store'
 export type {
   MainSessionState,
   SessionForm,

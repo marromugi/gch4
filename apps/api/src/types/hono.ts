@@ -13,8 +13,18 @@ export type Bindings = {
   GEMINI_API_KEY: string
   GEMINI_MODEL?: string
   AGENT_LOG_DIR?: string
-  /** Cloudflare KV namespace for session storage */
-  SESSIONS: KVNamespace
+
+  // KVStore 設定
+  /** KVStore の種別: 'cloudflare' | 'firestore' | 'memory' */
+  KV_STORE_TYPE?: string
+  /** Cloudflare KV namespace for session storage (KV_STORE_TYPE='cloudflare' の場合) */
+  SESSIONS?: KVNamespace
+  /** Firestore Project ID (KV_STORE_TYPE='firestore' の場合) */
+  FIRESTORE_PROJECT_ID?: string
+  /** Firestore Database ID (KV_STORE_TYPE='firestore' の場合、デフォルト: '(default)') */
+  FIRESTORE_DATABASE_ID?: string
+  /** Firestore Collection Name (KV_STORE_TYPE='firestore' の場合、デフォルト: 'kv-store') */
+  FIRESTORE_COLLECTION_NAME?: string
 }
 
 export type HonoEnv = {

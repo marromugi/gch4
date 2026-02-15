@@ -43,12 +43,13 @@ export const api = onRequest(
       BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET || '',
       GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || '',
       GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET || '',
-      ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY || '',
-      MEDIA_SIGNER_SECRET: process.env.MEDIA_SIGNER_SECRET || '',
-      MEDIA_PROXY_BASE_URL: process.env.MEDIA_PROXY_BASE_URL || '',
-      // Firestore (Agent KV 用)
+      GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
+      GEMINI_MODEL: process.env.GEMINI_MODEL || '',
+      // KVStore 設定（Firebase 環境ではデフォルトで firestore）
+      KV_STORE_TYPE: process.env.KV_STORE_TYPE || 'firestore',
       FIRESTORE_PROJECT_ID: process.env.GCLOUD_PROJECT || process.env.FIREBASE_PROJECT_ID || '',
       FIRESTORE_DATABASE_ID: process.env.FIRESTORE_DATABASE_ID || '(default)',
+      FIRESTORE_COLLECTION_NAME: process.env.FIRESTORE_COLLECTION_NAME || 'kv-store',
     })
 
     // Fetch API の Response を Express の res に変換

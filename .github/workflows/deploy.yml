@@ -51,5 +51,19 @@ jobs:
           npm install -g firebase-tools
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > $HOME/gcloud-key.json
           export GOOGLE_APPLICATION_CREDENTIALS=$HOME/gcloud-key.json
+
+          # Cloud Functions 用の環境変数ファイルを生成
+          cat > apps/api/.env.${{ secrets.FIREBASE_PROJECT_ID }} << 'EOF'
+          DATABASE_URL=${{ secrets.DATABASE_URL }}
+          DATABASE_AUTH_TOKEN=${{ secrets.DATABASE_AUTH_TOKEN }}
+          CLIENT_URL=${{ secrets.CLIENT_URL }}
+          BETTER_AUTH_URL=${{ secrets.BETTER_AUTH_URL }}
+          BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }}
+          GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL=${{ secrets.GEMINI_MODEL }}
+          EOF
+
           firebase deploy --only functions --project ${{ secrets.FIREBASE_PROJECT_ID }}
           rm -f $HOME/gcloud-key.json
