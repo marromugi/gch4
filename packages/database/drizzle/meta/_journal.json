@@ -5,43 +5,8 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1770904776190,
-      "tag": "0000_third_lucky_pierre",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1770908523627,
-      "tag": "0001_redundant_jasper_sitwell",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "6",
-      "when": 1770913722362,
-      "tag": "0002_neat_jean_grey",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "6",
-      "when": 1771074000000,
-      "tag": "0003_add_boundaries_column",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "6",
-      "when": 1771150000000,
-      "tag": "0004_drop_job_and_application_tables",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "6",
-      "when": 1771200000000,
-      "tag": "0005_remove_country_timezone",
+      "when": 1771157233744,
+      "tag": "0000_worthless_iron_fist",
       "breakpoints": true
     }
   ]
