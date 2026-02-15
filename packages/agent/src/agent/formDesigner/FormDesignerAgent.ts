@@ -24,7 +24,7 @@ export class FormDesignerAgent extends BaseAgent<FormDesignerContext, FormDesign
     systemPrompt: FORM_DESIGNER_SYSTEM_PROMPT,
     temperature: 0.7,
     maxOutputTokens: 6000,
-    model: 'gemini-3-flash-preview',
+    model: 'gemini-2.5-flash',
     forceToolCall: true,
   }
 

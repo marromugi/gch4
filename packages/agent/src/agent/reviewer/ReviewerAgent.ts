@@ -33,7 +33,7 @@ export class ReviewerAgent
     systemPrompt: REVIEWER_SYSTEM_PROMPT,
     temperature: 1.0, // 判定は一貫性が重要なので低め
     maxOutputTokens: 800,
-    model: 'gemini-3-flash-preview', // lite モデルは forceToolCall 非対応のため flash を使用
+    model: 'gemini-2.5-flash', // lite モデルは forceToolCall 非対応のため flash を使用
     forceToolCall: true, // 必ず review ツールを呼び出す
   }
 

@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
 import { useState, useCallback } from 'react'
 import { customFetch, API_BASE_URL } from '@/lib/api/fetcher'
+import { getListFormsQueryKey } from '@/lib/api/generated/form/form'
 import { useUser } from '@/lib/auth'
 import type { CreateFormRequest, CreateFormResponse } from './type'
 
@@ -71,7 +72,7 @@ export function useCreateFormMutation() {
       })
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['forms'] })
+      queryClient.invalidateQueries({ queryKey: getListFormsQueryKey() })
       router.navigate({ to: '/forms' })
     },
   })
