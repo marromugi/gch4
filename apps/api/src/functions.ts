@@ -10,6 +10,7 @@ export const api = onRequest(
     timeoutSeconds: 60,
     minInstances: 0,
     maxInstances: 100,
+    invoker: 'public', // 未認証リクエストを許可（公開API用）
   },
   async (req, res) => {
     // Node.js の IncomingMessage を Fetch API の Request に変換
