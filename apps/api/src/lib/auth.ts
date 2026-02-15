@@ -61,11 +61,6 @@ export function createAuth(env: AuthEnv) {
       google: {
         clientId: env.GOOGLE_CLIENT_ID,
         clientSecret: env.GOOGLE_CLIENT_SECRET,
-        // Google Calendar API へのアクセス権限を追加
-        scope: ['openid', 'email', 'profile', 'https://www.googleapis.com/auth/calendar.events'],
-        // トークンをアカウントテーブルに保存するためにaccessTypeを設定
-        accessType: 'offline',
-        prompt: 'consent',
       },
     },
 
