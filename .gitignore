@@ -21,6 +21,7 @@ pnpm-debug.log*
 .env.local
 .env.*.local
 .dev.vars
+.firebaserc
 
 # IDE
 .idea/
