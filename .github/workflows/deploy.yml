@@ -46,11 +46,12 @@ jobs:
 
       - name: Prepare Cloud Functions package.json
         run: |
-          # devDependencies を削除（workspace:* が含まれるため）
+          # Cloud Functions 用に package.json をクリーンアップ
           cd apps/api
           node -e "
             const pkg = require('./package.json');
             delete pkg.devDependencies;
+            delete pkg.type;  // ESM 設定を削除（CJS との互換性のため）
             require('fs').writeFileSync('./package.json', JSON.stringify(pkg, null, 2));
           "
 
@@ -61,7 +62,7 @@ jobs:
           export GOOGLE_APPLICATION_CREDENTIALS=$HOME/gcloud-key.json
 
           # Cloud Functions 用の環境変数ファイルを生成
-          cat > apps/api/.env.${{ secrets.FIREBASE_PROJECT_ID }} << 'EOF'
+          cat > apps/api/.env.${{ secrets.FIREBASE_PROJECT_ID }} << EOF
           DATABASE_URL=${{ secrets.DATABASE_URL }}
           DATABASE_AUTH_TOKEN=${{ secrets.DATABASE_AUTH_TOKEN }}
           CLIENT_URL=${{ secrets.CLIENT_URL }}
@@ -71,7 +72,11 @@ jobs:
           GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
           GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL=${{ secrets.GEMINI_MODEL }}
+          GCLOUD_PROJECT=${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }}
           EOF
+          # 先頭スペースを削除
+          sed -i 's/^[[:space:]]*//' apps/api/.env.${{ secrets.FIREBASE_PROJECT_ID }}
 
           firebase deploy --only functions --project ${{ secrets.FIREBASE_PROJECT_ID }} --non-interactive --force
           rm -f $HOME/gcloud-key.json

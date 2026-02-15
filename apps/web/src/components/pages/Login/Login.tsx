@@ -13,10 +13,10 @@ export function LoginPage({ className }: LoginPageProps) {
   const router = useRouter()
   const { signInWithGoogle, isPending, isAuthenticated } = useAuth()
 
-  // ログイン済みの場合はホームページにリダイレクト
+  // ログイン済みの場合はフォーム一覧ページにリダイレクト
   useEffect(() => {
     if (!isPending && isAuthenticated) {
-      router.navigate({ to: '/' })
+      router.navigate({ to: '/forms' })
     }
   }, [isAuthenticated, isPending, router])
 
