@@ -14,7 +14,20 @@ export const api = onRequest(
   },
   async (req, res) => {
     // Node.js の IncomingMessage を Fetch API の Request に変換
-    const url = new URL(req.url || '/', `https://${req.headers.host}`)
+    // Firebase Hosting 経由の場合、x-forwarded-host に元のホストが含まれる
+    const host = req.headers['x-forwarded-host'] || req.headers.host
+    const url = new URL(req.url || '/', `https://${host}`)
+
+    // OAuth デバッグログ
+    if (req.url?.includes('/auth/')) {
+      console.log('[OAuth Debug]', {
+        url: url.toString(),
+        host,
+        originalHost: req.headers.host,
+        forwardedHost: req.headers['x-forwarded-host'],
+        cookie: req.headers.cookie ? 'present' : 'missing',
+      })
+    }
 
     const headers = new Headers()
     for (const [key, value] of Object.entries(req.headers)) {
