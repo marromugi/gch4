@@ -56,8 +56,17 @@ export const api = onRequest(
     // Fetch API の Response を Express の res に変換
     res.status(response.status)
 
+    // Set-Cookie ヘッダーは特別に処理（複数の cookie を正しく設定するため）
+    const setCookieHeaders = response.headers.getSetCookie()
+    if (setCookieHeaders.length > 0) {
+      res.setHeader('Set-Cookie', setCookieHeaders)
+    }
+
+    // その他のヘッダーを設定
     response.headers.forEach((value, key) => {
-      res.setHeader(key, value)
+      if (key.toLowerCase() !== 'set-cookie') {
+        res.setHeader(key, value)
+      }
     })
 
     const responseBody = await response.arrayBuffer()
